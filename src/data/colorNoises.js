@@ -1,8 +1,10 @@
 export const colorNoises = [
     {
         id: 'white-noise',
-        title: '⚪ WHITE NOISE',
-        type: 'white',
+        title: 'WHITE NOISE',
+        noiseType: 'white',
+        left: 0,
+        right: 0,
         profile: 'equal energy across all frequencies',
         effects: [
             'Masks background sounds',
@@ -14,8 +16,10 @@ export const colorNoises = [
     },
     {
         id: 'black-noise',
-        title: '⚫ BLACK NOISE',
-        type: 'black', // Silence/Pulses
+        title: 'BLACK NOISE',
+        noiseType: 'black',
+        left: 0,
+        right: 0,
         sound: 'almost silence, with occasional deep low pulses',
         profile: 'absence of noise',
         effects: [
@@ -27,8 +31,10 @@ export const colorNoises = [
     },
     {
         id: 'pink-noise',
-        title: '🎀 PINK NOISE',
-        type: 'pink',
+        title: 'PINK NOISE',
+        noiseType: 'pink',
+        left: 0,
+        right: 0,
         profile: 'more energy in low frequencies',
         effects: [
             'Improves sleep quality',
@@ -39,8 +45,10 @@ export const colorNoises = [
     },
     {
         id: 'blue-noise',
-        title: '🔵 BLUE NOISE',
-        type: 'blue',
+        title: 'BLUE NOISE',
+        noiseType: 'blue',
+        left: 0,
+        right: 0,
         profile: 'more energy in higher frequencies',
         effects: [
             'Enhances alertness',
@@ -50,8 +58,10 @@ export const colorNoises = [
     },
     {
         id: 'azure-noise',
-        title: '🔷 AZURE NOISE',
-        type: 'azure',
+        title: 'AZURE NOISE',
+        noiseType: 'azure',
+        left: 0,
+        right: 0,
         sound: 'smoother than blue; airy and bright',
         profile: 'between blue and violet',
         effects: [
@@ -62,8 +72,10 @@ export const colorNoises = [
     },
     {
         id: 'violet-noise',
-        title: '🟣 VIOLET NOISE',
-        type: 'violet',
+        title: 'VIOLET NOISE',
+        noiseType: 'violet',
+        left: 0,
+        right: 0,
         profile: 'heavily weighted toward high frequencies',
         effects: [
             'Helps with tinnitus relief (many tinnitus sufferers benefit)',
@@ -73,8 +85,10 @@ export const colorNoises = [
     },
     {
         id: 'red-noise',
-        title: '🔥 RED NOISE (BROWN/ BROWNIAN)',
-        type: 'brown', // Red is often Brown
+        title: 'RED NOISE (BROWN/ BROWNIAN)',
+        noiseType: 'brown',
+        left: 0,
+        right: 0,
         sound: 'deep rumble—like thunder, crashing waves, or distant wind',
         profile: 'more energy in very low frequencies',
         effects: [
@@ -86,8 +100,10 @@ export const colorNoises = [
     },
     {
         id: 'brown-noise',
-        title: '🟤 BROWN NOISE (BROWNIAN)',
-        type: 'brown',
+        title: 'BROWN NOISE (BROWNIAN)',
+        noiseType: 'brown',
+        left: 0,
+        right: 0,
         sound: 'deep, rolling ocean roar',
         profile: 'technically same family as red noise, but often deeper and smoother',
         effects: [
@@ -99,8 +115,10 @@ export const colorNoises = [
     },
     {
         id: 'yellow-noise',
-        title: '🟨 YELLOW NOISE',
-        type: 'yellow',
+        title: 'YELLOW NOISE',
+        noiseType: 'yellow',
+        left: 0,
+        right: 0,
         sound: 'experimental; emphasizes mid-range frequencies',
         effects: [
             'Stabilizing, mental balance',
@@ -110,8 +128,10 @@ export const colorNoises = [
     },
     {
         id: 'orange-noise',
-        title: '🟧 ORANGE NOISE',
-        type: 'orange',
+        title: 'ORANGE NOISE',
+        noiseType: 'orange',
+        left: 0,
+        right: 0,
         sound: 'rare; warm mid-low tones',
         effects: [
             'Comforting',
@@ -121,8 +141,10 @@ export const colorNoises = [
     },
     {
         id: 'green-noise',
-        title: '🟩 GREEN NOISE',
-        type: 'green',
+        title: 'GREEN NOISE',
+        noiseType: 'green',
+        left: 0,
+        right: 0,
         sound: 'natural, like ocean waves or forests',
         profile: 'balanced distribution, natural feeling',
         effects: [
@@ -134,8 +156,10 @@ export const colorNoises = [
     },
     {
         id: 'turquoise-noise',
-        title: '🩵 TURQUOISE NOISE',
-        type: 'turquoise',
+        title: 'TURQUOISE NOISE',
+        noiseType: 'turquoise',
+        left: 0,
+        right: 0,
         sound: 'soft rushing sound',
         profile: 'between green and blue',
         effects: [
@@ -146,8 +170,10 @@ export const colorNoises = [
     },
     {
         id: 'grey-noise',
-        title: '🔮 GREY NOISE',
-        type: 'grey',
+        title: 'GREY NOISE',
+        noiseType: 'grey',
+        left: 0,
+        right: 0,
         sound: 'adjusted to match human hearing sensitivity',
         profile: 'psychologically even across frequencies',
         effects: [
@@ -158,8 +184,10 @@ export const colorNoises = [
     },
     {
         id: 'burgundy-noise',
-        title: '🟫 BURGUNDY / PLUM NOISE',
-        type: 'burgundy',
+        title: 'BURGUNDY / PLUM NOISE',
+        noiseType: 'burgundy',
+        left: 0,
+        right: 0,
         sound: 'dark, warm, low-mid tones',
         effects: [
             'Emotional depth',
