@@ -1,4 +1,4 @@
-import { Home, Info, Sliders, Music, FileText } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
@@ -9,6 +9,13 @@ export function HomePage({ onNavigate }) {
             icon: Music,
             description: 'Browse our curated frequency library',
             color: 'from-pink-900 to-purple-900'
+        },
+        {
+            id: 'colors',
+            title: 'Color Noises',
+            icon: CloudRain,
+            description: 'Full spectrum of healing noise colors',
+            color: 'from-indigo-900 to-blue-900'
         },
         {
             id: 'custom',
@@ -46,7 +53,7 @@ export function HomePage({ onNavigate }) {
                     return (
                         <button
                             key={item.id}
-                            className={`nav-card glass-card bg-gradient-to-br ${item.color}`}
+                            className={`nav - card glass - card bg - gradient - to - br ${item.color} `}
                             onClick={() => onNavigate(item.id)}
                         >
                             <Icon size={48} className="nav-icon" />

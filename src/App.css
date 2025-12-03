@@ -110,6 +110,32 @@
   border-top: 1px solid rgba(139, 92, 246, 0.1);
 }
 
+.best-results-banner-inline {
+  max-width: 800px;
+  margin: 0 auto 24px;
+  padding: 12px 20px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  text-align: center;
+  color: var(--accent-teal);
+  font-weight: 500;
+  font-size: 14px;
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 768px) {
   .app-container {
     padding: 20px 12px 180px;

@@ -10,6 +10,7 @@ import { CustomGenerator } from './components/CustomGenerator';
 import { PlayerControls } from './components/PlayerControls';
 import { Disclaimer } from './components/Disclaimer';
 import { ArrowLeft } from 'lucide-react';
+import { ColorNoisesPage } from './pages/ColorNoisesPage';
 import './App.css';
 
 function App() {
@@ -131,6 +132,27 @@ function App() {
     );
   }
 
+  if (currentPage === 'colors') {
+    return (
+      <>
+        <div className="animated-bg" />
+        <ColorNoisesPage
+          onBack={handleBack}
+          onPlay={handleSelectFrequency}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+        />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
+      </>
+    );
+  }
+
   // Custom Generator and Presets pages
   return (
     <>
@@ -146,6 +168,10 @@ function App() {
           <img src="/omnisync-logo.png" alt="OMNISYNC" className="app-logo" />
           <p className="app-subtitle">Please put on headphones and enjoy 🎧</p>
         </header>
+
+        <div className="best-results-banner-inline">
+          ✨ For best results: lower volume, silent mode OFF, wear headphones 🎧
+        </div>
 
         <main className="app-main">
           {currentPage === 'custom' && (
@@ -163,6 +189,7 @@ function App() {
             />
           )}
         </main>
+
 
         <footer className="page-footer-inline">
           © NeoTheory Music LLC & Mixie 2025

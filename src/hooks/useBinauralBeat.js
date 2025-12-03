@@ -10,6 +10,7 @@ export function useBinauralBeat() {
     const rightGainRef = useRef(null);
     const bothEarsGainRef = useRef(null);
     const noiseGainRef = useRef(null);
+    const noiseFilterRef = useRef(null);
     const masterGainRef = useRef(null);
 
     const [isPlaying, setIsPlaying] = useState(false);
@@ -46,9 +47,13 @@ export function useBinauralBeat() {
             bothEarsGainRef.current = audioContextRef.current.createGain();
             bothEarsGainRef.current.connect(masterGainRef.current);
 
-            // Noise Channel (center)
+            // Noise Channel
             noiseGainRef.current = audioContextRef.current.createGain();
             noiseGainRef.current.connect(masterGainRef.current);
+
+            // Noise Filter
+            noiseFilterRef.current = audioContextRef.current.createBiquadFilter();
+            noiseFilterRef.current.connect(noiseGainRef.current);
         }
 
         if (audioContextRef.current.state === 'suspended') {
@@ -81,11 +86,7 @@ export function useBinauralBeat() {
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
 
-        if (type === 'white') {
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-        } else if (type === 'pink') {
+        if (type === 'pink') {
             let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
             for (let i = 0; i < bufferSize; i++) {
                 const white = Math.random() * 2 - 1;
@@ -99,7 +100,8 @@ export function useBinauralBeat() {
                 data[i] *= 0.11; // (roughly) compensate for gain
                 b6 = white * 0.115926;
             }
-        } else if (type === 'brown') {
+            return buffer;
+        } else if (type === 'brown' || type === 'red') {
             let lastOut = 0;
             for (let i = 0; i < bufferSize; i++) {
                 const white = Math.random() * 2 - 1;
@@ -107,6 +109,11 @@ export function useBinauralBeat() {
                 lastOut = data[i];
                 data[i] *= 3.5; // (roughly) compensate for gain
             }
+            return buffer;
+        }
+        // Default to White Noise for all filtered types
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
         }
         return buffer;
     };
@@ -132,15 +139,75 @@ export function useBinauralBeat() {
         // Handle Noise
         if (noiseType) {
             if (!noiseNodeRef.current) {
+                // Configure Filter based on Type
+                const filter = noiseFilterRef.current;
+                // Reset filter
+                filter.type = 'allpass';
+                filter.frequency.value = 0;
+                filter.Q.value = 1; // Reset Q
+                filter.gain.value = 0; // Reset gain for peaking
+
+                switch (noiseType) {
+                    case 'blue':
+                        filter.type = 'highpass';
+                        filter.frequency.value = 500;
+                        break;
+                    case 'violet':
+                        filter.type = 'highpass';
+                        filter.frequency.value = 2000;
+                        break;
+                    case 'green':
+                        filter.type = 'bandpass';
+                        filter.frequency.value = 500;
+                        filter.Q.value = 0.5;
+                        break;
+                    case 'turquoise':
+                        filter.type = 'bandpass';
+                        filter.frequency.value = 2000;
+                        filter.Q.value = 0.5;
+                        break;
+                    case 'grey':
+                        // Approximate grey with a gentle bandpass
+                        filter.type = 'peaking';
+                        filter.frequency.value = 1000;
+                        filter.Q.value = 1;
+                        filter.gain.value = -5;
+                        break;
+                    case 'yellow':
+                        filter.type = 'bandpass';
+                        filter.frequency.value = 800;
+                        filter.Q.value = 1;
+                        break;
+                    case 'orange':
+                        filter.type = 'lowpass';
+                        filter.frequency.value = 1000;
+                        break;
+                    case 'burgundy':
+                        filter.type = 'lowpass';
+                        filter.frequency.value = 200;
+                        break;
+                    case 'black':
+                        // Silence (handled by gain)
+                        break;
+                    default:
+                        // White, Pink, Brown, Red use their specific buffers and no filter (or default white)
+                        break;
+                }
+
                 const buffer = createNoiseBuffer(ctx, noiseType);
                 noiseNodeRef.current = ctx.createBufferSource();
                 noiseNodeRef.current.buffer = buffer;
                 noiseNodeRef.current.loop = true;
-                noiseNodeRef.current.connect(noiseGainRef.current);
+
+                // Connect: Source -> Filter -> Gain -> Master
+                noiseNodeRef.current.connect(noiseFilterRef.current);
+
                 noiseNodeRef.current.start();
 
+                // Gain handling
                 noiseGainRef.current.gain.setValueAtTime(0, now);
-                noiseGainRef.current.gain.linearRampToValueAtTime(0.5, now + rampTime);
+                const targetGain = noiseType === 'black' ? 0.05 : 0.5; // Very low for black
+                noiseGainRef.current.gain.linearRampToValueAtTime(targetGain, now + rampTime);
             }
             // If noise is already playing and type is same, do nothing (it loops)
         }
