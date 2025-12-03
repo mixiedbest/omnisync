@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 export function useBinauralBeat() {
     const audioContextRef = useRef(null);
