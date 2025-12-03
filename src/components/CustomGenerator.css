@@ -1,0 +1,223 @@
+.custom-generator {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 24px;
+}
+
+.generator-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.generator-icon {
+    color: var(--accent-teal);
+}
+
+.generator-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.mode-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 12px 20px;
+    background: rgba(17, 24, 39, 0.4);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-btn:hover {
+    border-color: rgba(139, 92, 246, 0.4);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.mode-btn.active {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: var(--accent-purple);
+    color: var(--text-primary);
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
+}
+
+.generator-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.section-title {
+    grid-column: 1 / -1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-purple);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.section-divider {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(139, 92, 246, 0.3), transparent);
+    margin: 12px 0;
+}
+
+.optional-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: 8px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.freq-input {
+    padding: 12px 16px;
+    background: rgba(17, 24, 39, 0.6);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.freq-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.beat-display {
+    grid-column: 1 / -1;
+    padding: 16px 20px;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+}
+
+.freq-breakdown {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.breakdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.breakdown-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.breakdown-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent-purple);
+    font-family: 'Courier New', monospace;
+}
+
+.monaural-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-text {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.freq-large {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent-teal);
+    font-family: 'Courier New', monospace;
+}
+
+.both-ears-display {
+    background: rgba(20, 184, 166, 0.1);
+    border-color: rgba(20, 184, 166, 0.3);
+}
+
+
+.generate-btn {
+    grid-column: 1 / -1;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+.generate-btn.active {
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+    box-shadow: 0 0 30px rgba(20, 184, 166, 0.5);
+}
+
+@media (max-width: 640px) {
+    .mode-selector {
+        flex-direction: column;
+    }
+
+    .generator-content {
+        grid-template-columns: 1fr;
+    }
+
+    .beat-display {
+        grid-column: 1;
+    }
+
+    .generate-btn {
+        grid-column: 1;
+    }
+
+    .freq-breakdown {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
