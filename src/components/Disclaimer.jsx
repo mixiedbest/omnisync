@@ -1,25 +1,12 @@
-import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 import './Disclaimer.css';
 
 export function Disclaimer() {
-    const [isExpanded, setIsExpanded] = useState(false);
-
     return (
         <footer className="disclaimer-footer">
             <div className="disclaimer-content">
-                <button
-                    className="disclaimer-toggle"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                >
-                    <h3 className="disclaimer-title">Disclaimer</h3>
-                    <ChevronDown
-                        size={24}
-                        className={`disclaimer-chevron ${isExpanded ? 'expanded' : ''}`}
-                    />
-                </button>
+                <h3 className="disclaimer-title">Disclaimer</h3>
 
-                <div className={`disclaimer-body ${isExpanded ? 'expanded' : ''}`}>
+                <div className="disclaimer-body-static">
                     <p className="disclaimer-intro">
                         OMNISYNC provides audio experiences designed for relaxation, meditation, and personal well-being.
                         Our sound frequencies, binaural beats, and energetic tools are intended to support mindfulness,
