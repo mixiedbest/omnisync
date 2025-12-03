@@ -23,51 +23,18 @@ export function AboutPage({ onBack }) {
                     <h2>Brainwave States</h2>
 
                     <div className="brainwave-card">
-                        <h3>Gamma (30–100 Hz)</h3>
-                        <p className="brainwave-subtitle">Peak Awareness • Expanded Consciousness</p>
+                        <h3>Delta (0.5–4 Hz)</h3>
+                        <p className="brainwave-subtitle">Rest • Repair • Deep Sleep</p>
                         <p>
-                            Gamma waves appear during moments of insight, high-level information processing, and deep
-                            compassion. This state is associated with "whole brain synchrony," where different regions
-                            of the mind communicate at high speed.
+                            Delta waves are slow, powerful, and restorative. They appear in deep, dreamless sleep and
+                            are linked with the body's natural healing processes.
                         </p>
-                        <h4>Gamma frequencies support:</h4>
+                        <h4>Delta frequencies help with:</h4>
                         <ul>
-                            <li>Heightened mental clarity</li>
-                            <li>Deep spiritual awareness</li>
-                            <li>Enhanced memory and learning</li>
-                            <li>Feeling connected and "in flow"</li>
-                        </ul>
-                    </div>
-
-                    <div className="brainwave-card">
-                        <h3>Beta (12–30 Hz)</h3>
-                        <p className="brainwave-subtitle">Active Thinking • Problem Solving</p>
-                        <p>
-                            Beta waves dominate your normal waking life: when you're focused, thinking, planning, or
-                            navigating tasks. Balanced beta supports productivity and alertness, while excess beta can
-                            feel like stress or overthinking.
-                        </p>
-                        <h4>Beta frequencies help with:</h4>
-                        <ul>
-                            <li>Focus and concentration</li>
-                            <li>Mental energy</li>
-                            <li>Clear thinking and decision-making</li>
-                        </ul>
-                    </div>
-
-                    <div className="brainwave-card">
-                        <h3>Alpha (8–12 Hz)</h3>
-                        <p className="brainwave-subtitle">Relaxed • Creative • Lightly Meditative</p>
-                        <p>
-                            Alpha is the bridge between the conscious and subconscious mind. It's the state you drop
-                            into when daydreaming, journaling, drawing, or unwinding.
-                        </p>
-                        <h4>Alpha frequencies are used for:</h4>
-                        <ul>
-                            <li>Stress relief</li>
-                            <li>Mood balancing</li>
-                            <li>Enhancing imagination and creativity</li>
-                            <li>Opening the mind for manifestation work</li>
+                            <li>Deep relaxation</li>
+                            <li>Sleep improvement</li>
+                            <li>Nervous system repair</li>
+                            <li>Immune support</li>
                         </ul>
                     </div>
 
@@ -89,18 +56,51 @@ export function AboutPage({ onBack }) {
                     </div>
 
                     <div className="brainwave-card">
-                        <h3>Delta (0.5–4 Hz)</h3>
-                        <p className="brainwave-subtitle">Rest • Repair • Deep Sleep</p>
+                        <h3>Alpha (8–12 Hz)</h3>
+                        <p className="brainwave-subtitle">Relaxed • Creative • Lightly Meditative</p>
                         <p>
-                            Delta waves are slow, powerful, and restorative. They appear in deep, dreamless sleep and
-                            are linked with the body's natural healing processes.
+                            Alpha is the bridge between the conscious and subconscious mind. It's the state you drop
+                            into when daydreaming, journaling, drawing, or unwinding.
                         </p>
-                        <h4>Delta frequencies help with:</h4>
+                        <h4>Alpha frequencies are used for:</h4>
                         <ul>
-                            <li>Deep relaxation</li>
-                            <li>Sleep improvement</li>
-                            <li>Nervous system repair</li>
-                            <li>Immune support</li>
+                            <li>Stress relief</li>
+                            <li>Mood balancing</li>
+                            <li>Enhancing imagination and creativity</li>
+                            <li>Opening the mind for manifestation work</li>
+                        </ul>
+                    </div>
+
+                    <div className="brainwave-card">
+                        <h3>Beta (12–30 Hz)</h3>
+                        <p className="brainwave-subtitle">Active Thinking • Problem Solving</p>
+                        <p>
+                            Beta waves dominate your normal waking life: when you're focused, thinking, planning, or
+                            navigating tasks. Balanced beta supports productivity and alertness, while excess beta can
+                            feel like stress or overthinking.
+                        </p>
+                        <h4>Beta frequencies help with:</h4>
+                        <ul>
+                            <li>Focus and concentration</li>
+                            <li>Mental energy</li>
+                            <li>Clear thinking and decision-making</li>
+                        </ul>
+                    </div>
+
+                    <div className="brainwave-card">
+                        <h3>Gamma (30–100 Hz)</h3>
+                        <p className="brainwave-subtitle">Peak Awareness • Expanded Consciousness</p>
+                        <p>
+                            Gamma waves appear during moments of insight, high-level information processing, and deep
+                            compassion. This state is associated with "whole brain synchrony," where different regions
+                            of the mind communicate at high speed.
+                        </p>
+                        <h4>Gamma frequencies support:</h4>
+                        <ul>
+                            <li>Heightened mental clarity</li>
+                            <li>Deep spiritual awareness</li>
+                            <li>Enhanced memory and learning</li>
+                            <li>Feeling connected and "in flow"</li>
                         </ul>
                     </div>
                 </section>

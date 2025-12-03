@@ -4,11 +4,11 @@ import './HomePage.css';
 export function HomePage({ onNavigate }) {
     const navItems = [
         {
-            id: 'about',
-            title: 'About',
-            icon: Info,
-            description: 'Learn about brainwaves & sound healing',
-            color: 'from-purple-900 to-blue-900'
+            id: 'presets',
+            title: 'Preset Frequencies',
+            icon: Music,
+            description: 'Browse our curated frequency library',
+            color: 'from-pink-900 to-purple-900'
         },
         {
             id: 'custom',
@@ -18,11 +18,11 @@ export function HomePage({ onNavigate }) {
             color: 'from-teal-900 to-cyan-900'
         },
         {
-            id: 'presets',
-            title: 'Preset Frequencies',
-            icon: Music,
-            description: 'Browse our curated frequency library',
-            color: 'from-pink-900 to-purple-900'
+            id: 'about',
+            title: 'About',
+            icon: Info,
+            description: 'Learn about brainwaves & sound healing',
+            color: 'from-purple-900 to-blue-900'
         },
         {
             id: 'disclaimer',
