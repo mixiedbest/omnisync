@@ -226,15 +226,5 @@ export const categories = [
                 isSequence: true
             },
         ]
-    },
-    {
-        id: 'color-noises',
-        title: 'COLOR NOISES',
-        icon: 'CloudRain',
-        items: [
-            { id: 'white-noise', title: 'White Noise', beat: 'N/A', left: 0, right: 0, noiseType: 'white', desc: 'Pure, flat frequency spectrum for blocking distractions' },
-            { id: 'pink-noise', title: 'Pink Noise', beat: 'N/A', left: 0, right: 0, noiseType: 'pink', desc: 'Balanced, natural sound like rain or wind' },
-            { id: 'brown-noise', title: 'Brown Noise', beat: 'N/A', left: 0, right: 0, noiseType: 'brown', desc: 'Deep, rumbling sound for focus and sleep' }
-        ]
     }
 ];

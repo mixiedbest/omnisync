@@ -7,36 +7,31 @@ export function HomePage({ onNavigate }) {
             id: 'presets',
             title: 'Preset Frequencies',
             icon: Music,
-            description: 'Browse our curated frequency library',
-            color: 'from-pink-900 to-purple-900'
+            description: 'Browse our curated frequency library'
         },
         {
             id: 'colors',
             title: 'Color Noises',
             icon: CloudRain,
-            description: 'Full spectrum of healing noise colors',
-            color: 'from-indigo-900 to-blue-900'
+            description: 'Full spectrum of healing noise colors'
         },
         {
             id: 'custom',
             title: 'Custom Generator',
             icon: Sliders,
-            description: 'Create your own frequency combinations',
-            color: 'from-teal-900 to-cyan-900'
+            description: 'Create your own frequency combinations'
         },
         {
             id: 'about',
             title: 'About',
             icon: Info,
-            description: 'Learn about brainwaves & sound healing',
-            color: 'from-purple-900 to-blue-900'
+            description: 'Learn about brainwaves & sound healing'
         },
         {
             id: 'disclaimer',
             title: 'Disclaimer',
             icon: FileText,
-            description: 'Important safety information',
-            color: 'from-slate-900 to-gray-900'
+            description: 'Important safety information'
         }
     ];
 
@@ -53,7 +48,7 @@ export function HomePage({ onNavigate }) {
                     return (
                         <button
                             key={item.id}
-                            className={`nav - card glass - card bg - gradient - to - br ${item.color} `}
+                            className="nav-card glass-card"
                             onClick={() => onNavigate(item.id)}
                         >
                             <Icon size={48} className="nav-icon" />
