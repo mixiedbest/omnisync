@@ -67,7 +67,7 @@ function App() {
         setCurrentTrack(item);
         play(0, 0);
       } else {
-        play(item.left, item.right, item.bothEars || 0);
+        play(item.left, item.right, item.bothEars || 0, item.noiseType || null);
         setCurrentTrack(item);
       }
     }
@@ -80,7 +80,7 @@ function App() {
       if (currentTrack.id === 'sleep-program-90') {
         play(0, 0);
       } else {
-        play(currentTrack.left, currentTrack.right, currentTrack.bothEars || 0);
+        play(currentTrack.left, currentTrack.right, currentTrack.bothEars || 0, currentTrack.noiseType || null);
       }
     }
   };

@@ -5,14 +5,16 @@ export function useBinauralBeat() {
     const leftOscRef = useRef(null);
     const rightOscRef = useRef(null);
     const bothEarsOscRef = useRef(null);
+    const noiseNodeRef = useRef(null);
     const leftGainRef = useRef(null);
     const rightGainRef = useRef(null);
     const bothEarsGainRef = useRef(null);
+    const noiseGainRef = useRef(null);
     const masterGainRef = useRef(null);
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(0.5);
-    const [currentFrequencies, setCurrentFrequencies] = useState({ left: 0, right: 0, bothEars: 0 });
+    const [currentFrequencies, setCurrentFrequencies] = useState({ left: 0, right: 0, bothEars: 0, noiseType: null });
 
     const initAudio = useCallback(() => {
         if (!audioContextRef.current) {
@@ -43,6 +45,10 @@ export function useBinauralBeat() {
             // Both Ears Channel (center)
             bothEarsGainRef.current = audioContextRef.current.createGain();
             bothEarsGainRef.current.connect(masterGainRef.current);
+
+            // Noise Channel (center)
+            noiseGainRef.current = audioContextRef.current.createGain();
+            noiseGainRef.current.connect(masterGainRef.current);
         }
 
         if (audioContextRef.current.state === 'suspended') {
@@ -69,39 +75,114 @@ export function useBinauralBeat() {
         };
     }, []);
 
-    const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0) => {
+    // Noise Generator
+    const createNoiseBuffer = (ctx, type) => {
+        const bufferSize = ctx.sampleRate * 2; // 2 seconds buffer
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+
+        if (type === 'white') {
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+        } else if (type === 'pink') {
+            let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99886 * b0 + white * 0.0555179;
+                b1 = 0.99332 * b1 + white * 0.0750759;
+                b2 = 0.96900 * b2 + white * 0.1538520;
+                b3 = 0.86650 * b3 + white * 0.3104856;
+                b4 = 0.55000 * b4 + white * 0.5329522;
+                b5 = -0.7616 * b5 - white * 0.0168980;
+                data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                data[i] *= 0.11; // (roughly) compensate for gain
+                b6 = white * 0.115926;
+            }
+        } else if (type === 'brown') {
+            let lastOut = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                data[i] = (lastOut + (0.02 * white)) / 1.02;
+                lastOut = data[i];
+                data[i] *= 3.5; // (roughly) compensate for gain
+            }
+        }
+        return buffer;
+    };
+
+    const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null) => {
         initAudio();
         const ctx = audioContextRef.current;
         const now = ctx.currentTime;
         const rampTime = 0.5; // Smooth transition
 
-        // If not playing, start oscillators
-        if (!isPlaying || !leftOscRef.current) {
-            // Create Left/Right Oscillators
-            leftOscRef.current = ctx.createOscillator();
-            leftOscRef.current.type = 'sine';
-            leftOscRef.current.frequency.setValueAtTime(leftFreq, now);
-            leftOscRef.current.connect(leftGainRef.current);
-            leftOscRef.current.start();
+        // Stop existing noise if switching types or turning off
+        if (noiseNodeRef.current && (!noiseType || noiseType !== currentFrequencies.noiseType)) {
+            noiseGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+            setTimeout(() => {
+                if (noiseNodeRef.current) {
+                    noiseNodeRef.current.stop();
+                    noiseNodeRef.current.disconnect();
+                    noiseNodeRef.current = null;
+                }
+            }, rampTime * 1000);
+        }
 
-            rightOscRef.current = ctx.createOscillator();
-            rightOscRef.current.type = 'sine';
-            rightOscRef.current.frequency.setValueAtTime(rightFreq, now);
-            rightOscRef.current.connect(rightGainRef.current);
-            rightOscRef.current.start();
+        // Handle Noise
+        if (noiseType) {
+            if (!noiseNodeRef.current) {
+                const buffer = createNoiseBuffer(ctx, noiseType);
+                noiseNodeRef.current = ctx.createBufferSource();
+                noiseNodeRef.current.buffer = buffer;
+                noiseNodeRef.current.loop = true;
+                noiseNodeRef.current.connect(noiseGainRef.current);
+                noiseNodeRef.current.start();
 
-            // Fade in
-            leftGainRef.current.gain.setValueAtTime(0, now);
-            leftGainRef.current.gain.linearRampToValueAtTime(0.7, now + rampTime);
+                noiseGainRef.current.gain.setValueAtTime(0, now);
+                noiseGainRef.current.gain.linearRampToValueAtTime(0.5, now + rampTime);
+            }
+            // If noise is already playing and type is same, do nothing (it loops)
+        }
 
-            rightGainRef.current.gain.setValueAtTime(0, now);
-            rightGainRef.current.gain.linearRampToValueAtTime(0.7, now + rampTime);
+        // Handle Binaural Beats (Sine Waves)
+        if (leftFreq > 0 && rightFreq > 0) {
+            // If not playing, start oscillators
+            if (!isPlaying || !leftOscRef.current) {
+                // Create Left/Right Oscillators
+                leftOscRef.current = ctx.createOscillator();
+                leftOscRef.current.type = 'sine';
+                leftOscRef.current.frequency.setValueAtTime(leftFreq, now);
+                leftOscRef.current.connect(leftGainRef.current);
+                leftOscRef.current.start();
 
-            setIsPlaying(true);
+                rightOscRef.current = ctx.createOscillator();
+                rightOscRef.current.type = 'sine';
+                rightOscRef.current.frequency.setValueAtTime(rightFreq, now);
+                rightOscRef.current.connect(rightGainRef.current);
+                rightOscRef.current.start();
+
+                // Fade in
+                leftGainRef.current.gain.setValueAtTime(0, now);
+                leftGainRef.current.gain.linearRampToValueAtTime(0.7, now + rampTime);
+
+                rightGainRef.current.gain.setValueAtTime(0, now);
+                rightGainRef.current.gain.linearRampToValueAtTime(0.7, now + rampTime);
+            } else {
+                // Update frequencies smoothly
+                leftOscRef.current.frequency.linearRampToValueAtTime(leftFreq, now + rampTime);
+                rightOscRef.current.frequency.linearRampToValueAtTime(rightFreq, now + rampTime);
+            }
         } else {
-            // Update frequencies smoothly
-            leftOscRef.current.frequency.linearRampToValueAtTime(leftFreq, now + rampTime);
-            rightOscRef.current.frequency.linearRampToValueAtTime(rightFreq, now + rampTime);
+            // Stop sine waves if frequencies are 0 (e.g. noise only mode)
+            if (leftOscRef.current) {
+                leftGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+                rightGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+                setTimeout(() => {
+                    if (leftOscRef.current) { leftOscRef.current.stop(); leftOscRef.current = null; }
+                    if (rightOscRef.current) { rightOscRef.current.stop(); rightOscRef.current = null; }
+                }, rampTime * 1000);
+            }
         }
 
         // Handle Both Ears oscillator
@@ -130,8 +211,9 @@ export function useBinauralBeat() {
             }, rampTime * 1000);
         }
 
-        setCurrentFrequencies({ left: leftFreq, right: rightFreq, bothEars: bothEarsFreq });
-    }, [initAudio, isPlaying]);
+        setIsPlaying(true);
+        setCurrentFrequencies({ left: leftFreq, right: rightFreq, bothEars: bothEarsFreq, noiseType });
+    }, [initAudio, isPlaying, currentFrequencies]);
 
     const stop = useCallback(() => {
         if (audioContextRef.current && isPlaying) {
@@ -143,6 +225,9 @@ export function useBinauralBeat() {
             rightGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
             if (bothEarsGainRef.current) {
                 bothEarsGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+            }
+            if (noiseGainRef.current) {
+                noiseGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
             }
 
             setTimeout(() => {
@@ -161,8 +246,13 @@ export function useBinauralBeat() {
                     bothEarsOscRef.current.disconnect();
                     bothEarsOscRef.current = null;
                 }
+                if (noiseNodeRef.current) {
+                    noiseNodeRef.current.stop();
+                    noiseNodeRef.current.disconnect();
+                    noiseNodeRef.current = null;
+                }
                 setIsPlaying(false);
-                setCurrentFrequencies({ left: 0, right: 0, bothEars: 0 });
+                setCurrentFrequencies({ left: 0, right: 0, bothEars: 0, noiseType: null });
             }, rampTime * 1000);
         }
     }, [isPlaying]);

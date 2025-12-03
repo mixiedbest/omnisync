@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ChevronDown, Moon, Waves, Flame, Heart, Zap, Sparkles, CircleDot, Feather, Activity, Globe, Sun, HeartCrack, Star, Accessibility, Shield, Baby, Eye, Brain, Wind, Smile, Sunrise } from 'lucide-react';
+import { ChevronDown, Moon, Waves, Flame, Heart, Zap, Sparkles, CircleDot, Feather, Activity, Globe, Sun, HeartCrack, Star, Accessibility, Shield, Baby, Eye, Brain, Wind, Smile, Sunrise, CloudRain } from 'lucide-react';
 import './CategoryList.css';
 
 const iconMap = {
-    Moon, Waves, Flame, Heart, Zap, Sparkles, CircleDot, Feather, Activity, Globe, Sun, HeartCrack, Star, Accessibility, Shield, Baby, Eye, Brain, Wind, Smile, Sunrise
+    Moon, Waves, Flame, Heart, Zap, Sparkles, CircleDot, Feather, Activity, Globe, Sun, HeartCrack, Star, Accessibility, Shield, Baby, Eye, Brain, Wind, Smile, Sunrise, CloudRain
 };
 
 export function CategoryList({ categories, onSelectFrequency, activeId }) {
