@@ -153,22 +153,25 @@ export function AboutPage({ onBack }) {
 
                 <section className="why-section">
                     <h2>Why We Use These Tools</h2>
-                    <p>
-                        The sounds in this app are crafted with intention: blending brainwave entrainment, healing
-                        frequencies, and immersive musical design to help you:
-                    </p>
-                    <ul className="benefits-list">
-                        <li>Relax your body</li>
-                        <li>Calm your mind</li>
-                        <li>Expand your awareness</li>
-                        <li>Heal emotionally</li>
-                        <li>Connect spiritually</li>
-                        <li>Sleep deeply</li>
-                    </ul>
-                    <p className="closing">
-                        Whether you're here to focus, meditate, or transform, these frequencies are tools to help
-                        your mind and spirit work together.
-                    </p>
+
+                    <div className="tech-card">
+                        <p>
+                            The sounds in this app are crafted with intention: blending brainwave entrainment, healing
+                            frequencies, and immersive musical design to help you:
+                        </p>
+                        <ul className="benefits-list">
+                            <li>Relax your body</li>
+                            <li>Calm your mind</li>
+                            <li>Expand your awareness</li>
+                            <li>Heal emotionally</li>
+                            <li>Connect spiritually</li>
+                            <li>Sleep deeply</li>
+                        </ul>
+                        <p className="closing">
+                            Whether you're here to focus, meditate, or transform, these frequencies are tools to help
+                            your mind and spirit work together.
+                        </p>
+                    </div>
                 </section>
             </div>
 
