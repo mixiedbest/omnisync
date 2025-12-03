@@ -53,12 +53,14 @@
 }
 
 .brainwave-section,
+.color-noise-section,
 .technology-section,
 .why-section {
     margin-bottom: 48px;
 }
 
 .brainwave-section h2,
+.color-noise-section h2,
 .technology-section h2,
 .why-section h2 {
     font-size: 28px;

@@ -105,6 +105,37 @@ export function AboutPage({ onBack }) {
                     </div>
                 </section>
 
+                <section className="color-noise-section">
+                    <h2>About Color Noises</h2>
+
+                    <div className="tech-card">
+                        <p>
+                            Color noises are natural sound textures used to calm the mind, support focus, and create
+                            soothing environments. Each "color" represents the way energy is distributed across
+                            frequencies—similar to how colors in light carry different wavelengths.
+                        </p>
+                        <p>
+                            These gentle sound layers don't guide your brainwaves like binaural beats; instead, they
+                            create a steady sonic atmosphere that helps the nervous system relax and settle.
+                        </p>
+
+                        <h4>Different colors have different effects:</h4>
+                        <ul>
+                            <li><strong>White noise</strong> masks background distractions and helps with sleep.</li>
+                            <li><strong>Pink and brown noise</strong> offer warm, grounding tones ideal for deep rest, anxiety relief, and emotional balance.</li>
+                            <li><strong>Green noise</strong> brings the feel of forests and oceans, supporting stress reduction and natural harmony.</li>
+                            <li><strong>Blue and violet noises</strong> emphasize higher frequencies, often used for alertness or tinnitus relief.</li>
+                            <li><strong>Grey noise</strong> matches human hearing sensitivity and provides a neutral, soothing mask for overstimulation.</li>
+                        </ul>
+
+                        <p className="note">
+                            Color noises are simple, powerful, and safe for all ages. In OMNISYNC, we use them as a
+                            foundation for calm—helping you drift into sleep, focus on your work, or relax your
+                            nervous system anytime you need a soft sonic reset.
+                        </p>
+                    </div>
+                </section>
+
                 <section className="technology-section">
                     <h2>How Sound Technology Supports You</h2>
 
