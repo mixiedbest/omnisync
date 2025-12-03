@@ -1,0 +1,213 @@
+.about-page {
+    min-height: 100vh;
+    padding: 20px;
+    padding-bottom: 100px;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 32px;
+}
+
+.back-button:hover {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: var(--accent-purple);
+    transform: translateX(-4px);
+}
+
+.about-content {
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeIn 0.8s ease;
+}
+
+.about-title {
+    font-size: 36px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.about-intro {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    margin-bottom: 48px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.brainwave-section,
+.technology-section,
+.why-section {
+    margin-bottom: 48px;
+}
+
+.brainwave-section h2,
+.technology-section h2,
+.why-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent-purple);
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.brainwave-card,
+.tech-card {
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+
+.brainwave-card:hover,
+.tech-card:hover {
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.1);
+}
+
+.brainwave-card h3,
+.tech-card h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.brainwave-subtitle {
+    font-size: 14px;
+    color: var(--accent-teal);
+    font-weight: 500;
+    margin-bottom: 16px;
+    font-style: italic;
+}
+
+.brainwave-card p,
+.tech-card p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+}
+
+.brainwave-card h4,
+.tech-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 20px 0 12px;
+}
+
+.brainwave-card ul,
+.tech-card ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 12px 0;
+}
+
+.brainwave-card ul li,
+.tech-card ul li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.brainwave-card ul li::before,
+.tech-card ul li::before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    color: var(--accent-purple);
+    font-size: 14px;
+}
+
+.example-box {
+    background: rgba(139, 92, 246, 0.1);
+    border-left: 3px solid var(--accent-purple);
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-primary);
+}
+
+.note {
+    font-size: 13px;
+    color: var(--accent-teal);
+    font-style: italic;
+    margin-top: 16px;
+}
+
+.benefits-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.benefits-list li {
+    background: rgba(139, 92, 246, 0.1);
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    text-align: center;
+    font-weight: 500;
+}
+
+.closing {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    text-align: center;
+    margin-top: 32px;
+    padding: 24px;
+    background: rgba(20, 184, 166, 0.1);
+    border-radius: 16px;
+    border: 1px solid rgba(20, 184, 166, 0.2);
+}
+
+.page-footer {
+    text-align: center;
+    padding: 32px 20px;
+    margin-top: 60px;
+    font-size: 13px;
+    color: var(--text-muted);
+    border-top: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+@media (max-width: 768px) {
+    .about-title {
+        font-size: 28px;
+    }
+
+    .brainwave-card,
+    .tech-card {
+        padding: 24px 20px;
+    }
+
+    .benefits-list {
+        grid-template-columns: 1fr;
+    }
+}
