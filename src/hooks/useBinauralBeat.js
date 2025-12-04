@@ -118,11 +118,199 @@ export function useBinauralBeat() {
         return buffer;
     };
 
-    const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null) => {
+    const soundscapeNodesRef = useRef([]);
+
+    // Soundscape Generators
+    const createSoundscape = (ctx, type, destination) => {
+        const nodes = [];
+        const now = ctx.currentTime;
+
+        if (type === 'ocean') {
+            // Pink Noise
+            const buffer = createNoiseBuffer(ctx, 'pink');
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.loop = true;
+
+            const gain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 400;
+
+            // LFO for waves
+            const lfo = ctx.createOscillator();
+            lfo.type = 'sine';
+            lfo.frequency.value = 0.1; // Slow waves
+
+            const lfoGain = ctx.createGain();
+            lfoGain.gain.value = 0.3; // Modulation depth
+
+            lfo.connect(lfoGain);
+            lfoGain.connect(gain.gain);
+
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(destination);
+
+            source.start();
+            lfo.start();
+
+            gain.gain.setValueAtTime(0.2, now); // Base volume
+
+            nodes.push(source, gain, filter, lfo, lfoGain);
+        }
+        else if (type === 'rain') {
+            const buffer = createNoiseBuffer(ctx, 'pink');
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.loop = true;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 800;
+
+            const gain = ctx.createGain();
+            gain.gain.value = 0.4;
+
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(destination);
+            source.start();
+
+            nodes.push(source, filter, gain);
+        }
+        else if (type === 'cosmic') {
+            // Drone: 3 detuned oscillators
+            [110, 112, 220].forEach(freq => {
+                const osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+
+                const gain = ctx.createGain();
+                gain.gain.value = 0.1;
+
+                osc.connect(gain);
+                gain.connect(destination);
+                osc.start();
+                nodes.push(osc, gain);
+            });
+        }
+        else if (type === 'earth') {
+            // Deep Brown Noise Rumble
+            const buffer = createNoiseBuffer(ctx, 'brown');
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.loop = true;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 120;
+
+            const gain = ctx.createGain();
+            gain.gain.value = 0.6;
+
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(destination);
+            source.start();
+
+            nodes.push(source, filter, gain);
+        }
+        else if (type === 'tibetan') {
+            // FM Synthesis Bell
+            const carrier = ctx.createOscillator();
+            carrier.frequency.value = 200;
+
+            const modulator = ctx.createOscillator();
+            modulator.frequency.value = 280; // Ratio 1.4
+
+            const modGain = ctx.createGain();
+            modGain.gain.value = 100;
+
+            const masterGain = ctx.createGain();
+            masterGain.gain.value = 0.3;
+
+            modulator.connect(modGain);
+            modGain.connect(carrier.frequency);
+            carrier.connect(masterGain);
+            masterGain.connect(destination);
+
+            carrier.start();
+            modulator.start();
+
+            // Simple LFO for vibrato
+            const vibrato = ctx.createOscillator();
+            vibrato.frequency.value = 4;
+            const vibGain = ctx.createGain();
+            vibGain.gain.value = 2;
+            vibrato.connect(vibGain);
+            vibGain.connect(carrier.frequency);
+            vibrato.start();
+
+            nodes.push(carrier, modulator, modGain, masterGain, vibrato, vibGain);
+        }
+        else if (type === 'crystal') {
+            // Pure Sine with long reverb feel
+            const osc = ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.value = 440; // A4
+
+            const gain = ctx.createGain();
+            gain.gain.value = 0.2;
+
+            osc.connect(gain);
+            gain.connect(destination);
+            osc.start();
+            nodes.push(osc, gain);
+        }
+        else if (type === 'drums') {
+            // Simulated Heartbeat (filtered noise burst)
+            const interval = setInterval(() => {
+                const t = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                osc.frequency.value = 60;
+
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0, t);
+                gain.gain.linearRampToValueAtTime(0.5, t + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
+
+                osc.connect(gain);
+                gain.connect(destination);
+                osc.start(t);
+                osc.stop(t + 0.4);
+            }, 1000); // 60 BPM
+
+            nodes.push({ stop: () => clearInterval(interval) });
+        }
+
+        return nodes;
+    };
+
+    const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null, soundscapeType = null) => {
         initAudio();
         const ctx = audioContextRef.current;
         const now = ctx.currentTime;
-        const rampTime = 0.5; // Smooth transition
+        const rampTime = 0.5;
+
+        // Stop existing soundscape
+        if (soundscapeNodesRef.current.length > 0) {
+            soundscapeNodesRef.current.forEach(node => {
+                if (node.stop) {
+                    try { node.stop(); } catch (e) { }
+                }
+                if (node.disconnect) {
+                    try { node.disconnect(); } catch (e) { }
+                }
+            });
+            soundscapeNodesRef.current = [];
+        }
+
+        // Handle Soundscape
+        if (soundscapeType) {
+            const nodes = createSoundscape(ctx, soundscapeType, masterGainRef.current);
+            soundscapeNodesRef.current = nodes;
+        }
 
         // Stop existing noise if switching types or turning off
         if (noiseNodeRef.current && (!noiseType || noiseType !== currentFrequencies.noiseType)) {
@@ -279,7 +467,7 @@ export function useBinauralBeat() {
         }
 
         setIsPlaying(true);
-        setCurrentFrequencies({ left: leftFreq, right: rightFreq, bothEars: bothEarsFreq, noiseType });
+        setCurrentFrequencies({ left: leftFreq, right: rightFreq, bothEars: bothEarsFreq, noiseType, soundscapeType });
     }, [initAudio, isPlaying, currentFrequencies]);
 
     const stop = useCallback(() => {
@@ -288,38 +476,38 @@ export function useBinauralBeat() {
             const rampTime = 0.5;
 
             // Fade out
-            leftGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
-            rightGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
-            if (bothEarsGainRef.current) {
-                bothEarsGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
-            }
-            if (noiseGainRef.current) {
-                noiseGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+            if (leftGainRef.current) leftGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+            if (rightGainRef.current) rightGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+            if (bothEarsGainRef.current) bothEarsGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+            if (noiseGainRef.current) noiseGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+
+            // Stop Soundscapes
+            if (soundscapeNodesRef.current.length > 0) {
+                soundscapeNodesRef.current.forEach(node => {
+                    // If it's a gain node, ramp it down
+                    if (node instanceof GainNode) {
+                        try { node.gain.linearRampToValueAtTime(0, now + rampTime); } catch (e) { }
+                    }
+                });
             }
 
             setTimeout(() => {
-                if (leftOscRef.current) {
-                    leftOscRef.current.stop();
-                    leftOscRef.current.disconnect();
-                    leftOscRef.current = null;
+                if (leftOscRef.current) { leftOscRef.current.stop(); leftOscRef.current.disconnect(); leftOscRef.current = null; }
+                if (rightOscRef.current) { rightOscRef.current.stop(); rightOscRef.current.disconnect(); rightOscRef.current = null; }
+                if (bothEarsOscRef.current) { bothEarsOscRef.current.stop(); bothEarsOscRef.current.disconnect(); bothEarsOscRef.current = null; }
+                if (noiseNodeRef.current) { noiseNodeRef.current.stop(); noiseNodeRef.current.disconnect(); noiseNodeRef.current = null; }
+
+                // Stop Soundscape Nodes
+                if (soundscapeNodesRef.current.length > 0) {
+                    soundscapeNodesRef.current.forEach(node => {
+                        if (node.stop) { try { node.stop(); } catch (e) { } }
+                        if (node.disconnect) { try { node.disconnect(); } catch (e) { } }
+                    });
+                    soundscapeNodesRef.current = [];
                 }
-                if (rightOscRef.current) {
-                    rightOscRef.current.stop();
-                    rightOscRef.current.disconnect();
-                    rightOscRef.current = null;
-                }
-                if (bothEarsOscRef.current) {
-                    bothEarsOscRef.current.stop();
-                    bothEarsOscRef.current.disconnect();
-                    bothEarsOscRef.current = null;
-                }
-                if (noiseNodeRef.current) {
-                    noiseNodeRef.current.stop();
-                    noiseNodeRef.current.disconnect();
-                    noiseNodeRef.current = null;
-                }
+
                 setIsPlaying(false);
-                setCurrentFrequencies({ left: 0, right: 0, bothEars: 0, noiseType: null });
+                setCurrentFrequencies({ left: 0, right: 0, bothEars: 0, noiseType: null, soundscapeType: null });
             }, rampTime * 1000);
         }
     }, [isPlaying]);

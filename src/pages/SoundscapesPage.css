@@ -1,0 +1,108 @@
+.soundscapes-page {
+    min-height: 100vh;
+    padding: 20px;
+    padding-bottom: 120px;
+    animation: fadeIn 0.8s ease;
+}
+
+.soundscapes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.scape-card {
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 24px;
+    padding: 32px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.scape-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.scape-card.active {
+    border-color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+}
+
+.scape-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    color: var(--accent-teal);
+    transition: all 0.3s ease;
+}
+
+.scape-card:hover .scape-icon-wrapper {
+    background: rgba(139, 92, 246, 0.2);
+    color: white;
+    transform: scale(1.1);
+}
+
+.scape-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+    letter-spacing: 1px;
+}
+
+.scape-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.play-button-large {
+    background: var(--accent-purple);
+    border: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: auto;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.play-button-large:hover {
+    transform: scale(1.1);
+    background: var(--accent-teal);
+}
+
+.play-button-large.playing {
+    background: var(--accent-teal);
+    animation: pulse 2s infinite;
+}
+
+@media (max-width: 768px) {
+    .soundscapes-grid {
+        grid-template-columns: 1fr;
+    }
+}

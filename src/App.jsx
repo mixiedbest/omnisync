@@ -11,6 +11,7 @@ import { PlayerControls } from './components/PlayerControls';
 import { Disclaimer } from './components/Disclaimer';
 import { ArrowLeft } from 'lucide-react';
 import { ColorNoisesPage } from './pages/ColorNoisesPage';
+import { SoundscapesPage } from './pages/SoundscapesPage';
 import './App.css';
 
 function App() {
@@ -68,7 +69,13 @@ function App() {
         setCurrentTrack(item);
         play(0, 0);
       } else {
-        play(item.left, item.right, item.bothEars || 0, item.noiseType || null);
+        play(
+          item.left || 0,
+          item.right || 0,
+          item.bothEars || 0,
+          item.noiseType || null,
+          item.type || null // Soundscape type
+        );
         setCurrentTrack(item);
       }
     }
@@ -81,7 +88,13 @@ function App() {
       if (currentTrack.id === 'sleep-program-90') {
         play(0, 0);
       } else {
-        play(currentTrack.left, currentTrack.right, currentTrack.bothEars || 0, currentTrack.noiseType || null);
+        play(
+          currentTrack.left || 0,
+          currentTrack.right || 0,
+          currentTrack.bothEars || 0,
+          currentTrack.noiseType || null,
+          currentTrack.type || null
+        );
       }
     }
   };
@@ -128,6 +141,27 @@ function App() {
           </button>
           <Disclaimer />
         </div>
+      </>
+    );
+  }
+
+  if (currentPage === 'soundscapes') {
+    return (
+      <>
+        <div className="animated-bg" />
+        <SoundscapesPage
+          onBack={handleBack}
+          onPlay={handleSelectFrequency}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+        />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
       </>
     );
   }

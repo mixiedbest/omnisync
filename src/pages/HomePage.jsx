@@ -1,4 +1,4 @@
-import { Home, Info, Sliders, Music, FileText, CloudRain } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
@@ -8,6 +8,12 @@ export function HomePage({ onNavigate }) {
             title: 'Preset Frequencies',
             icon: Music,
             description: 'Browse our curated frequency library'
+        },
+        {
+            id: 'soundscapes',
+            title: 'Soundscapes',
+            icon: Mountain,
+            description: 'Generative ambient environments'
         },
         {
             id: 'colors',
