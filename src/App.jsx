@@ -13,6 +13,7 @@ import { ArrowLeft } from 'lucide-react';
 import { ColorNoisesPage } from './pages/ColorNoisesPage';
 import { SoundscapesPage } from './pages/SoundscapesPage';
 import { EnergyProfilesPage } from './pages/EnergyProfilesPage';
+import { EnergyCleanseMode } from './pages/EnergyCleanseMode';
 import './App.css';
 
 function App() {
@@ -184,6 +185,15 @@ function App() {
           onVolumeChange={setVolume}
           currentTrack={displayTrack}
         />
+      </>
+    );
+  }
+
+  if (currentPage === 'energy-cleanse') {
+    return (
+      <>
+        <div className="animated-bg" />
+        <EnergyCleanseMode onBack={handleBack} />
       </>
     );
   }

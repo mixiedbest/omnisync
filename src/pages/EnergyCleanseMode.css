@@ -1,0 +1,215 @@
+.energy-cleanse-page {
+    min-height: 100vh;
+    padding: 20px;
+    padding-bottom: 120px;
+    animation: fadeIn 0.8s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.cleanse-container {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 40px 20px;
+}
+
+.cleanse-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
+}
+
+.cleanse-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin: 0;
+    text-align: center;
+}
+
+.direction-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+}
+
+.direction-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 24px;
+    background: rgba(17, 24, 39, 0.6);
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    border-radius: 16px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.direction-btn:hover:not(:disabled) {
+    border-color: rgba(139, 92, 246, 0.5);
+    transform: translateY(-4px);
+}
+
+.direction-btn.active {
+    border-color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--text-primary);
+}
+
+.direction-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.direction-label {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.direction-desc {
+    font-size: 13px;
+    color: var(--accent-teal);
+    margin-top: 4px;
+}
+
+.direction-freq {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.frequency-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    padding: 40px;
+    background: rgba(17, 24, 39, 0.8);
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    border-radius: 20px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.frequency-display.active {
+    border-color: var(--accent-teal);
+    background: rgba(6, 182, 212, 0.1);
+    box-shadow: 0 0 40px rgba(6, 182, 212, 0.2);
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 40px rgba(6, 182, 212, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 60px rgba(6, 182, 212, 0.4);
+    }
+}
+
+.freq-value {
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--accent-teal);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+}
+
+.freq-unit {
+    font-size: 24px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.cleanse-play-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 40px;
+    background: var(--accent-purple);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+.cleanse-play-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(139, 92, 246, 0.6);
+}
+
+.cleanse-play-btn.playing {
+    background: var(--accent-teal);
+}
+
+.cleanse-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 12px;
+    color: var(--accent-teal);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.pulse-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-teal);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+}
+
+@media (max-width: 640px) {
+    .direction-selector {
+        grid-template-columns: 1fr;
+    }
+
+    .freq-value {
+        font-size: 48px;
+    }
+
+    .freq-unit {
+        font-size: 20px;
+    }
+
+    .cleanse-play-btn {
+        padding: 16px 32px;
+        font-size: 16px;
+    }
+}

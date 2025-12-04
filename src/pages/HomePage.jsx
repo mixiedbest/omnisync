@@ -1,4 +1,4 @@
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
@@ -20,6 +20,12 @@ export function HomePage({ onNavigate }) {
             title: 'Energy Profiles',
             icon: Sparkles,
             description: 'Daily tuning rituals (3min/30min)'
+        },
+        {
+            id: 'energy-cleanse',
+            title: 'Energy Cleanse',
+            icon: Zap,
+            description: 'Frequency sweep to clear your field'
         },
         {
             id: 'colors',
