@@ -51,9 +51,10 @@ export function Disclaimer() {
                         resulting from the use of this app.
                     </p>
 
-                    <div className="disclaimer-copyright">
-                        © NeoTheory Music LLC & Mixie 2025
-                    </div>
+                    <footer className="disclaimer-footer">
+                        <div>OMNISYNC™</div>
+                        <div>© NeoTheory Music 2025</div>
+                    </footer>
                 </div>
             </div>
         </footer>

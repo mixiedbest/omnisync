@@ -65,7 +65,8 @@ export function ColorNoisesPage({ onBack, onPlay, currentTrack, isPlaying }) {
             </div>
 
             <footer className="page-footer">
-                © NeoTheory Music LLC & Mixie 2025
+                <div>OMNISYNC™</div>
+                <div>© NeoTheory Music 2025</div>
             </footer>
         </div>
     );

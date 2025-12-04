@@ -185,7 +185,8 @@ export function EnergyCleanseMode({ onBack }) {
             </div>
 
             <footer className="page-footer">
-                © NeoTheory Music LLC & Mixie 2025
+                <div>OMNISYNC™</div>
+                <div>© NeoTheory Music 2025</div>
             </footer>
         </div>
     );
