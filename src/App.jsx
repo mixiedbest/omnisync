@@ -81,7 +81,9 @@ function App() {
           item.right || 0,
           item.bothEars || 0,
           item.noiseType || null,
-          item.type || null // Soundscape type
+          item.type || null, // Soundscape type
+          item.volumes || {},
+          item.layers || []
         );
         setCurrentTrack(item);
       }
@@ -100,7 +102,9 @@ function App() {
           currentTrack.right || 0,
           currentTrack.bothEars || 0,
           currentTrack.noiseType || null,
-          currentTrack.type || null
+          currentTrack.type || null,
+          currentTrack.volumes || {},
+          currentTrack.layers || []
         );
       }
     }

@@ -12,6 +12,7 @@ export function useBinauralBeat() {
     const noiseGainRef = useRef(null);
     const noiseFilterRef = useRef(null);
     const masterGainRef = useRef(null);
+    const layersRef = useRef([]);
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(0.5);
@@ -787,7 +788,14 @@ export function useBinauralBeat() {
         return nodes;
     };
 
-    const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null, soundscapeType = null) => {
+    const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null, soundscapeType = null, volumes = {}) => {
+        // Default volumes if not provided
+        const {
+            binaural = 0.7,
+            bothEars = 0.5,
+            noise = 0.3,
+            soundscape = 0.4
+        } = volumes;
         initAudio();
         const ctx = audioContextRef.current;
         const now = ctx.currentTime;
@@ -808,7 +816,13 @@ export function useBinauralBeat() {
 
         // Handle Soundscape
         if (soundscapeType) {
-            const nodes = createSoundscape(ctx, soundscapeType, masterGainRef.current);
+            const soundscapeGain = ctx.createGain();
+            soundscapeGain.gain.setValueAtTime(0, now);
+            soundscapeGain.gain.linearRampToValueAtTime(soundscape, now + rampTime);
+            soundscapeGain.connect(masterGainRef.current);
+
+            const nodes = createSoundscape(ctx, soundscapeType, soundscapeGain);
+            nodes.push(soundscapeGain);
             soundscapeNodesRef.current = nodes;
         }
 
@@ -894,48 +908,115 @@ export function useBinauralBeat() {
 
                 // Gain handling
                 noiseGainRef.current.gain.setValueAtTime(0, now);
-                const targetGain = noiseType === 'black' ? 0.05 : 0.5; // Very low for black
+                const targetGain = noiseType === 'black' ? (noise * 0.1) : noise; // Very low for black
                 noiseGainRef.current.gain.linearRampToValueAtTime(targetGain, now + rampTime);
             }
             // If noise is already playing and type is same, do nothing (it loops)
         }
 
         // Handle Binaural Beats (Sine Waves)
-        if (leftFreq > 0 && rightFreq > 0) {
-            // If not playing, start oscillators
-            if (!isPlaying || !leftOscRef.current) {
-                // Create Left/Right Oscillators
-                leftOscRef.current = ctx.createOscillator();
-                leftOscRef.current.type = 'sine';
-                leftOscRef.current.frequency.setValueAtTime(leftFreq, now);
-                leftOscRef.current.connect(leftGainRef.current);
-                leftOscRef.current.start();
+        const layersToPlay = (layers && layers.length > 0)
+            ? layers.map(l => ({ left: l.carrierFreq, right: l.carrierFreq + l.beatFreq, volume: l.volume ?? 0.7 }))
+            : (leftFreq > 0 && rightFreq > 0) ? [{ left: leftFreq, right: rightFreq, volume: volumes.binaural ?? 0.7 }] : [];
 
-                rightOscRef.current = ctx.createOscillator();
-                rightOscRef.current.type = 'sine';
-                rightOscRef.current.frequency.setValueAtTime(rightFreq, now);
-                rightOscRef.current.connect(rightGainRef.current);
-                rightOscRef.current.start();
+        layersToPlay.forEach((layer, index) => {
+            const lFreq = layer.left;
+            const rFreq = layer.right;
+            const vol = layer.volume;
+
+            if (index === 0) {
+                // Primary Layer (using existing refs)
+                if (!isPlaying || !leftOscRef.current) {
+                    leftOscRef.current = ctx.createOscillator();
+                    leftOscRef.current.type = 'sine';
+                    leftOscRef.current.frequency.setValueAtTime(lFreq, now);
+                    leftOscRef.current.connect(leftGainRef.current);
+                    leftOscRef.current.start();
+
+                    rightOscRef.current = ctx.createOscillator();
+                    rightOscRef.current.type = 'sine';
+                    rightOscRef.current.frequency.setValueAtTime(rFreq, now);
+                    rightOscRef.current.connect(rightGainRef.current);
+                    rightOscRef.current.start();
+
+                    // Fade in
+                    leftGainRef.current.gain.setValueAtTime(0, now);
+                    leftGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
+
+                    rightGainRef.current.gain.setValueAtTime(0, now);
+                    rightGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
+                } else {
+                    // Update frequencies smoothly
+                    leftOscRef.current.frequency.linearRampToValueAtTime(lFreq, now + rampTime);
+                    rightOscRef.current.frequency.linearRampToValueAtTime(rFreq, now + rampTime);
+                    // Update volume
+                    leftGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
+                    rightGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
+                }
+            } else {
+                // Additional Layers
+                const lOsc = ctx.createOscillator();
+                const rOsc = ctx.createOscillator();
+                const lGain = ctx.createGain();
+                const rGain = ctx.createGain();
+
+                // Panning for extra layers (reuse main panners via master gain? No, need separate gains connected to panners)
+                // Actually, I can connect to the same panners if I want, or create new chains.
+                // The main setup has: leftGain -> leftPanner -> masterGain
+                // I should create: lOsc -> lGain -> leftPanner (if accessible) or just create new panners?
+                // Reusing panners is tricky if I don't have refs to them.
+                // In initAudio, panners are created but not stored in refs.
+                // I should probably refactor initAudio to store panners or just create new panners for each layer.
+                // Creating new panners is safer.
+
+                const lPanner = ctx.createStereoPanner();
+                lPanner.pan.value = -1;
+                lPanner.connect(masterGainRef.current);
+
+                const rPanner = ctx.createStereoPanner();
+                rPanner.pan.value = 1;
+                rPanner.connect(masterGainRef.current);
+
+                lOsc.type = 'sine';
+                lOsc.frequency.setValueAtTime(lFreq, now);
+                lOsc.connect(lGain);
+                lGain.connect(lPanner);
+
+                rOsc.type = 'sine';
+                rOsc.frequency.setValueAtTime(rFreq, now);
+                rOsc.connect(rGain);
+                rGain.connect(rPanner);
+
+                lOsc.start();
+                rOsc.start();
 
                 // Fade in
-                leftGainRef.current.gain.setValueAtTime(0, now);
-                leftGainRef.current.gain.linearRampToValueAtTime(0.7, now + rampTime);
+                lGain.gain.setValueAtTime(0, now);
+                lGain.gain.linearRampToValueAtTime(vol, now + rampTime);
 
-                rightGainRef.current.gain.setValueAtTime(0, now);
-                rightGainRef.current.gain.linearRampToValueAtTime(0.7, now + rampTime);
-            } else {
-                // Update frequencies smoothly
-                leftOscRef.current.frequency.linearRampToValueAtTime(leftFreq, now + rampTime);
-                rightOscRef.current.frequency.linearRampToValueAtTime(rightFreq, now + rampTime);
+                rGain.gain.setValueAtTime(0, now);
+                rGain.gain.linearRampToValueAtTime(vol, now + rampTime);
+
+                layersRef.current.push({
+                    leftOsc: lOsc,
+                    rightOsc: rOsc,
+                    leftGain: lGain,
+                    rightGain: rGain,
+                    leftPanner: lPanner,
+                    rightPanner: rPanner
+                });
             }
-        } else {
+        });
+
+        if (layersToPlay.length === 0) {
             // Stop sine waves if frequencies are 0 (e.g. noise only mode)
             if (leftOscRef.current) {
                 leftGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
                 rightGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+
                 setTimeout(() => {
-                    if (leftOscRef.current) { leftOscRef.current.stop(); leftOscRef.current = null; }
-                    if (rightOscRef.current) { rightOscRef.current.stop(); rightOscRef.current = null; }
+                    if (leftOscRef.current) { leftOscRef.current.stop(); leftOscRef.current.disconnect(); leftOscRef.current = null; }
+                    if (rightOscRef.current) { rightOscRef.current.stop(); rightOscRef.current.disconnect(); rightOscRef.current = null; }
                 }, rampTime * 1000);
             }
         }
@@ -950,7 +1031,7 @@ export function useBinauralBeat() {
                 bothEarsOscRef.current.start();
 
                 bothEarsGainRef.current.gain.setValueAtTime(0, now);
-                bothEarsGainRef.current.gain.linearRampToValueAtTime(0.5, now + rampTime);
+                bothEarsGainRef.current.gain.linearRampToValueAtTime(bothEars, now + rampTime);
             } else {
                 bothEarsOscRef.current.frequency.linearRampToValueAtTime(bothEarsFreq, now + rampTime);
             }
@@ -994,6 +1075,18 @@ export function useBinauralBeat() {
             setTimeout(() => {
                 if (leftOscRef.current) { leftOscRef.current.stop(); leftOscRef.current.disconnect(); leftOscRef.current = null; }
                 if (rightOscRef.current) { rightOscRef.current.stop(); rightOscRef.current.disconnect(); rightOscRef.current = null; }
+
+                // Stop Extra Layers
+                if (layersRef.current.length > 0) {
+                    layersRef.current.forEach(layer => {
+                        try { if (layer.leftOsc) { layer.leftOsc.stop(); layer.leftOsc.disconnect(); } } catch (e) { }
+                        try { if (layer.rightOsc) { layer.rightOsc.stop(); layer.rightOsc.disconnect(); } } catch (e) { }
+                        try { if (layer.leftGain) { layer.leftGain.disconnect(); } } catch (e) { }
+                        try { if (layer.rightGain) { layer.rightGain.disconnect(); } } catch (e) { }
+                    });
+                    layersRef.current = [];
+                }
+
                 if (bothEarsOscRef.current) { bothEarsOscRef.current.stop(); bothEarsOscRef.current.disconnect(); bothEarsOscRef.current = null; }
                 if (noiseNodeRef.current) { noiseNodeRef.current.stop(); noiseNodeRef.current.disconnect(); noiseNodeRef.current = null; }
 
