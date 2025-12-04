@@ -1,16 +1,19 @@
 import { useState } from 'react';
-import { Sliders } from 'lucide-react';
+import { Sliders, Plus, X } from 'lucide-react';
 import './CustomGenerator.css';
 
 export function CustomGenerator({ onGenerate, isActive }) {
-    const [carrierFreq, setCarrierFreq] = useState(200);
-    const [beatFreq, setBeatFreq] = useState(10);
-    const [bothEarsFreq, setBothEarsFreq] = useState(0);
-    const [selectedNoise, setSelectedNoise] = useState('none');
-    const [selectedScape, setSelectedScape] = useState('none');
+    // Frequency Layers (can add multiple)
+    const [frequencyLayers, setFrequencyLayers] = useState([
+        { id: 1, carrierFreq: 200, beatFreq: 10, volume: 0.7 }
+    ]);
 
-    const leftFreq = carrierFreq;
-    const rightFreq = carrierFreq + beatFreq;
+    const [bothEarsFreq, setBothEarsFreq] = useState(0);
+    const [bothEarsVolume, setBothEarsVolume] = useState(0.5);
+    const [selectedNoise, setSelectedNoise] = useState('none');
+    const [noiseVolume, setNoiseVolume] = useState(0.3);
+    const [selectedScape, setSelectedScape] = useState('none');
+    const [scapeVolume, setScapeVolume] = useState(0.4);
 
     const noiseOptions = [
         { value: 'none', label: 'None' },
@@ -27,33 +30,67 @@ export function CustomGenerator({ onGenerate, isActive }) {
         { value: 'none', label: 'None' },
         { value: 'ocean', label: 'Ocean Waves' },
         { value: 'rain', label: 'Gentle Rain' },
-        { value: 'firewood', label: 'Crackling Fire' },
-        { value: 'nature-walk', label: 'Nature Walk' },
-        { value: 'japanese-garden', label: 'Japanese Garden' },
         { value: 'thunder', label: 'Distant Thunder' },
         { value: 'waterfall', label: 'Waterfall' },
         { value: 'cat-purr', label: 'Cat Purr' },
         { value: 'in-utero', label: 'In Utero' },
-        { value: 'underwater', label: 'Underwater' }
+        { value: 'underwater', label: 'Underwater' },
+        { value: 'wind', label: 'Wind' },
+        { value: 'cosmic', label: 'Cosmic Space' },
+        { value: 'earth', label: 'Earth Resonance' }
     ];
 
+    const addFrequencyLayer = () => {
+        const newId = Math.max(...frequencyLayers.map(l => l.id), 0) + 1;
+        setFrequencyLayers([...frequencyLayers, {
+            id: newId,
+            carrierFreq: 200,
+            beatFreq: 10,
+            volume: 0.7
+        }]);
+    };
+
+    const removeFrequencyLayer = (id) => {
+        if (frequencyLayers.length > 1) {
+            setFrequencyLayers(frequencyLayers.filter(l => l.id !== id));
+        }
+    };
+
+    const updateLayer = (id, field, value) => {
+        setFrequencyLayers(frequencyLayers.map(layer =>
+            layer.id === id ? { ...layer, [field]: parseFloat(value) || 0 } : layer
+        ));
+    };
+
     const handleGenerate = () => {
+        // Use the first layer as the primary binaural beat
+        const primaryLayer = frequencyLayers[0];
+
         onGenerate({
             id: 'custom-combined',
             title: 'Custom Sound Mix',
-            beat: beatFreq,
-            left: leftFreq,
-            right: rightFreq,
+            beat: primaryLayer.beatFreq,
+            left: primaryLayer.carrierFreq,
+            right: primaryLayer.carrierFreq + primaryLayer.beatFreq,
             bothEars: bothEarsFreq,
             noiseType: selectedNoise !== 'none' ? selectedNoise : null,
             type: selectedScape !== 'none' ? selectedScape : null,
-            desc: buildDescription()
+            desc: buildDescription(),
+            // Pass volume controls
+            volumes: {
+                binaural: primaryLayer.volume,
+                bothEars: bothEarsVolume,
+                noise: noiseVolume,
+                soundscape: scapeVolume
+            }
         });
     };
 
     const buildDescription = () => {
         const parts = [];
-        if (beatFreq > 0) parts.push(`${beatFreq} Hz binaural beat`);
+        frequencyLayers.forEach((layer, idx) => {
+            if (layer.beatFreq > 0) parts.push(`Layer ${idx + 1}: ${layer.beatFreq} Hz`);
+        });
         if (bothEarsFreq > 0) parts.push(`${bothEarsFreq} Hz both ears`);
         if (selectedNoise !== 'none') parts.push(`${selectedNoise} noise`);
         if (selectedScape !== 'none') parts.push(scapeOptions.find(s => s.value === selectedScape)?.label);
@@ -64,74 +101,113 @@ export function CustomGenerator({ onGenerate, isActive }) {
         <div className="custom-generator glass-card">
             <div className="generator-header">
                 <Sliders size={20} className="generator-icon" />
-                <h3 className="generator-title">Sound Mixer</h3>
+                <h3 className="generator-title">Advanced Sound Mixer</h3>
             </div>
 
             <div className="generator-content">
-                {/* Binaural Beat Section */}
+                {/* Frequency Layers */}
                 <div className="mixer-section">
-                    <div className="section-title">🎧 Binaural Beat</div>
-
-                    <div className="input-group">
-                        <label htmlFor="carrier-freq">Carrier Frequency (Hz)</label>
-                        <input
-                            id="carrier-freq"
-                            type="number"
-                            min="20"
-                            max="1000"
-                            step="0.1"
-                            value={carrierFreq}
-                            onChange={(e) => setCarrierFreq(parseFloat(e.target.value) || 0)}
-                            className="freq-input"
-                        />
+                    <div className="section-title-with-action">
+                        <span>🎧 Binaural Beat Layers</span>
+                        <button className="add-layer-btn" onClick={addFrequencyLayer}>
+                            <Plus size={16} /> Add Layer
+                        </button>
                     </div>
 
-                    <div className="input-group">
-                        <label htmlFor="beat-freq">Binaural Beat (Hz)</label>
-                        <input
-                            id="beat-freq"
-                            type="number"
-                            min="0.1"
-                            max="40"
-                            step="0.1"
-                            value={beatFreq}
-                            onChange={(e) => setBeatFreq(parseFloat(e.target.value) || 0)}
-                            className="freq-input"
-                        />
-                    </div>
-
-                    <div className="beat-display">
-                        <div className="freq-breakdown">
-                            <div className="breakdown-item">
-                                <span className="breakdown-label">Left:</span>
-                                <span className="breakdown-value">{leftFreq.toFixed(1)} Hz</span>
+                    {frequencyLayers.map((layer, index) => (
+                        <div key={layer.id} className="frequency-layer">
+                            <div className="layer-header">
+                                <span className="layer-number">Layer {index + 1}</span>
+                                {frequencyLayers.length > 1 && (
+                                    <button
+                                        className="remove-layer-btn"
+                                        onClick={() => removeFrequencyLayer(layer.id)}
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                )}
                             </div>
-                            <div className="breakdown-item">
-                                <span className="breakdown-label">Right:</span>
-                                <span className="breakdown-value">{rightFreq.toFixed(1)} Hz</span>
+
+                            <div className="layer-controls">
+                                <div className="input-group">
+                                    <label>Carrier (Hz)</label>
+                                    <input
+                                        type="number"
+                                        min="20"
+                                        max="1000"
+                                        step="0.1"
+                                        value={layer.carrierFreq}
+                                        onChange={(e) => updateLayer(layer.id, 'carrierFreq', e.target.value)}
+                                        className="freq-input-small"
+                                    />
+                                </div>
+
+                                <div className="input-group">
+                                    <label>Beat (Hz)</label>
+                                    <input
+                                        type="number"
+                                        min="0.1"
+                                        max="40"
+                                        step="0.1"
+                                        value={layer.beatFreq}
+                                        onChange={(e) => updateLayer(layer.id, 'beatFreq', e.target.value)}
+                                        className="freq-input-small"
+                                    />
+                                </div>
+
+                                <div className="input-group volume-group">
+                                    <label>Volume: {Math.round(layer.volume * 100)}%</label>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="1"
+                                        step="0.01"
+                                        value={layer.volume}
+                                        onChange={(e) => updateLayer(layer.id, 'volume', e.target.value)}
+                                        className="volume-slider"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="beat-display-small">
+                                <span>L: {layer.carrierFreq.toFixed(1)} Hz</span>
+                                <span>R: {(layer.carrierFreq + layer.beatFreq).toFixed(1)} Hz</span>
                             </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
 
                 {/* Both Ears Section */}
                 <div className="mixer-section">
                     <div className="section-title">🔊 Both Ears Layer (Optional)</div>
-                    <div className="input-group full-width">
-                        <label htmlFor="both-freq">
-                            Frequency (Both Ears)
-                            <span className="optional-label">— Set to 0 to disable</span>
-                        </label>
-                        <input
-                            id="both-freq"
-                            type="number"
-                            min="0"
-                            max="1000"
-                            step="0.1"
-                            value={bothEarsFreq}
-                            onChange={(e) => setBothEarsFreq(parseFloat(e.target.value) || 0)}
-                            className="freq-input"
-                        />
+                    <div className="layer-controls">
+                        <div className="input-group">
+                            <label>Frequency (Hz)</label>
+                            <input
+                                type="number"
+                                min="0"
+                                max="1000"
+                                step="0.1"
+                                value={bothEarsFreq}
+                                onChange={(e) => setBothEarsFreq(parseFloat(e.target.value) || 0)}
+                                className="freq-input-small"
+                            />
+                        </div>
+
+                        {bothEarsFreq > 0 && (
+                            <div className="input-group volume-group">
+                                <label>Volume: {Math.round(bothEarsVolume * 100)}%</label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="1"
+                                    step="0.01"
+                                    value={bothEarsVolume}
+                                    onChange={(e) => setBothEarsVolume(parseFloat(e.target.value))}
+                                    className="volume-slider"
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -147,6 +223,21 @@ export function CustomGenerator({ onGenerate, isActive }) {
                             <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
                     </select>
+
+                    {selectedNoise !== 'none' && (
+                        <div className="volume-control">
+                            <label>Volume: {Math.round(noiseVolume * 100)}%</label>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={noiseVolume}
+                                onChange={(e) => setNoiseVolume(parseFloat(e.target.value))}
+                                className="volume-slider"
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* Soundscape Section */}
@@ -161,6 +252,21 @@ export function CustomGenerator({ onGenerate, isActive }) {
                             <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
                     </select>
+
+                    {selectedScape !== 'none' && (
+                        <div className="volume-control">
+                            <label>Volume: {Math.round(scapeVolume * 100)}%</label>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={scapeVolume}
+                                onChange={(e) => setScapeVolume(parseFloat(e.target.value))}
+                                className="volume-slider"
+                            />
+                        </div>
+                    )}
                 </div>
 
                 <button
