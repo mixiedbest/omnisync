@@ -229,7 +229,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
                     className={`tab - btn ${activeTab === 'favorites' ? 'active' : ''} `}
                     onClick={() => setActiveTab('favorites')}
                 >
-                    <Star size={18} />
+                    <Heart size={18} />
                     Favorites
                 </button>
                 <button
@@ -334,9 +334,9 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
 
                     {favorites.length === 0 ? (
                         <div className="empty-favorites">
-                            <Star size={48} />
+                            <Heart size={48} />
                             <p>No favorites yet</p>
-                            <p className="empty-subtitle">Star your favorite frequencies to save them here</p>
+                            <p className="empty-subtitle">Heart your favorite frequencies to save them here</p>
                         </div>
                     ) : (
                         <div className="favorites-grid">
@@ -349,7 +349,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
                                             onClick={() => toggleFavorite(fav)}
                                             title="Remove from favorites"
                                         >
-                                            <Star size={20} fill="var(--accent-teal)" />
+                                            <Heart size={20} fill="var(--accent-teal)" />
                                         </button>
                                     </div>
                                     <p className="favorite-desc">{fav.desc}</p>
