@@ -17,6 +17,7 @@ import { EnergyCleanseMode } from './pages/EnergyCleanseMode';
 import { JourneysPage } from './pages/JourneysPage';
 import { JourneyPlayer } from './components/JourneyPlayer';
 import { Visualizer } from './components/Visualizer';
+import { CosmicAlignmentPage } from './pages/CosmicAlignmentPage';
 import './App.css';
 
 function App() {
@@ -227,6 +228,20 @@ function App() {
         <JourneyPlayer
           journey={selectedJourney}
           onBack={() => setCurrentPage('journeys')}
+        />
+      </>
+    );
+  }
+
+  if (currentPage === 'cosmic-alignment') {
+    return (
+      <>
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
+        <CosmicAlignmentPage
+          onBack={handleBack}
+          onPlay={handleSelectFrequency}
+          currentTrack={displayTrack}
+          isPlaying={isPlaying}
         />
       </>
     );

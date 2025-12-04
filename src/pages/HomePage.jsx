@@ -1,4 +1,4 @@
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
@@ -8,6 +8,12 @@ export function HomePage({ onNavigate }) {
             title: 'Preset Frequencies',
             icon: Music,
             description: 'Browse our curated frequency library'
+        },
+        {
+            id: 'cosmic-alignment',
+            title: 'Cosmic Alignment',
+            icon: Star,
+            description: 'Astrology-based sound healing'
         },
         {
             id: 'journeys',
