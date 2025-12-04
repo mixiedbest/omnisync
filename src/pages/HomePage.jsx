@@ -89,6 +89,17 @@ export function HomePage({ onNavigate }) {
                 })}
             </div>
 
+            <div className="manifestation-link">
+                <a
+                    href="https://youtu.be/yHfUE7XrcdQ?si=b_m6o1GuLEV_GR92"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="anthem-link"
+                >
+                    ✨ Manifestation Anthem ✨
+                </a>
+            </div>
+
             <footer className="home-footer">
                 © NeoTheory Music LLC & Mixie 2025
             </footer>

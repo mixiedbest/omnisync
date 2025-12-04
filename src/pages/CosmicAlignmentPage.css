@@ -326,6 +326,12 @@ select {
     margin-bottom: 12px;
 }
 
+.planet-header h4 {
+    color: var(--text-primary);
+    margin: 0;
+    font-size: 16px;
+}
+
 .planet-icon {
     width: 24px;
     height: 24px;
