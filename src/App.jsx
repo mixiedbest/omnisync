@@ -32,6 +32,8 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home'); // 'home', 'about', 'custom', 'presets', 'disclaimer', 'journeys', 'journey-player'
   const [selectedJourney, setSelectedJourney] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const [sleepTimer, setSleepTimer] = useState(null);
+  const sleepTimerRef = useRef(null);
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -44,6 +46,27 @@ function App() {
       }
     }
   }, []);
+
+  // Sleep Timer Logic
+  useEffect(() => {
+    if (sleepTimer && isPlaying) {
+      if (sleepTimerRef.current) clearTimeout(sleepTimerRef.current);
+
+      sleepTimerRef.current = setTimeout(() => {
+        stop();
+        setSleepTimer(null);
+      }, sleepTimer * 60 * 1000);
+    } else if (!isPlaying && sleepTimer) {
+      // Optional: Cancel timer if paused manually? 
+      // For now, let's keep it simple: if paused, timer is cancelled.
+      if (sleepTimerRef.current) clearTimeout(sleepTimerRef.current);
+      setSleepTimer(null);
+    }
+
+    return () => {
+      if (sleepTimerRef.current) clearTimeout(sleepTimerRef.current);
+    };
+  }, [sleepTimer, isPlaying, stop]);
 
   // Toggle favorite function
   const toggleFavorite = (preset) => {
@@ -448,6 +471,8 @@ function App() {
           volume={volume}
           onVolumeChange={setVolume}
           currentTrack={displayTrack}
+          sleepTimer={sleepTimer}
+          onSetSleepTimer={setSleepTimer}
         />
       </div>
     </>

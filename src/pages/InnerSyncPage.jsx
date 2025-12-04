@@ -339,26 +339,45 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
                             <p className="empty-subtitle">Heart your favorite frequencies to save them here</p>
                         </div>
                     ) : (
-                        <div className="favorites-grid">
-                            {favorites.map((fav, index) => (
-                                <div key={index} className="favorite-card">
-                                    <div className="favorite-header">
-                                        <h4>{fav.title}</h4>
-                                        <button
-                                            className="unfavorite-btn"
-                                            onClick={() => toggleFavorite(fav)}
-                                            title="Remove from favorites"
-                                        >
-                                            <Heart size={20} fill="var(--accent-teal)" />
-                                        </button>
+                        <div className="favorites-groups">
+                            {Object.entries(
+                                favorites.reduce((acc, fav) => {
+                                    let group = 'Other';
+                                    if (fav.id && fav.id.startsWith('energy-')) group = 'Energy Profiles';
+                                    else if (fav.effects) group = 'Color Noises';
+                                    else if (fav.duration) group = 'Journeys';
+                                    else if (fav.beat) group = 'Presets';
+
+                                    if (!acc[group]) acc[group] = [];
+                                    acc[group].push(fav);
+                                    return acc;
+                                }, {})
+                            ).map(([group, groupFavorites]) => (
+                                <div key={group} className="favorites-group">
+                                    <h4 className="group-title">{group}</h4>
+                                    <div className="favorites-grid">
+                                        {groupFavorites.map((fav, index) => (
+                                            <div key={index} className="favorite-card">
+                                                <div className="favorite-header">
+                                                    <h4>{fav.title}</h4>
+                                                    <button
+                                                        className="unfavorite-btn"
+                                                        onClick={() => toggleFavorite(fav)}
+                                                        title="Remove from favorites"
+                                                    >
+                                                        <Heart size={20} fill="var(--accent-teal)" />
+                                                    </button>
+                                                </div>
+                                                <p className="favorite-desc">{fav.desc}</p>
+                                                <button
+                                                    className="play-favorite-btn"
+                                                    onClick={() => onPlay(fav)}
+                                                >
+                                                    ▶ Play
+                                                </button>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <p className="favorite-desc">{fav.desc}</p>
-                                    <button
-                                        className="play-favorite-btn"
-                                        onClick={() => onPlay(fav)}
-                                    >
-                                        ▶ Play
-                                    </button>
                                 </div>
                             ))}
                         </div>
