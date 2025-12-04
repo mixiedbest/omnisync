@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Settings, Bell, Shield, Smartphone, ToggleLeft, ToggleRight, Info } from 'lucide-react';
+import { ArrowLeft, Settings, Bell, Shield, Smartphone, ToggleLeft, ToggleRight, Info, Database, Download, Upload } from 'lucide-react';
 import './SettingsPage.css';
 
 export function SettingsPage({ onBack }) {
@@ -110,7 +110,80 @@ export function SettingsPage({ onBack }) {
                         <p>Note: Background playback support varies by device and browser restrictions.</p>
                     </div>
                 </div>
+
+                {/* Data Management */}
+                <div className="settings-section">
+                    <div className="section-header">
+                        <Database size={24} className="section-icon" />
+                        <h3>Data Management</h3>
+                    </div>
+                    <div className="setting-item">
+                        <div className="setting-info">
+                            <span className="setting-label">Backup Data</span>
+                            <span className="setting-desc">Export your journal and settings to a file</span>
+                        </div>
+                        <button
+                            className="action-btn"
+                            onClick={() => {
+                                const data = {};
+                                for (let i = 0; i < localStorage.length; i++) {
+                                    const key = localStorage.key(i);
+                                    if (key.startsWith('omnisync_')) {
+                                        data[key] = JSON.parse(localStorage.getItem(key));
+                                    }
+                                }
+                                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `omnisync-backup-${new Date().toISOString().split('T')[0]}.json`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                            }}
+                        >
+                            <Download size={20} />
+                            Export
+                        </button>
+                    </div>
+                    <div className="setting-item">
+                        <div className="setting-info">
+                            <span className="setting-label">Restore Data</span>
+                            <span className="setting-desc">Import data from a backup file</span>
+                        </div>
+                        <label className="action-btn">
+                            <Upload size={20} />
+                            Import
+                            <input
+                                type="file"
+                                accept=".json"
+                                style={{ display: 'none' }}
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    if (!file) return;
+                                    const reader = new FileReader();
+                                    reader.onload = (event) => {
+                                        try {
+                                            const data = JSON.parse(event.target.result);
+                                            Object.keys(data).forEach(key => {
+                                                if (key.startsWith('omnisync_')) {
+                                                    localStorage.setItem(key, JSON.stringify(data[key]));
+                                                }
+                                            });
+                                            alert('Data restored successfully! The app will reload.');
+                                            window.location.reload();
+                                        } catch (err) {
+                                            alert('Failed to restore data: Invalid file format.');
+                                        }
+                                    };
+                                    reader.readAsText(file);
+                                }}
+                            />
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
+        </div >
     );
 }
