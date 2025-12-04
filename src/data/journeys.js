@@ -3,7 +3,7 @@ export const journeys = [
     {
         id: 'manifestation-gateway',
         title: 'Manifestation Gateway',
-        emoji: '✨',
+        icon: 'Sparkles',
         description: 'Align intention, emotion, and subconscious to manifest desires',
         category: 'manifestation',
         short: {
@@ -30,7 +30,7 @@ export const journeys = [
     {
         id: 'deep-sleep-descent',
         title: 'Deep Sleep Descent',
-        emoji: '🌙',
+        icon: 'Moon',
         description: 'Fall asleep faster, stay asleep, stop overthinking',
         category: 'sleep',
         short: {
@@ -57,7 +57,7 @@ export const journeys = [
     {
         id: 'magnetic-aura-cleanse',
         title: 'Magnetic Aura Cleanse',
-        emoji: '🌟',
+        icon: 'Star',
         description: 'Clear emotional buildup, negative thoughts, and energetic heaviness',
         category: 'cleansing',
         short: {
@@ -84,7 +84,7 @@ export const journeys = [
     {
         id: 'rooted-unshakeable',
         title: 'Rooted & Unshakeable',
-        emoji: '🌳',
+        icon: 'TreeDeciduous',
         description: 'For anxiety, overthinking, overstimulation, EMF stress',
         category: 'grounding',
         short: {
@@ -109,7 +109,7 @@ export const journeys = [
     {
         id: 'emotional-release-ritual',
         title: 'Emotional Release Ritual',
-        emoji: '💧',
+        icon: 'Droplets',
         description: 'Let emotions flow without suppressing',
         category: 'healing',
         short: {
@@ -136,7 +136,7 @@ export const journeys = [
     {
         id: 'focus-flow-accelerator',
         title: 'Focus Flow Accelerator',
-        emoji: '🎯',
+        icon: 'Target',
         description: 'Get into a productive, clear mental zone',
         category: 'focus',
         short: {
@@ -161,7 +161,7 @@ export const journeys = [
     {
         id: 'body-scan-chakra-sweep',
         title: 'Body Scan: Chakra Sweep',
-        emoji: '🌈',
+        icon: 'Activity',
         description: 'Frequency glide from root to crown (or reverse)',
         category: 'chakra',
         short: {
@@ -188,7 +188,105 @@ export const journeys = [
                 { name: 'Crown (Sahasrara)', duration: 300, freq: 963, bothEars: 0, noiseType: 'white', desc: 'Connection' }
             ]
         }
+    },
+    {
+        id: 'vagus-nerve-reset',
+        title: 'Vagus Nerve Reset',
+        icon: 'Waves',
+        description: 'Calm the nervous system with low-frequency vibration',
+        category: 'healing',
+        short: {
+            duration: 600, // 10 minutes
+            phases: [
+                { name: 'Humming Vibration', duration: 180, freq: 111, bothEars: 4, noiseType: 'brown', desc: 'Stimulating the vagus nerve' },
+                { name: 'Parasympathetic Activation', duration: 240, freq: 7.83, bothEars: 0, noiseType: 'pink', desc: 'Deep relaxation response' },
+                { name: 'Heart Coherence', duration: 120, freq: 639, bothEars: 0, noiseType: null, desc: 'Balancing heart rate' },
+                { name: 'Rest & Digest', duration: 60, freq: 432, bothEars: 0, noiseType: null, desc: 'Settling into calm' }
+            ]
+        },
+        long: {
+            duration: 1800, // 30 minutes
+            phases: [
+                { name: 'Humming Vibration', duration: 540, freq: 111, bothEars: 4, noiseType: 'brown', desc: 'Stimulating the vagus nerve' },
+                { name: 'Parasympathetic Activation', duration: 720, freq: 7.83, bothEars: 0, noiseType: 'pink', desc: 'Deep relaxation response' },
+                { name: 'Heart Coherence', duration: 360, freq: 639, bothEars: 0, noiseType: null, desc: 'Balancing heart rate' },
+                { name: 'Rest & Digest', duration: 180, freq: 432, bothEars: 0, noiseType: null, desc: 'Settling into calm' }
+            ]
+        }
+    },
+    {
+        id: 'creative-breakthrough',
+        title: 'Creative Breakthrough',
+        icon: 'Lightbulb',
+        description: 'Spark insight and "aha!" moments',
+        category: 'focus',
+        short: {
+            duration: 600, // 10 minutes
+            phases: [
+                { name: 'Alpha Relax', duration: 180, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Clearing the mind' },
+                { name: 'Theta Dream', duration: 180, freq: 528, bothEars: 6, noiseType: 'pink', desc: 'Accessing subconscious' },
+                { name: 'Gamma Spark', duration: 180, freq: 528, bothEars: 40, noiseType: null, desc: 'Insight flash' },
+                { name: 'Flow Integration', duration: 60, freq: 432, bothEars: 14, noiseType: null, desc: 'Grounding the idea' }
+            ]
+        },
+        long: {
+            duration: 1800, // 30 minutes
+            phases: [
+                { name: 'Alpha Relax', duration: 540, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Clearing the mind' },
+                { name: 'Theta Dream', duration: 540, freq: 528, bothEars: 6, noiseType: 'pink', desc: 'Accessing subconscious' },
+                { name: 'Gamma Spark', duration: 540, freq: 528, bothEars: 40, noiseType: null, desc: 'Insight flash' },
+                { name: 'Flow Integration', duration: 180, freq: 432, bothEars: 14, noiseType: null, desc: 'Grounding the idea' }
+            ]
+        }
+    },
+    {
+        id: 'pain-relief-protocol',
+        title: 'Pain Relief Protocol',
+        icon: 'Activity',
+        description: 'Deep physical relaxation and pain signal reduction',
+        category: 'healing',
+        short: {
+            duration: 900, // 15 minutes
+            phases: [
+                { name: 'Signal Dampening', duration: 300, freq: 174, bothEars: 4, noiseType: 'pink', desc: 'Reducing pain perception' },
+                { name: 'Deep Release', duration: 300, freq: 111, bothEars: 2, noiseType: 'brown', desc: 'Cellular relaxation' },
+                { name: 'Delta Recovery', duration: 240, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Tissue repair mode' },
+                { name: 'Gentle Return', duration: 60, freq: 174, bothEars: 0, noiseType: null, desc: 'Waking up softly' }
+            ]
+        },
+        long: {
+            duration: 2700, // 45 minutes
+            phases: [
+                { name: 'Signal Dampening', duration: 900, freq: 174, bothEars: 4, noiseType: 'pink', desc: 'Reducing pain perception' },
+                { name: 'Deep Release', duration: 900, freq: 111, bothEars: 2, noiseType: 'brown', desc: 'Cellular relaxation' },
+                { name: 'Delta Recovery', duration: 600, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Tissue repair mode' },
+                { name: 'Gentle Return', duration: 300, freq: 174, bothEars: 0, noiseType: null, desc: 'Waking up softly' }
+            ]
+        }
+    },
+    {
+        id: 'morning-glory',
+        title: 'Morning Glory',
+        icon: 'Sun',
+        description: 'Wake up with energy and positivity (caffeine-free)',
+        category: 'energy',
+        short: {
+            duration: 600, // 10 minutes
+            phases: [
+                { name: 'Gentle Awakening', duration: 120, freq: 432, bothEars: 10, noiseType: 'pink', desc: 'Alpha transition' },
+                { name: 'Mental Clarity', duration: 180, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta focus' },
+                { name: 'Energy Boost', duration: 180, freq: 528, bothEars: 20, noiseType: null, desc: 'High Beta power' },
+                { name: 'Peak State', duration: 120, freq: 963, bothEars: 40, noiseType: null, desc: 'Gamma brilliance' }
+            ]
+        },
+        long: {
+            duration: 1800, // 30 minutes
+            phases: [
+                { name: 'Gentle Awakening', duration: 360, freq: 432, bothEars: 10, noiseType: 'pink', desc: 'Alpha transition' },
+                { name: 'Mental Clarity', duration: 540, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta focus' },
+                { name: 'Energy Boost', duration: 540, freq: 528, bothEars: 20, noiseType: null, desc: 'High Beta power' },
+                { name: 'Peak State', duration: 360, freq: 963, bothEars: 40, noiseType: null, desc: 'Gamma brilliance' }
+            ]
+        }
     }
 ];
-
-// Add more journeys here as needed

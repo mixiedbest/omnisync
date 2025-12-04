@@ -49,51 +49,27 @@ export const soundscapes = [
     },
     {
         id: 'shamanic-drums',
-        title: 'SHAMANIC DRUMS',
+        title: 'Shamanic Drums',
         type: 'drums',
-        desc: 'Rhythmic heartbeat drumming for trance states.',
-        frequencies: { left: 4, right: 4.5, bothEars: 0 },
+        desc: 'Rhythmic drumming for trance states',
+        frequencies: { left: 180, right: 184, bothEars: 0 },
         icon: 'Drum'
     },
     {
-        id: 'firewood',
-        title: 'FIREWOOD BURNING',
-        type: 'firewood',
-        desc: 'Crackling campfire warmth and comfort.',
-        frequencies: { left: 0, right: 0, bothEars: 0 },
-        icon: 'Flame'
-    },
-    {
-        id: 'nature-walk',
-        title: 'NATURE WALK',
-        type: 'nature-walk',
-        desc: 'Forest birds, rustling leaves, and flowing streams.',
-        frequencies: { left: 0, right: 0, bothEars: 0 },
-        icon: 'Trees'
-    },
-    {
-        id: 'japanese-garden',
-        title: 'JAPANESE GARDEN',
-        type: 'japanese-garden',
-        desc: 'Bamboo, water drips, and distant wind chimes.',
-        frequencies: { left: 0, right: 0, bothEars: 0 },
-        icon: 'Flower'
-    },
-    {
         id: 'distant-thunder',
-        title: 'DISTANT THUNDER',
+        title: 'Distant Thunder',
         type: 'thunder',
-        desc: 'Low rumbling storm energy approaching.',
-        frequencies: { left: 0, right: 0, bothEars: 0 },
+        desc: 'Deep rolling thunder for grounding',
+        frequencies: { left: 90, right: 97.83, bothEars: 0 },
         icon: 'CloudLightning'
     },
     {
         id: 'waterfall',
-        title: 'WATERFALL',
+        title: 'Waterfall',
         type: 'waterfall',
-        desc: 'Cascading water and mist for renewal.',
-        frequencies: { left: 0, right: 0, bothEars: 0 },
-        icon: 'Droplets'
+        desc: 'Powerful white noise for masking',
+        frequencies: { left: 100, right: 100, bothEars: 0 },
+        icon: 'Waves'
     },
     {
         id: 'cat-purr',

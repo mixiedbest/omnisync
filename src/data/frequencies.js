@@ -209,22 +209,5 @@ export const categories = [
             { id: "dr2", title: "Midday Reset", beat: 8, left: 432, right: 440, desc: "Midday Reset. Layers: 7.83 Hz" },
             { id: "dr3", title: "Night Wind-Down", beat: 3, left: 396, right: 399, desc: "Night Wind-Down. Layers: 174 Hz" },
         ]
-    },
-    {
-        id: "sleep_suite",
-        title: "SLEEP PROGRAM SUITE",
-        icon: "Moon",
-        color: "from-indigo-900 to-slate-900",
-        items: [
-            {
-                id: "sleep-program-90",
-                title: "Full 90-Minute Sleep Cycle",
-                beat: "Var",
-                left: 0,
-                right: 0,
-                desc: "Complete 90-minute journey from grounding to deep delta sleep. Loops automatically.",
-                isSequence: true
-            },
-        ]
     }
 ];
