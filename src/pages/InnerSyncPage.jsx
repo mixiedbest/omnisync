@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, User, Sparkles, BookOpen, Activity, Heart, Brain, Zap, Star } from 'lucide-react';
+import { ArrowLeft, User, Sparkles, BookOpen, Activity, Heart, Brain, Zap, Star, Frown, Meh, Smile, Coffee, Battery, BatteryLow, Wind, Cloud, Flame, Moon } from 'lucide-react';
 import './InnerSyncPage.css';
 
 export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
@@ -92,27 +92,27 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
     };
 
     const emotions = [
-        { value: 'anxious', label: 'Anxious', icon: '◆', freq: { left: 200, right: 210, beat: 10 } },
-        { value: 'stressed', label: 'Stressed', icon: '■', freq: { left: 200, right: 208, beat: 8 } },
-        { value: 'sad', label: 'Sad', icon: '▼', freq: { left: 200, right: 206, beat: 6 } },
-        { value: 'tired', label: 'Tired', icon: '●', freq: { left: 200, right: 204, beat: 4 } },
-        { value: 'neutral', label: 'Neutral', icon: '◯', freq: { left: 200, right: 210, beat: 10 } },
-        { value: 'calm', label: 'Calm', icon: '◇', freq: { left: 200, right: 208, beat: 8 } },
-        { value: 'happy', label: 'Happy', icon: '✦', freq: { left: 200, right: 212, beat: 12 } },
-        { value: 'energized', label: 'Energized', icon: '▲', freq: { left: 200, right: 220, beat: 20 } },
-        { value: 'focused', label: 'Focused', icon: '◈', freq: { left: 200, right: 214, beat: 14 } },
-        { value: 'creative', label: 'Creative', icon: '✧', freq: { left: 200, right: 210, beat: 10 } },
+        { value: 'anxious', label: 'Anxious', icon: Frown, freq: { left: 200, right: 210, beat: 10 } },
+        { value: 'stressed', label: 'Stressed', icon: Zap, freq: { left: 200, right: 208, beat: 8 } },
+        { value: 'sad', label: 'Sad', icon: Cloud, freq: { left: 200, right: 206, beat: 6 } },
+        { value: 'tired', label: 'Tired', icon: BatteryLow, freq: { left: 200, right: 204, beat: 4 } },
+        { value: 'neutral', label: 'Neutral', icon: Meh, freq: { left: 200, right: 210, beat: 10 } },
+        { value: 'calm', label: 'Calm', icon: Wind, freq: { left: 200, right: 208, beat: 8 } },
+        { value: 'happy', label: 'Happy', icon: Smile, freq: { left: 200, right: 212, beat: 12 } },
+        { value: 'energized', label: 'Energized', icon: Flame, freq: { left: 200, right: 220, beat: 20 } },
+        { value: 'focused', label: 'Focused', icon: Sparkles, freq: { left: 200, right: 214, beat: 14 } },
+        { value: 'creative', label: 'Creative', icon: Star, freq: { left: 200, right: 210, beat: 10 } },
     ];
 
     const symptoms = [
-        { value: 'headache', label: 'Headache', icon: '◆' },
-        { value: 'tension', label: 'Muscle Tension', icon: '■' },
-        { value: 'insomnia', label: 'Insomnia', icon: '◯' },
-        { value: 'fatigue', label: 'Fatigue', icon: '●' },
-        { value: 'racing-thoughts', label: 'Racing Thoughts', icon: '◇' },
-        { value: 'low-energy', label: 'Low Energy', icon: '▼' },
-        { value: 'restlessness', label: 'Restlessness', icon: '◈' },
-        { value: 'brain-fog', label: 'Brain Fog', icon: '✦' },
+        { value: 'headache', label: 'Headache', icon: Brain },
+        { value: 'tension', label: 'Muscle Tension', icon: Zap },
+        { value: 'insomnia', label: 'Insomnia', icon: Moon },
+        { value: 'fatigue', label: 'Fatigue', icon: BatteryLow },
+        { value: 'racing-thoughts', label: 'Racing Thoughts', icon: Wind },
+        { value: 'low-energy', label: 'Low Energy', icon: Battery },
+        { value: 'restlessness', label: 'Restlessness', icon: Flame },
+        { value: 'brain-fog', label: 'Brain Fog', icon: Cloud },
     ];
 
     const toggleSymptom = (symptom) => {
@@ -272,7 +272,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                                     className={`emotion-card ${currentEmotion === emotion.value ? 'selected' : ''}`}
                                     onClick={() => setCurrentEmotion(emotion.value)}
                                 >
-                                    <span className="emotion-icon">{emotion.icon}</span>
+                                    <emotion.icon size={28} className="emotion-icon" />
                                     <span className="emotion-label">{emotion.label}</span>
                                 </button>
                             ))}
@@ -310,7 +310,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                                     className={`symptom-card ${physicalSymptoms.includes(symptom.value) ? 'selected' : ''}`}
                                     onClick={() => toggleSymptom(symptom.value)}
                                 >
-                                    <span className="symptom-icon">{symptom.icon}</span>
+                                    <symptom.icon size={24} className="symptom-icon" />
                                     <span className="symptom-label">{symptom.label}</span>
                                 </button>
                             ))}

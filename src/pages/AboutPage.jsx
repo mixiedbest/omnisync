@@ -283,10 +283,22 @@ export function AboutPage({ onBack }) {
                         </div>
                     )}
                 </div>
+
+                {/* Privacy Notice */}
+                <div className="privacy-notice">
+                    <h3>🔒 Your Privacy Matters</h3>
+                    <p>
+                        All INNERSYNC data (username, journal entries, favorites, and energy profile)
+                        is stored locally on your device. We respect your privacy and do not collect,
+                        transmit, or store any personal data on external servers. Your sonic healing
+                        journey is yours alone.
+                    </p>
+                </div>
             </div>
 
             <footer className="page-footer">
-                © NeoTheory Music LLC & Mixie 2025
+                <div>OMNISYNC™</div>
+                <div>© NeoTheory Music 2025</div>
             </footer>
         </div>
     );

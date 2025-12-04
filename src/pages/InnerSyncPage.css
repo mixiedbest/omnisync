@@ -216,7 +216,8 @@
 }
 
 .emotion-icon {
-    font-size: 32px;
+    color: var(--accent-purple);
+    margin-bottom: 4px;
 }
 
 .emotion-label {
@@ -257,7 +258,7 @@
 }
 
 .symptom-icon {
-    font-size: 28px;
+    color: var(--accent-teal);
 }
 
 .symptom-label {
