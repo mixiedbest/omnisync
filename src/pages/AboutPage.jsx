@@ -269,11 +269,11 @@ export function AboutPage({ onBack }) {
                                 <h3>Our Mission</h3>
                                 <p>We believe sound should be:</p>
                                 <ul className="values-list">
-                                    <li>Accessible</li>
-                                    <li>Inclusive</li>
-                                    <li>Safe</li>
-                                    <li>Beautiful</li>
-                                    <li>Available to everyone</li>
+                                    <li>✦ Accessible</li>
+                                    <li>✦ Inclusive</li>
+                                    <li>✦ Safe</li>
+                                    <li>✦ Beautiful</li>
+                                    <li>✦ Available to everyone</li>
                                 </ul>
                                 <p className="closing">
                                     Whether you're here to meditate, heal, study, rest, connect, or explore: OMNISYNC is our offering to you.
