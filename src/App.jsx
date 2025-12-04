@@ -385,7 +385,8 @@ function App() {
 
 
         <footer className="page-footer-inline">
-          © NeoTheory Music LLC & Mixie 2025
+          <div>OMNISYNC™</div>
+          <div>© NeoTheory Music 2025</div>
         </footer>
 
         <PlayerControls

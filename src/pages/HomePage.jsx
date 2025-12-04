@@ -113,7 +113,8 @@ export function HomePage({ onNavigate }) {
             </div>
 
             <footer className="home-footer">
-                © NeoTheory Music LLC & Mixie 2025
+                <div>OMNISYNC™</div>
+                <div>© NeoTheory Music 2025</div>
             </footer>
         </div>
     );

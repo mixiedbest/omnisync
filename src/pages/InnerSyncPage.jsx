@@ -42,14 +42,22 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
 
     const generateRandomUsername = () => {
         const adjectives = [
-            'Cosmic', 'Radiant', 'Serene', 'Luminous', 'Ethereal', 'Tranquil',
-            'Vibrant', 'Harmonic', 'Celestial', 'Peaceful', 'Mystic', 'Sacred',
+            'Affectionate', 'Amicable', 'Brave', 'Calm', 'Charismatic', 'Cheerful',
+            'Compassionate', 'Confident', 'Courageous', 'Creative', 'Diligent', 'Empathetic',
+            'Enthusiastic', 'Friendly', 'Generous', 'Genuine', 'Helpful', 'Honest',
+            'Intelligent', 'Loyal', 'Optimistic', 'Passionate', 'Patient', 'Responsible',
+            'Skilled', 'Thoughtful', 'Trustworthy', 'Vibrant', 'Witty', 'Bright',
+            'Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet', 'Turquoise',
+            'Radiant', 'Gentle', 'Happy', 'Cosmic', 'Serene', 'Luminous', 'Ethereal',
+            'Tranquil', 'Harmonic', 'Celestial', 'Peaceful', 'Mystic', 'Sacred',
             'Divine', 'Infinite', 'Stellar', 'Quantum', 'Resonant', 'Flowing'
         ];
         const nouns = [
-            'Soul', 'Spirit', 'Heart', 'Mind', 'Aura', 'Energy', 'Vibe',
-            'Frequency', 'Wave', 'Light', 'Being', 'Essence', 'Flow', 'Pulse',
-            'Rhythm', 'Harmony', 'Seeker', 'Dreamer'
+            'Love', 'Builder', 'Glow', 'Sparkle', 'Soul', 'Spirit', 'Heart',
+            'Mind', 'Aura', 'Energy', 'Vibe', 'Frequency', 'Wave', 'Light',
+            'Being', 'Essence', 'Flow', 'Pulse', 'Rhythm', 'Harmony', 'Seeker',
+            'Dreamer', 'Healer', 'Guide', 'Warrior', 'Phoenix', 'Star', 'Moon',
+            'Sun', 'Ocean', 'Mountain', 'River', 'Forest', 'Sky', 'Dawn'
         ];
 
         const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
@@ -84,27 +92,27 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
     };
 
     const emotions = [
-        { value: 'anxious', label: 'Anxious', icon: '😰', freq: { left: 200, right: 210, beat: 10 } },
-        { value: 'stressed', label: 'Stressed', icon: '😫', freq: { left: 200, right: 208, beat: 8 } },
-        { value: 'sad', label: 'Sad', icon: '😢', freq: { left: 200, right: 206, beat: 6 } },
-        { value: 'tired', label: 'Tired', icon: '😴', freq: { left: 200, right: 204, beat: 4 } },
-        { value: 'neutral', label: 'Neutral', icon: '😐', freq: { left: 200, right: 210, beat: 10 } },
-        { value: 'calm', label: 'Calm', icon: '😌', freq: { left: 200, right: 208, beat: 8 } },
-        { value: 'happy', label: 'Happy', icon: '😊', freq: { left: 200, right: 212, beat: 12 } },
-        { value: 'energized', label: 'Energized', icon: '⚡', freq: { left: 200, right: 220, beat: 20 } },
-        { value: 'focused', label: 'Focused', icon: '🎯', freq: { left: 200, right: 214, beat: 14 } },
-        { value: 'creative', label: 'Creative', icon: '🎨', freq: { left: 200, right: 210, beat: 10 } },
+        { value: 'anxious', label: 'Anxious', icon: '◆', freq: { left: 200, right: 210, beat: 10 } },
+        { value: 'stressed', label: 'Stressed', icon: '■', freq: { left: 200, right: 208, beat: 8 } },
+        { value: 'sad', label: 'Sad', icon: '▼', freq: { left: 200, right: 206, beat: 6 } },
+        { value: 'tired', label: 'Tired', icon: '●', freq: { left: 200, right: 204, beat: 4 } },
+        { value: 'neutral', label: 'Neutral', icon: '◯', freq: { left: 200, right: 210, beat: 10 } },
+        { value: 'calm', label: 'Calm', icon: '◇', freq: { left: 200, right: 208, beat: 8 } },
+        { value: 'happy', label: 'Happy', icon: '✦', freq: { left: 200, right: 212, beat: 12 } },
+        { value: 'energized', label: 'Energized', icon: '▲', freq: { left: 200, right: 220, beat: 20 } },
+        { value: 'focused', label: 'Focused', icon: '◈', freq: { left: 200, right: 214, beat: 14 } },
+        { value: 'creative', label: 'Creative', icon: '✧', freq: { left: 200, right: 210, beat: 10 } },
     ];
 
     const symptoms = [
-        { value: 'headache', label: 'Headache', icon: '🤕' },
-        { value: 'tension', label: 'Muscle Tension', icon: '💪' },
-        { value: 'insomnia', label: 'Insomnia', icon: '🌙' },
-        { value: 'fatigue', label: 'Fatigue', icon: '😴' },
-        { value: 'racing-thoughts', label: 'Racing Thoughts', icon: '🌀' },
-        { value: 'low-energy', label: 'Low Energy', icon: '🔋' },
-        { value: 'restlessness', label: 'Restlessness', icon: '🌊' },
-        { value: 'brain-fog', label: 'Brain Fog', icon: '☁️' },
+        { value: 'headache', label: 'Headache', icon: '◆' },
+        { value: 'tension', label: 'Muscle Tension', icon: '■' },
+        { value: 'insomnia', label: 'Insomnia', icon: '◯' },
+        { value: 'fatigue', label: 'Fatigue', icon: '●' },
+        { value: 'racing-thoughts', label: 'Racing Thoughts', icon: '◇' },
+        { value: 'low-energy', label: 'Low Energy', icon: '▼' },
+        { value: 'restlessness', label: 'Restlessness', icon: '◈' },
+        { value: 'brain-fog', label: 'Brain Fog', icon: '✦' },
     ];
 
     const toggleSymptom = (symptom) => {
@@ -143,6 +151,20 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
             noiseType: physicalSymptoms.includes('headache') ? 'pink' : null,
             type: physicalSymptoms.includes('tension') ? 'ocean' : null
         };
+
+        // Log journal entry
+        const newEntry = {
+            date: new Date().toLocaleString(),
+            frequency: `${adjustedBeat.toFixed(1)} Hz`,
+            moodBefore: current.label,
+            moodAfter: desired.label,
+            symptoms: physicalSymptoms,
+            preset: preset
+        };
+
+        const updatedEntries = [newEntry, ...journalEntries];
+        setJournalEntries(updatedEntries);
+        localStorage.setItem('omnisync_journal', JSON.stringify(updatedEntries));
 
         onPlay(preset);
     };
@@ -378,7 +400,78 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
             {activeTab === 'energy-profile' && (
                 <div className="energy-profile-container">
                     <h3 className="section-title">Your Energy Profile</h3>
-                    <p className="coming-soon">Energy profiles coming soon...</p>
+                    <p className="profile-subtitle">Insights from your sonic healing journey</p>
+
+                    {journalEntries.length === 0 ? (
+                        <div className="empty-profile">
+                            <Activity size={48} />
+                            <p>No data yet</p>
+                            <p className="empty-subtitle">Use the Aura Scan to start building your profile</p>
+                        </div>
+                    ) : (
+                        <div className="profile-stats">
+                            <div className="stat-box">
+                                <div className="stat-icon">📊</div>
+                                <div className="stat-value">{journalEntries.length}</div>
+                                <div className="stat-label">Total Sessions</div>
+                            </div>
+
+                            <div className="stat-box">
+                                <div className="stat-icon">✦</div>
+                                <div className="stat-value">
+                                    {(() => {
+                                        const moods = journalEntries.map(e => e.moodBefore);
+                                        const moodCounts = {};
+                                        moods.forEach(m => moodCounts[m] = (moodCounts[m] || 0) + 1);
+                                        return Object.keys(moodCounts).sort((a, b) => moodCounts[b] - moodCounts[a])[0] || 'N/A';
+                                    })()}
+                                </div>
+                                <div className="stat-label">Most Common Starting Mood</div>
+                            </div>
+
+                            <div className="stat-box">
+                                <div className="stat-icon">🎯</div>
+                                <div className="stat-value">
+                                    {(() => {
+                                        const moods = journalEntries.map(e => e.moodAfter);
+                                        const moodCounts = {};
+                                        moods.forEach(m => moodCounts[m] = (moodCounts[m] || 0) + 1);
+                                        return Object.keys(moodCounts).sort((a, b) => moodCounts[b] - moodCounts[a])[0] || 'N/A';
+                                    })()}
+                                </div>
+                                <div className="stat-label">Most Desired Mood</div>
+                            </div>
+
+                            <div className="stat-box">
+                                <div className="stat-icon">🎵</div>
+                                <div className="stat-value">
+                                    {(() => {
+                                        const freqs = journalEntries.map(e => parseFloat(e.frequency));
+                                        const avg = freqs.reduce((a, b) => a + b, 0) / freqs.length;
+                                        return avg.toFixed(1);
+                                    })()} Hz
+                                </div>
+                                <div className="stat-label">Average Frequency</div>
+                            </div>
+                        </div>
+                    )}
+
+                    {journalEntries.length > 0 && (
+                        <div className="recent-sessions">
+                            <h4>Recent Sessions</h4>
+                            <div className="session-list">
+                                {journalEntries.slice(0, 5).map((entry, index) => (
+                                    <div key={index} className="session-item">
+                                        <div className="session-date">{entry.date}</div>
+                                        <div className="session-transition">
+                                            {entry.moodBefore} → {entry.moodAfter}
+                                        </div>
+                                        <div className="session-freq">{entry.frequency}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
