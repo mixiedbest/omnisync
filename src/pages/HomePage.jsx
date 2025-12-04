@@ -1,4 +1,4 @@
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
@@ -50,6 +50,18 @@ export function HomePage({ onNavigate }) {
             title: 'Custom Generator',
             icon: Sliders,
             description: 'Create your own frequency combinations'
+        },
+        {
+            id: 'innersync',
+            title: 'INNERSYNC',
+            icon: User,
+            description: 'Your personal sonic healing hub'
+        },
+        {
+            id: 'connections',
+            title: 'Connections',
+            icon: Users,
+            description: 'Your sonic circle & synced sessions'
         },
         {
             id: 'about',

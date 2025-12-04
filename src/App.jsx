@@ -18,6 +18,8 @@ import { JourneysPage } from './pages/JourneysPage';
 import { JourneyPlayer } from './components/JourneyPlayer';
 import { Visualizer } from './components/Visualizer';
 import { CosmicAlignmentPage } from './pages/CosmicAlignmentPage';
+import { InnerSyncPage } from './pages/InnerSyncPage';
+import { ConnectionsPage } from './pages/ConnectionsPage';
 import './App.css';
 
 function App() {
@@ -296,6 +298,43 @@ function App() {
           currentTrack={currentTrack}
           isPlaying={isPlaying}
         />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
+      </>
+    );
+  }
+
+  if (currentPage === 'innersync') {
+    return (
+      <>
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
+        <InnerSyncPage
+          onBack={handleBack}
+          onPlay={handleSelectFrequency}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+        />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
+      </>
+    );
+  }
+
+  if (currentPage === 'connections') {
+    return (
+      <>
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
+        <ConnectionsPage onBack={handleBack} />
         <PlayerControls
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
