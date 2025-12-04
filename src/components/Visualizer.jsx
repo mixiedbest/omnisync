@@ -2,19 +2,19 @@ import { useEffect, useState } from 'react';
 import './Visualizer.css';
 
 export function Visualizer({ isPlaying, currentTrack }) {
-    const [color, setColor] = useState('var(--bg-dark)');
+    const [color, setColor] = useState('var(--accent-purple)');
     const [animationMode, setAnimationMode] = useState('idle'); // idle, breathe, pulse, flow
 
     useEffect(() => {
         if (!currentTrack) {
-            setColor('var(--bg-dark)');
+            setColor('var(--accent-purple)');
             setAnimationMode('idle');
             return;
         }
 
         // Determine color based on frequency or type
         const freq = currentTrack.left || 0;
-        let newColor = 'var(--bg-dark)';
+        let newColor = 'var(--accent-purple)';
         let mode = 'pulse';
 
         if (currentTrack.id.includes('energy-')) {
@@ -32,13 +32,13 @@ export function Visualizer({ isPlaying, currentTrack }) {
             mode = 'breathe';
         } else if (freq > 0) {
             // Frequency-based mapping
-            if (freq < 100) newColor = '#3f2e22'; // Earthy Brown/Red
-            else if (freq < 300) newColor = '#7c2d12'; // Orange/Red
-            else if (freq < 400) newColor = '#b45309'; // Yellow/Orange
-            else if (freq < 550) newColor = '#14532d'; // Green
-            else if (freq < 700) newColor = '#0e7490'; // Blue/Teal
-            else if (freq < 850) newColor = '#1e3a8a'; // Indigo
-            else newColor = '#581c87'; // Violet
+            if (freq < 100) newColor = '#7f1d1d'; // Earthy Red (was brown, made more vibrant)
+            else if (freq < 300) newColor = '#c2410c'; // Orange
+            else if (freq < 400) newColor = '#b45309'; // Yellow/Amber
+            else if (freq < 550) newColor = '#15803d'; // Green (more vibrant)
+            else if (freq < 700) newColor = '#0e7490'; // Cyan
+            else if (freq < 850) newColor = '#1d4ed8'; // Blue
+            else newColor = '#7e22ce'; // Purple
         }
 
         // Override for specific soundscapes
