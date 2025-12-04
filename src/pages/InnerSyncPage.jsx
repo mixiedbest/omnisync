@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, User, Sparkles, BookOpen, Activity, Heart, Brain, Zap, Star, Frown, Meh, Smile, Coffee, Battery, BatteryLow, Wind, Cloud, Flame, Moon } from 'lucide-react';
 import './InnerSyncPage.css';
 
-export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
+export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorites = [], onToggleFavorite }) {
     const [username, setUsername] = useState('');
     const [hasUsername, setHasUsername] = useState(false);
     const [activeTab, setActiveTab] = useState('aura-scan'); // 'aura-scan', 'favorites', 'journal', 'energy-profile'
@@ -11,9 +11,6 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
     const [currentEmotion, setCurrentEmotion] = useState('');
     const [desiredEmotion, setDesiredEmotion] = useState('');
     const [physicalSymptoms, setPhysicalSymptoms] = useState([]);
-
-    // Favorites State
-    const [favorites, setFavorites] = useState([]);
 
     // Journal State
     const [journalEntries, setJournalEntries] = useState([]);
@@ -25,12 +22,6 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
         if (savedUsername) {
             setUsername(savedUsername);
             setHasUsername(true);
-        }
-
-        // Load favorites
-        const savedFavorites = localStorage.getItem('omnisync_favorites');
-        if (savedFavorites) {
-            setFavorites(JSON.parse(savedFavorites));
         }
 
         // Load journal entries
@@ -62,7 +53,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
 
         const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
         const noun = nouns[Math.floor(Math.random() * nouns.length)];
-        return `${adj}${noun}`;
+        return `${adj}${noun} `;
     };
 
     const handleRandomUsername = () => {
@@ -78,17 +69,9 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
     };
 
     const toggleFavorite = (preset) => {
-        const isFavorited = favorites.some(f => f.id === preset.id);
-        let updatedFavorites;
-
-        if (isFavorited) {
-            updatedFavorites = favorites.filter(f => f.id !== preset.id);
-        } else {
-            updatedFavorites = [...favorites, preset];
+        if (onToggleFavorite) {
+            onToggleFavorite(preset);
         }
-
-        setFavorites(updatedFavorites);
-        localStorage.setItem('omnisync_favorites', JSON.stringify(updatedFavorites));
     };
 
     const currentEmotions = [
@@ -150,8 +133,8 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
 
         const preset = {
             id: 'aura-scan-custom',
-            title: `${current.label} → ${desired.label}`,
-            desc: `Personalized Aura Scan: Transitioning from ${current.label} to ${desired.label}`,
+            title: `${current.label} → ${desired.label} `,
+            desc: `Personalized Aura Scan: Transitioning from ${current.label} to ${desired.label} `,
             left: 200,
             right: 200 + adjustedBeat,
             beat: adjustedBeat,
@@ -236,28 +219,28 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
 
             <div className="innersync-tabs">
                 <button
-                    className={`tab-btn ${activeTab === 'aura-scan' ? 'active' : ''}`}
+                    className={`tab - btn ${activeTab === 'aura-scan' ? 'active' : ''} `}
                     onClick={() => setActiveTab('aura-scan')}
                 >
                     <Sparkles size={18} />
                     Aura Scan
                 </button>
                 <button
-                    className={`tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}
+                    className={`tab - btn ${activeTab === 'favorites' ? 'active' : ''} `}
                     onClick={() => setActiveTab('favorites')}
                 >
                     <Star size={18} />
                     Favorites
                 </button>
                 <button
-                    className={`tab-btn ${activeTab === 'journal' ? 'active' : ''}`}
+                    className={`tab - btn ${activeTab === 'journal' ? 'active' : ''} `}
                     onClick={() => setActiveTab('journal')}
                 >
                     <BookOpen size={18} />
                     Journal
                 </button>
                 <button
-                    className={`tab-btn ${activeTab === 'energy-profile' ? 'active' : ''}`}
+                    className={`tab - btn ${activeTab === 'energy-profile' ? 'active' : ''} `}
                     onClick={() => setActiveTab('energy-profile')}
                 >
                     <Activity size={18} />
@@ -278,7 +261,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                                 return (
                                     <button
                                         key={emotion.value}
-                                        className={`emotion-card ${currentEmotion === emotion.value ? 'selected' : ''}`}
+                                        className={`emotion - card ${currentEmotion === emotion.value ? 'selected' : ''} `}
                                         onClick={() => setCurrentEmotion(emotion.value)}
                                     >
                                         <IconComponent size={28} className="emotion-icon" />
@@ -300,7 +283,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                                 return (
                                     <button
                                         key={emotion.value}
-                                        className={`emotion-card ${desiredEmotion === emotion.value ? 'selected' : ''}`}
+                                        className={`emotion - card ${desiredEmotion === emotion.value ? 'selected' : ''} `}
                                         onClick={() => setDesiredEmotion(emotion.value)}
                                     >
                                         <IconComponent size={28} className="emotion-icon" />
@@ -322,7 +305,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                                 return (
                                     <button
                                         key={symptom.value}
-                                        className={`symptom-card ${physicalSymptoms.includes(symptom.value) ? 'selected' : ''}`}
+                                        className={`symptom - card ${physicalSymptoms.includes(symptom.value) ? 'selected' : ''} `}
                                         onClick={() => toggleSymptom(symptom.value)}
                                     >
                                         <IconComponent size={24} className="symptom-icon" />

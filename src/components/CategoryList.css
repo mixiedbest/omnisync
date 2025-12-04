@@ -65,21 +65,60 @@
     padding-bottom: 12px;
 }
 
+.frequency-item-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
 .frequency-item {
-    width: 100%;
+    flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
     margin: 0 12px;
-    width: calc(100% - 24px);
     background: rgba(17, 24, 39, 0.4);
     border: 1px solid rgba(139, 92, 246, 0.1);
     border-radius: 12px;
     color: var(--text-primary);
     cursor: pointer;
     text-align: left;
-    margin-bottom: 8px;
+}
+
+.favorite-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(17, 24, 39, 0.6);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 12px;
+}
+
+.favorite-btn:hover {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+    transform: scale(1.1);
+}
+
+.favorite-btn.favorited {
+    color: #ec4899;
+    border-color: #ec4899;
+    background: rgba(236, 72, 153, 0.1);
+}
+
+.favorite-btn.favorited:hover {
+    background: rgba(236, 72, 153, 0.2);
 }
 
 .frequency-item:hover {

@@ -31,6 +31,34 @@ function App() {
   const sequenceTimerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState('home'); // 'home', 'about', 'custom', 'presets', 'disclaimer', 'journeys', 'journey-player'
   const [selectedJourney, setSelectedJourney] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+
+  // Load favorites from localStorage
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem('omnisync_favorites');
+    if (savedFavorites) {
+      try {
+        setFavorites(JSON.parse(savedFavorites));
+      } catch (e) {
+        console.error('Failed to load favorites:', e);
+      }
+    }
+  }, []);
+
+  // Toggle favorite function
+  const toggleFavorite = (preset) => {
+    const isFavorited = favorites.some(f => f.id === preset.id);
+    let updatedFavorites;
+
+    if (isFavorited) {
+      updatedFavorites = favorites.filter(f => f.id !== preset.id);
+    } else {
+      updatedFavorites = [...favorites, preset];
+    }
+
+    setFavorites(updatedFavorites);
+    localStorage.setItem('omnisync_favorites', JSON.stringify(updatedFavorites));
+  };
 
   // Sleep Sequence Logic
   useEffect(() => {
@@ -216,6 +244,8 @@ function App() {
           onPlay={handleSelectFrequency}
           currentTrack={currentTrack}
           isPlaying={isPlaying}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
         />
         <PlayerControls
           isPlaying={isPlaying}
@@ -298,6 +328,8 @@ function App() {
           onPlay={handleSelectFrequency}
           currentTrack={currentTrack}
           isPlaying={isPlaying}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
         />
         <PlayerControls
           isPlaying={isPlaying}
@@ -319,6 +351,8 @@ function App() {
           onPlay={handleSelectFrequency}
           currentTrack={currentTrack}
           isPlaying={isPlaying}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
         />
         <PlayerControls
           isPlaying={isPlaying}
@@ -396,6 +430,8 @@ function App() {
               categories={categories}
               onSelectFrequency={handleSelectFrequency}
               activeId={currentTrack?.id}
+              favorites={favorites}
+              onToggleFavorite={toggleFavorite}
             />
           )}
         </main>

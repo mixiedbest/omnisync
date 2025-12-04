@@ -6,7 +6,7 @@ const iconMap = {
     Moon, Waves, Flame, Heart, Zap, Sparkles, CircleDot, Feather, Activity, Globe, Sun, HeartCrack, Star, Accessibility, Shield, Baby, Eye, Brain, Wind, Smile, Sunrise, CloudRain
 };
 
-export function CategoryList({ categories, onSelectFrequency, activeId }) {
+export function CategoryList({ categories, onSelectFrequency, activeId, favorites = [], onToggleFavorite }) {
     const [expandedCategories, setExpandedCategories] = useState({});
 
     const toggleCategory = (categoryId) => {
@@ -14,6 +14,10 @@ export function CategoryList({ categories, onSelectFrequency, activeId }) {
             ...prev,
             [categoryId]: !prev[categoryId]
         }));
+    };
+
+    const isFavorited = (itemId) => {
+        return favorites.some(f => f.id === itemId);
     };
 
     return (
@@ -40,20 +44,33 @@ export function CategoryList({ categories, onSelectFrequency, activeId }) {
 
                         <div className={`frequency-list ${isExpanded ? 'expanded' : ''}`}>
                             {category.items.map(item => (
-                                <button
-                                    key={item.id}
-                                    className={`frequency-item ${activeId === item.id ? 'active' : ''}`}
-                                    onClick={() => onSelectFrequency(item)}
-                                >
-                                    <div className="frequency-info">
-                                        <div className="frequency-title">{item.title}</div>
-                                        <div className="frequency-desc">{item.desc}</div>
-                                    </div>
-                                    <div className="frequency-details">
-                                        <div className="beat-hz">{item.beat} Hz</div>
-                                        <div className="freq-pair">{item.left} / {item.right}</div>
-                                    </div>
-                                </button>
+                                <div key={item.id} className="frequency-item-wrapper">
+                                    <button
+                                        className={`frequency-item ${activeId === item.id ? 'active' : ''}`}
+                                        onClick={() => onSelectFrequency(item)}
+                                    >
+                                        <div className="frequency-info">
+                                            <div className="frequency-title">{item.title}</div>
+                                            <div className="frequency-desc">{item.desc}</div>
+                                        </div>
+                                        <div className="frequency-details">
+                                            <div className="beat-hz">{item.beat} Hz</div>
+                                            <div className="freq-pair">{item.left} / {item.right}</div>
+                                        </div>
+                                    </button>
+                                    {onToggleFavorite && (
+                                        <button
+                                            className={`favorite-btn ${isFavorited(item.id) ? 'favorited' : ''}`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onToggleFavorite(item);
+                                            }}
+                                            title={isFavorited(item.id) ? 'Remove from favorites' : 'Add to favorites'}
+                                        >
+                                            <Heart size={18} fill={isFavorited(item.id) ? 'currentColor' : 'none'} />
+                                        </button>
+                                    )}
+                                </div>
                             ))}
                         </div>
                     </div>
