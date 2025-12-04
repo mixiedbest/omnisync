@@ -197,7 +197,7 @@
     align-items: center;
     gap: 8px;
     padding: 20px 12px;
-    background: rgba(17, 24, 39, 0.4);
+    background: rgba(17, 24, 39, 0.2);
     border: 2px solid rgba(139, 92, 246, 0.2);
     border-radius: 12px;
     cursor: pointer;
@@ -239,7 +239,7 @@
     align-items: center;
     gap: 8px;
     padding: 16px 12px;
-    background: rgba(17, 24, 39, 0.4);
+    background: rgba(17, 24, 39, 0.2);
     border: 2px solid rgba(20, 184, 166, 0.2);
     border-radius: 12px;
     cursor: pointer;
