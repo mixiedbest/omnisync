@@ -182,9 +182,29 @@ export function useBinauralBeat() {
             nodes.push(source, filter, gain);
         }
         else if (type === 'firewood') {
-            // Crackling fire: Random noise bursts
-            const interval = setInterval(() => {
-                if (Math.random() > 0.3) { // 70% chance of crackle
+            // Realistic crackling fire with base rumble + varied crackles + pops
+
+            // Base fire rumble (low brown noise)
+            const rumbleBuffer = createNoiseBuffer(ctx, 'brown');
+            const rumbleSource = ctx.createBufferSource();
+            rumbleSource.buffer = rumbleBuffer;
+            rumbleSource.loop = true;
+
+            const rumbleFilter = ctx.createBiquadFilter();
+            rumbleFilter.type = 'lowpass';
+            rumbleFilter.frequency.value = 150;
+
+            const rumbleGain = ctx.createGain();
+            rumbleGain.gain.value = 0.2;
+
+            rumbleSource.connect(rumbleFilter);
+            rumbleFilter.connect(rumbleGain);
+            rumbleGain.connect(destination);
+            rumbleSource.start();
+
+            // Small crackles (frequent, quiet)
+            const smallCrackleInterval = setInterval(() => {
+                if (Math.random() > 0.4) {
                     const t = ctx.currentTime;
                     const buffer = createNoiseBuffer(ctx, 'white');
                     const source = ctx.createBufferSource();
@@ -192,26 +212,55 @@ export function useBinauralBeat() {
 
                     const filter = ctx.createBiquadFilter();
                     filter.type = 'bandpass';
-                    filter.frequency.value = 800 + Math.random() * 1200;
-                    filter.Q.value = 2;
+                    filter.frequency.value = 1200 + Math.random() * 1500;
+                    filter.Q.value = 3;
 
                     const gain = ctx.createGain();
                     gain.gain.setValueAtTime(0, t);
-                    gain.gain.linearRampToValueAtTime(Math.random() * 0.3, t + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1 + Math.random() * 0.2);
+                    gain.gain.linearRampToValueAtTime(Math.random() * 0.15, t + 0.005);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05 + Math.random() * 0.1);
 
                     source.connect(filter);
                     filter.connect(gain);
                     gain.connect(destination);
                     source.start(t);
-                    source.stop(t + 0.4);
+                    source.stop(t + 0.2);
                 }
-            }, 100 + Math.random() * 200); // Random timing
+            }, 80 + Math.random() * 120);
 
-            nodes.push({ stop: () => clearInterval(interval) });
+            // Large pops (occasional, louder)
+            const largeCrackleInterval = setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const t = ctx.currentTime;
+                    const buffer = createNoiseBuffer(ctx, 'white');
+                    const source = ctx.createBufferSource();
+                    source.buffer = buffer;
+
+                    const filter = ctx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 600 + Math.random() * 800;
+                    filter.Q.value = 2;
+
+                    const gain = ctx.createGain();
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(Math.random() * 0.4, t + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15 + Math.random() * 0.25);
+
+                    source.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(destination);
+                    source.start(t);
+                    source.stop(t + 0.5);
+                }
+            }, 400 + Math.random() * 600);
+
+            nodes.push(rumbleSource, rumbleFilter, rumbleGain,
+                { stop: () => { clearInterval(smallCrackleInterval); clearInterval(largeCrackleInterval); } });
         }
         else if (type === 'nature-walk') {
-            // Layered: Brown noise (wind) + chirps + water
+            // Realistic nature: wind + leaves + multiple bird types + occasional stream
+
+            // Wind (brown noise base)
             const windBuffer = createNoiseBuffer(ctx, 'brown');
             const windSource = ctx.createBufferSource();
             windSource.buffer = windBuffer;
@@ -219,75 +268,238 @@ export function useBinauralBeat() {
 
             const windFilter = ctx.createBiquadFilter();
             windFilter.type = 'lowpass';
-            windFilter.frequency.value = 300;
+            windFilter.frequency.value = 250;
 
             const windGain = ctx.createGain();
-            windGain.gain.value = 0.15;
+            windGain.gain.value = 0.12;
+
+            // LFO for wind gusts
+            const windLFO = ctx.createOscillator();
+            windLFO.frequency.value = 0.08;
+            const windLFOGain = ctx.createGain();
+            windLFOGain.gain.value = 0.08;
+            windLFO.connect(windLFOGain);
+            windLFOGain.connect(windGain.gain);
+            windLFO.start();
 
             windSource.connect(windFilter);
             windFilter.connect(windGain);
             windGain.connect(destination);
             windSource.start();
 
-            // Bird chirps (random high-freq oscillators)
-            const birdInterval = setInterval(() => {
-                if (Math.random() > 0.6) {
+            // Rustling leaves (high-freq filtered noise bursts)
+            const leavesInterval = setInterval(() => {
+                if (Math.random() > 0.5) {
                     const t = ctx.currentTime;
-                    const osc = ctx.createOscillator();
-                    osc.frequency.value = 1500 + Math.random() * 2000;
+                    const buffer = createNoiseBuffer(ctx, 'white');
+                    const source = ctx.createBufferSource();
+                    source.buffer = buffer;
 
-                    const gain = ctx.createGain();
-                    gain.gain.setValueAtTime(0, t);
-                    gain.gain.linearRampToValueAtTime(0.1, t + 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-
-                    osc.connect(gain);
-                    gain.connect(destination);
-                    osc.start(t);
-                    osc.stop(t + 0.3);
-                }
-            }, 2000 + Math.random() * 3000);
-
-            nodes.push(windSource, windFilter, windGain, { stop: () => clearInterval(birdInterval) });
-        }
-        else if (type === 'japanese-garden') {
-            // Water drips + bamboo + chimes
-            const dripInterval = setInterval(() => {
-                const t = ctx.currentTime;
-                const osc = ctx.createOscillator();
-                osc.frequency.value = 800;
-
-                const gain = ctx.createGain();
-                gain.gain.setValueAtTime(0, t);
-                gain.gain.linearRampToValueAtTime(0.15, t + 0.01);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-
-                osc.connect(gain);
-                gain.connect(destination);
-                osc.start(t);
-                osc.stop(t + 0.4);
-            }, 1500 + Math.random() * 2500);
-
-            // Wind chime (FM synthesis, occasional)
-            const chimeInterval = setInterval(() => {
-                if (Math.random() > 0.7) {
-                    const t = ctx.currentTime;
-                    const carrier = ctx.createOscillator();
-                    carrier.frequency.value = 1200 + Math.random() * 800;
+                    const filter = ctx.createBiquadFilter();
+                    filter.type = 'highpass';
+                    filter.frequency.value = 2000 + Math.random() * 2000;
 
                     const gain = ctx.createGain();
                     gain.gain.setValueAtTime(0, t);
                     gain.gain.linearRampToValueAtTime(0.08, t + 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.001, t + 2);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
 
-                    carrier.connect(gain);
+                    source.connect(filter);
+                    filter.connect(gain);
                     gain.connect(destination);
-                    carrier.start(t);
-                    carrier.stop(t + 2.5);
+                    source.start(t);
+                    source.stop(t + 0.4);
                 }
-            }, 4000 + Math.random() * 6000);
+            }, 800 + Math.random() * 1200);
 
-            nodes.push({ stop: () => { clearInterval(dripInterval); clearInterval(chimeInterval); } });
+            // Bird chirps - variety of types
+            const birdInterval = setInterval(() => {
+                if (Math.random() > 0.6) {
+                    const t = ctx.currentTime;
+                    const birdType = Math.random();
+
+                    if (birdType < 0.4) {
+                        // High chirp
+                        const osc = ctx.createOscillator();
+                        osc.frequency.setValueAtTime(2000 + Math.random() * 1500, t);
+                        osc.frequency.exponentialRampToValueAtTime(2500 + Math.random() * 1000, t + 0.1);
+
+                        const gain = ctx.createGain();
+                        gain.gain.setValueAtTime(0, t);
+                        gain.gain.linearRampToValueAtTime(0.12, t + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+
+                        osc.connect(gain);
+                        gain.connect(destination);
+                        osc.start(t);
+                        osc.stop(t + 0.2);
+                    } else if (birdType < 0.7) {
+                        // Warbling bird
+                        const osc = ctx.createOscillator();
+                        const lfo = ctx.createOscillator();
+                        lfo.frequency.value = 8;
+                        const lfoGain = ctx.createGain();
+                        lfoGain.gain.value = 100;
+
+                        lfo.connect(lfoGain);
+                        lfoGain.connect(osc.frequency);
+
+                        osc.frequency.value = 1500 + Math.random() * 800;
+
+                        const gain = ctx.createGain();
+                        gain.gain.setValueAtTime(0, t);
+                        gain.gain.linearRampToValueAtTime(0.1, t + 0.05);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+
+                        osc.connect(gain);
+                        gain.connect(destination);
+                        osc.start(t);
+                        lfo.start(t);
+                        osc.stop(t + 0.35);
+                        lfo.stop(t + 0.35);
+                    } else {
+                        // Low coo
+                        const osc = ctx.createOscillator();
+                        osc.frequency.value = 400 + Math.random() * 300;
+
+                        const gain = ctx.createGain();
+                        gain.gain.setValueAtTime(0, t);
+                        gain.gain.linearRampToValueAtTime(0.08, t + 0.1);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+
+                        osc.connect(gain);
+                        gain.connect(destination);
+                        osc.start(t);
+                        osc.stop(t + 0.5);
+                    }
+                }
+            }, 2000 + Math.random() * 4000);
+
+            // Occasional stream babble
+            const streamInterval = setInterval(() => {
+                if (Math.random() > 0.8) {
+                    const t = ctx.currentTime;
+                    const buffer = createNoiseBuffer(ctx, 'white');
+                    const source = ctx.createBufferSource();
+                    source.buffer = buffer;
+
+                    const filter = ctx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 800 + Math.random() * 600;
+                    filter.Q.value = 0.8;
+
+                    const gain = ctx.createGain();
+                    gain.gain.value = 0.15;
+
+                    source.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(destination);
+                    source.start(t);
+                    source.stop(t + 1 + Math.random() * 2);
+                }
+            }, 5000 + Math.random() * 10000);
+
+            nodes.push(windSource, windFilter, windGain, windLFO, windLFOGain,
+                { stop: () => { clearInterval(leavesInterval); clearInterval(birdInterval); clearInterval(streamInterval); } });
+        }
+        else if (type === 'japanese-garden') {
+            // Realistic Japanese garden: bamboo knocks + water drips + wind chimes + ambient
+
+            // Subtle ambient (very quiet pink noise)
+            const ambientBuffer = createNoiseBuffer(ctx, 'pink');
+            const ambientSource = ctx.createBufferSource();
+            ambientSource.buffer = ambientBuffer;
+            ambientSource.loop = true;
+
+            const ambientFilter = ctx.createBiquadFilter();
+            ambientFilter.type = 'lowpass';
+            ambientFilter.frequency.value = 500;
+
+            const ambientGain = ctx.createGain();
+            ambientGain.gain.value = 0.05;
+
+            ambientSource.connect(ambientFilter);
+            ambientFilter.connect(ambientGain);
+            ambientGain.connect(destination);
+            ambientSource.start();
+
+            // Bamboo knocking (low wooden sounds)
+            const bambooInterval = setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const t = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    osc.frequency.value = 120 + Math.random() * 80;
+
+                    const gain = ctx.createGain();
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.2, t + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+
+                    osc.connect(gain);
+                    gain.connect(destination);
+                    osc.start(t);
+                    osc.stop(t + 0.2);
+                }
+            }, 3000 + Math.random() * 5000);
+
+            // Water drips (varied pitch and timing)
+            const dripInterval = setInterval(() => {
+                const t = ctx.currentTime;
+                const pitch = 700 + Math.random() * 400;
+
+                const osc = ctx.createOscillator();
+                osc.frequency.setValueAtTime(pitch, t);
+                osc.frequency.exponentialRampToValueAtTime(pitch * 0.7, t + 0.05);
+
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0, t);
+                gain.gain.linearRampToValueAtTime(0.18, t + 0.005);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+                osc.connect(gain);
+                gain.connect(destination);
+                osc.start(t);
+                osc.stop(t + 0.25);
+            }, 1200 + Math.random() * 2000);
+
+            // Wind chimes (FM synthesis with long decay)
+            const chimeInterval = setInterval(() => {
+                if (Math.random() > 0.75) {
+                    const t = ctx.currentTime;
+                    const baseFreq = 800 + Math.random() * 1200;
+
+                    // Create multiple harmonics for richer sound
+                    [1, 2.1, 3.3, 4.7].forEach((harmonic, i) => {
+                        const carrier = ctx.createOscillator();
+                        carrier.frequency.value = baseFreq * harmonic;
+
+                        const modulator = ctx.createOscillator();
+                        modulator.frequency.value = baseFreq * harmonic * 1.4;
+
+                        const modGain = ctx.createGain();
+                        modGain.gain.value = 50;
+
+                        modulator.connect(modGain);
+                        modGain.connect(carrier.frequency);
+
+                        const gain = ctx.createGain();
+                        const amplitude = 0.06 / (i + 1); // Quieter harmonics
+                        gain.gain.setValueAtTime(0, t);
+                        gain.gain.linearRampToValueAtTime(amplitude, t + 0.05);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 3 + Math.random() * 2);
+
+                        carrier.connect(gain);
+                        gain.connect(destination);
+                        carrier.start(t);
+                        modulator.start(t);
+                        carrier.stop(t + 5);
+                        modulator.stop(t + 5);
+                    });
+                }
+            }, 4000 + Math.random() * 8000);
+
+            nodes.push(ambientSource, ambientFilter, ambientGain,
+                { stop: () => { clearInterval(bambooInterval); clearInterval(dripInterval); clearInterval(chimeInterval); } });
         }
         else if (type === 'thunder') {
             // Low rumble with occasional peaks
