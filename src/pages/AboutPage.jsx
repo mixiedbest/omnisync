@@ -42,8 +42,8 @@ export function AboutPage({ onBack }) {
                                 <h3>Brainwave States</h3>
 
                                 <div className="brainwave-card">
-                                    <h4>Delta (0.5–4 Hz)</h4>
-                                    <p className="brainwave-subtitle">Rest • Repair • Deep Sleep</p>
+                                    <h4>Delta (0.5-4 Hz)</h4>
+                                    <p className="brainwave-subtitle">Rest, Repair, Deep Sleep</p>
                                     <p>
                                         Delta waves are slow, powerful, and restorative. They appear in deep, dreamless sleep and
                                         are linked with the body's natural healing processes.
@@ -58,8 +58,8 @@ export function AboutPage({ onBack }) {
                                 </div>
 
                                 <div className="brainwave-card">
-                                    <h4>Theta (4–8 Hz)</h4>
-                                    <p className="brainwave-subtitle">Deep Meditation • Intuition • Inner Vision</p>
+                                    <h4>Theta (4-8 Hz)</h4>
+                                    <p className="brainwave-subtitle">Deep Meditation, Intuition, Inner Vision</p>
                                     <p>
                                         Theta waves are present during dream states, hypnosis, and profound meditation. This is
                                         where the subconscious opens and self-healing begins.
@@ -75,8 +75,8 @@ export function AboutPage({ onBack }) {
                                 </div>
 
                                 <div className="brainwave-card">
-                                    <h4>Alpha (8–12 Hz)</h4>
-                                    <p className="brainwave-subtitle">Relaxed • Creative • Lightly Meditative</p>
+                                    <h4>Alpha (8-12 Hz)</h4>
+                                    <p className="brainwave-subtitle">Relaxed, Creative, Lightly Meditative</p>
                                     <p>
                                         Alpha is the bridge between the conscious and subconscious mind. It's the state you drop
                                         into when daydreaming, journaling, drawing, or unwinding.
@@ -91,8 +91,8 @@ export function AboutPage({ onBack }) {
                                 </div>
 
                                 <div className="brainwave-card">
-                                    <h4>Beta (12–30 Hz)</h4>
-                                    <p className="brainwave-subtitle">Active Thinking • Problem Solving</p>
+                                    <h4>Beta (12-30 Hz)</h4>
+                                    <p className="brainwave-subtitle">Active Thinking, Problem Solving</p>
                                     <p>
                                         Beta waves dominate your normal waking life: when you're focused, thinking, planning, or
                                         navigating tasks. Balanced beta supports productivity and alertness, while excess beta can
@@ -107,8 +107,8 @@ export function AboutPage({ onBack }) {
                                 </div>
 
                                 <div className="brainwave-card">
-                                    <h4>Gamma (30–100 Hz)</h4>
-                                    <p className="brainwave-subtitle">Peak Awareness • Expanded Consciousness</p>
+                                    <h4>Gamma (30-100 Hz)</h4>
+                                    <p className="brainwave-subtitle">Peak Awareness, Expanded Consciousness</p>
                                     <p>
                                         Gamma waves appear during moments of insight, high-level information processing, and deep
                                         compassion. This state is associated with "whole brain synchrony," where different regions
@@ -269,14 +269,14 @@ export function AboutPage({ onBack }) {
                                 <h3>Our Mission</h3>
                                 <p>We believe sound should be:</p>
                                 <ul className="values-list">
-                                    <li>✨ Accessible</li>
-                                    <li>🤝 Inclusive</li>
-                                    <li>🛡️ Safe</li>
-                                    <li>🎨 Beautiful</li>
-                                    <li>🌍 Available to everyone</li>
+                                    <li>Accessible</li>
+                                    <li>Inclusive</li>
+                                    <li>Safe</li>
+                                    <li>Beautiful</li>
+                                    <li>Available to everyone</li>
                                 </ul>
                                 <p className="closing">
-                                    Whether you're here to meditate, heal, study, rest, connect, or explore — OMNISYNC is our offering to you.
+                                    Whether you're here to meditate, heal, study, rest, connect, or explore: OMNISYNC is our offering to you.
                                     A tool made with love, science, intuition, and the belief that vibration is a universal language.
                                 </p>
                             </div>
