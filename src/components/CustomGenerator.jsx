@@ -82,7 +82,8 @@ export function CustomGenerator({ onGenerate, isActive }) {
                 bothEars: bothEarsVolume,
                 noise: noiseVolume,
                 soundscape: scapeVolume
-            }
+            },
+            layers: frequencyLayers
         });
     };
 

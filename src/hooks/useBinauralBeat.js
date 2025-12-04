@@ -788,7 +788,7 @@ export function useBinauralBeat() {
         return nodes;
     };
 
-    const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null, soundscapeType = null, volumes = {}) => {
+    const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null, soundscapeType = null, volumes = {}, layers = []) => {
         // Default volumes if not provided
         const {
             binaural = 0.7,
@@ -800,6 +800,17 @@ export function useBinauralBeat() {
         const ctx = audioContextRef.current;
         const now = ctx.currentTime;
         const rampTime = 0.5;
+
+        // Cleanup existing extra layers
+        if (layersRef.current.length > 0) {
+            layersRef.current.forEach(layer => {
+                try { if (layer.leftOsc) { layer.leftOsc.stop(); layer.leftOsc.disconnect(); } } catch (e) { }
+                try { if (layer.rightOsc) { layer.rightOsc.stop(); layer.rightOsc.disconnect(); } } catch (e) { }
+                try { if (layer.leftGain) { layer.leftGain.disconnect(); } } catch (e) { }
+                try { if (layer.rightGain) { layer.rightGain.disconnect(); } } catch (e) { }
+            });
+            layersRef.current = [];
+        }
 
         // Stop existing soundscape
         if (soundscapeNodesRef.current.length > 0) {
