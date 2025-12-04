@@ -266,16 +266,19 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                             How are you feeling right now?
                         </h3>
                         <div className="emotion-grid">
-                            {emotions.map(emotion => (
-                                <button
-                                    key={emotion.value}
-                                    className={`emotion-card ${currentEmotion === emotion.value ? 'selected' : ''}`}
-                                    onClick={() => setCurrentEmotion(emotion.value)}
-                                >
-                                    <emotion.icon size={28} className="emotion-icon" />
-                                    <span className="emotion-label">{emotion.label}</span>
-                                </button>
-                            ))}
+                            {emotions.map(emotion => {
+                                const IconComponent = emotion.icon;
+                                return (
+                                    <button
+                                        key={emotion.value}
+                                        className={`emotion-card ${currentEmotion === emotion.value ? 'selected' : ''}`}
+                                        onClick={() => setCurrentEmotion(emotion.value)}
+                                    >
+                                        <IconComponent size={28} className="emotion-icon" />
+                                        <span className="emotion-label">{emotion.label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
@@ -285,16 +288,19 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                             How would you like to feel?
                         </h3>
                         <div className="emotion-grid">
-                            {emotions.map(emotion => (
-                                <button
-                                    key={emotion.value}
-                                    className={`emotion-card ${desiredEmotion === emotion.value ? 'selected' : ''}`}
-                                    onClick={() => setDesiredEmotion(emotion.value)}
-                                >
-                                    <span className="emotion-icon">{emotion.icon}</span>
-                                    <span className="emotion-label">{emotion.label}</span>
-                                </button>
-                            ))}
+                            {emotions.map(emotion => {
+                                const IconComponent = emotion.icon;
+                                return (
+                                    <button
+                                        key={emotion.value}
+                                        className={`emotion-card ${desiredEmotion === emotion.value ? 'selected' : ''}`}
+                                        onClick={() => setDesiredEmotion(emotion.value)}
+                                    >
+                                        <IconComponent size={28} className="emotion-icon" />
+                                        <span className="emotion-label">{emotion.label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
@@ -304,16 +310,19 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                             Physical Symptoms (Optional)
                         </h3>
                         <div className="symptoms-grid">
-                            {symptoms.map(symptom => (
-                                <button
-                                    key={symptom.value}
-                                    className={`symptom-card ${physicalSymptoms.includes(symptom.value) ? 'selected' : ''}`}
-                                    onClick={() => toggleSymptom(symptom.value)}
-                                >
-                                    <symptom.icon size={24} className="symptom-icon" />
-                                    <span className="symptom-label">{symptom.label}</span>
-                                </button>
-                            ))}
+                            {symptoms.map(symptom => {
+                                const IconComponent = symptom.icon;
+                                return (
+                                    <button
+                                        key={symptom.value}
+                                        className={`symptom-card ${physicalSymptoms.includes(symptom.value) ? 'selected' : ''}`}
+                                        onClick={() => toggleSymptom(symptom.value)}
+                                    >
+                                        <IconComponent size={24} className="symptom-icon" />
+                                        <span className="symptom-label">{symptom.label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
