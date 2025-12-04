@@ -219,28 +219,28 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
 
             <div className="innersync-tabs">
                 <button
-                    className={`tab - btn ${activeTab === 'aura-scan' ? 'active' : ''} `}
+                    className={`tab-btn ${activeTab === 'aura-scan' ? 'active' : ''}`}
                     onClick={() => setActiveTab('aura-scan')}
                 >
                     <Sparkles size={18} />
                     Aura Scan
                 </button>
                 <button
-                    className={`tab - btn ${activeTab === 'favorites' ? 'active' : ''} `}
+                    className={`tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}
                     onClick={() => setActiveTab('favorites')}
                 >
                     <Heart size={18} />
                     Favorites
                 </button>
                 <button
-                    className={`tab - btn ${activeTab === 'journal' ? 'active' : ''} `}
+                    className={`tab-btn ${activeTab === 'journal' ? 'active' : ''}`}
                     onClick={() => setActiveTab('journal')}
                 >
                     <BookOpen size={18} />
                     Journal
                 </button>
                 <button
-                    className={`tab - btn ${activeTab === 'energy-profile' ? 'active' : ''} `}
+                    className={`tab-btn ${activeTab === 'energy-profile' ? 'active' : ''}`}
                     onClick={() => setActiveTab('energy-profile')}
                 >
                     <Activity size={18} />
