@@ -1,4 +1,4 @@
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
@@ -14,6 +14,12 @@ export function HomePage({ onNavigate }) {
             title: 'Soundscapes',
             icon: Mountain,
             description: 'Generative ambient environments'
+        },
+        {
+            id: 'energy-profiles',
+            title: 'Energy Profiles',
+            icon: Sparkles,
+            description: 'Daily tuning rituals (3min/30min)'
         },
         {
             id: 'colors',

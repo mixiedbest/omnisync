@@ -12,6 +12,7 @@ import { Disclaimer } from './components/Disclaimer';
 import { ArrowLeft } from 'lucide-react';
 import { ColorNoisesPage } from './pages/ColorNoisesPage';
 import { SoundscapesPage } from './pages/SoundscapesPage';
+import { EnergyProfilesPage } from './pages/EnergyProfilesPage';
 import './App.css';
 
 function App() {
@@ -150,6 +151,27 @@ function App() {
       <>
         <div className="animated-bg" />
         <SoundscapesPage
+          onBack={handleBack}
+          onPlay={handleSelectFrequency}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+        />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
+      </>
+    );
+  }
+
+  if (currentPage === 'energy-profiles') {
+    return (
+      <>
+        <div className="animated-bg" />
+        <EnergyProfilesPage
           onBack={handleBack}
           onPlay={handleSelectFrequency}
           currentTrack={currentTrack}
