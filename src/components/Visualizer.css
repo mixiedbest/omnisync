@@ -1,0 +1,151 @@
+.visualizer-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    /* Behind everything */
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.visualizer-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, var(--active-color), #0f172a 70%);
+    opacity: 0.4;
+    transition: background 1s ease, opacity 0.5s ease;
+}
+
+.visualizer-bg.idle {
+    opacity: 0.1;
+}
+
+.visualizer-bg.breathe {
+    animation: bg-breathe 8s infinite ease-in-out;
+}
+
+.visualizer-bg.pulse {
+    animation: bg-pulse 4s infinite ease-in-out;
+}
+
+.visualizer-bg.flow {
+    animation: bg-flow 10s infinite linear;
+}
+
+@keyframes bg-breathe {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes bg-pulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes bg-flow {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: scale(1.2) rotate(2deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Breathing Circle */
+.breathing-circle-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.breathing-circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: circle-expand 8s infinite ease-in-out;
+    opacity: 0.5;
+}
+
+.breathing-circle-inner {
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    opacity: 0.3;
+    filter: blur(20px);
+    animation: circle-expand 8s infinite ease-in-out;
+    animation-delay: 0.5s;
+}
+
+@keyframes circle-expand {
+
+    0%,
+    100% {
+        transform: scale(0.8);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+/* Simple Particles */
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1px, transparent 1px);
+    background-size: 50px 50px, 100px 100px;
+    background-position: 0 0, 25px 25px;
+    opacity: 0.1;
+    animation: particle-drift 20s linear infinite;
+}
+
+@keyframes particle-drift {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-100px);
+    }
+}

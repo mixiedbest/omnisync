@@ -16,6 +16,7 @@ import { EnergyProfilesPage } from './pages/EnergyProfilesPage';
 import { EnergyCleanseMode } from './pages/EnergyCleanseMode';
 import { JourneysPage } from './pages/JourneysPage';
 import { JourneyPlayer } from './components/JourneyPlayer';
+import { Visualizer } from './components/Visualizer';
 import './App.css';
 
 function App() {
@@ -126,7 +127,7 @@ function App() {
   if (currentPage === 'home') {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <HomePage onNavigate={handleNavigate} />
       </>
     );
@@ -135,7 +136,7 @@ function App() {
   if (currentPage === 'about') {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <AboutPage onBack={handleBack} />
       </>
     );
@@ -144,7 +145,7 @@ function App() {
   if (currentPage === 'disclaimer') {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <div className="page-container">
           <button className="back-button-top" onClick={handleBack}>
             <ArrowLeft size={20} />
@@ -159,7 +160,7 @@ function App() {
   if (currentPage === 'soundscapes') {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <SoundscapesPage
           onBack={handleBack}
           onPlay={handleSelectFrequency}
@@ -180,7 +181,7 @@ function App() {
   if (currentPage === 'energy-profiles') {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <EnergyProfilesPage
           onBack={handleBack}
           onPlay={handleSelectFrequency}
@@ -201,7 +202,7 @@ function App() {
   if (currentPage === 'energy-cleanse') {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <EnergyCleanseMode onBack={handleBack} />
       </>
     );
@@ -210,7 +211,7 @@ function App() {
   if (currentPage === 'journeys') {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <JourneysPage
           onBack={handleBack}
           onSelectJourney={handleSelectJourney}
@@ -222,7 +223,7 @@ function App() {
   if (currentPage === 'journey-player' && selectedJourney) {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <JourneyPlayer
           journey={selectedJourney}
           onBack={() => setCurrentPage('journeys')}
@@ -234,7 +235,7 @@ function App() {
   if (currentPage === 'colors') {
     return (
       <>
-        <div className="animated-bg" />
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <ColorNoisesPage
           onBack={handleBack}
           onPlay={handleSelectFrequency}
@@ -255,7 +256,7 @@ function App() {
   // Custom Generator and Presets pages
   return (
     <>
-      <div className="animated-bg" />
+      <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
 
       <div className="app-container">
         <button className="back-button-top" onClick={handleBack}>
