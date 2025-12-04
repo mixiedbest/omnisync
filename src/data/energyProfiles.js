@@ -2,7 +2,7 @@ export const energyProfiles = [
     {
         id: 'clarity',
         title: 'CLARITY',
-        emoji: '💎',
+        icon: 'Diamond',
         color: 'from-blue-900 to-cyan-900',
         description: 'Mental focus and clear thinking',
         short: {
@@ -21,7 +21,7 @@ export const energyProfiles = [
     {
         id: 'strength',
         title: 'STRENGTH',
-        emoji: '⚡',
+        icon: 'Zap',
         color: 'from-red-900 to-orange-900',
         description: 'Inner power and resilience',
         short: {
@@ -40,7 +40,7 @@ export const energyProfiles = [
     {
         id: 'confidence',
         title: 'CONFIDENCE',
-        emoji: '🔥',
+        icon: 'Flame',
         color: 'from-yellow-900 to-orange-900',
         description: 'Self-assurance and courage',
         short: {
@@ -59,7 +59,7 @@ export const energyProfiles = [
     {
         id: 'love',
         title: 'LOVE',
-        emoji: '💚',
+        icon: 'Heart',
         color: 'from-pink-900 to-rose-900',
         description: 'Heart opening and compassion',
         short: {
@@ -78,7 +78,7 @@ export const energyProfiles = [
     {
         id: 'peace',
         title: 'PEACE',
-        emoji: '🕊️',
+        icon: 'Feather',
         color: 'from-indigo-900 to-purple-900',
         description: 'Deep calm and tranquility',
         short: {
@@ -97,7 +97,7 @@ export const energyProfiles = [
     {
         id: 'protection',
         title: 'PROTECTION',
-        emoji: '🛡️',
+        icon: 'Shield',
         color: 'from-purple-900 to-violet-900',
         description: 'Energetic boundaries and safety',
         short: {
@@ -116,7 +116,7 @@ export const energyProfiles = [
     {
         id: 'creativity',
         title: 'CREATIVITY',
-        emoji: '🎨',
+        icon: 'Palette',
         color: 'from-orange-900 to-yellow-900',
         description: 'Flow state and inspiration',
         short: {
@@ -135,7 +135,7 @@ export const energyProfiles = [
     {
         id: 'flow',
         title: 'FLOW',
-        emoji: '🌊',
+        icon: 'Waves',
         color: 'from-teal-900 to-cyan-900',
         description: 'Effortless productivity',
         short: {
@@ -154,7 +154,7 @@ export const energyProfiles = [
     {
         id: 'motivation',
         title: 'MOTIVATION',
-        emoji: '🚀',
+        icon: 'Rocket',
         color: 'from-red-900 to-pink-900',
         description: 'Drive and determination',
         short: {

@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import { ArrowLeft, Clock, Zap } from 'lucide-react';
+import { ArrowLeft, Clock, Zap, Diamond, Flame, Heart, Feather, Shield, Palette, Waves, Rocket } from 'lucide-react';
 import { energyProfiles } from '../data/energyProfiles';
 import './EnergyProfilesPage.css';
+
+const iconMap = {
+    Diamond, Zap, Flame, Heart, Feather, Shield, Palette, Waves, Rocket
+};
 
 export function EnergyProfilesPage({ onBack, onPlay, currentTrack, isPlaying }) {
     const [selectedDuration, setSelectedDuration] = useState('short'); // 'short' or 'long'
@@ -57,6 +61,7 @@ export function EnergyProfilesPage({ onBack, onPlay, currentTrack, isPlaying }) 
             <div className="profiles-grid">
                 {energyProfiles.map(profile => {
                     const isActive = currentTrack?.id === `energy-${profile.id}-${selectedDuration}`;
+                    const Icon = iconMap[profile.icon];
 
                     return (
                         <button
@@ -64,7 +69,9 @@ export function EnergyProfilesPage({ onBack, onPlay, currentTrack, isPlaying }) 
                             className={`profile-card ${isActive ? 'active' : ''}`}
                             onClick={() => handlePlay(profile)}
                         >
-                            <div className="profile-emoji">{profile.emoji}</div>
+                            <div className={`profile-icon-wrapper bg-gradient-to-br ${profile.color}`}>
+                                {Icon && <Icon size={32} color="white" />}
+                            </div>
                             <h3 className="profile-title">{profile.title}</h3>
                             <p className="profile-desc">{profile.description}</p>
 
