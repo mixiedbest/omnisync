@@ -100,6 +100,20 @@ export const intentionProfiles = {
         base: 432, // Coherence
         binaural: 40, // Gamma (Flow)
         desc: 'Coherence, flow state, collaborative energy.'
+    },
+    family: {
+        id: 'family',
+        title: 'Family & Unity',
+        base: 528, // Transformation/Miracle
+        binaural: 8, // Alpha (Harmony)
+        desc: 'Unity, unconditional love, collective harmony.'
+    },
+    calming: {
+        id: 'calming',
+        title: 'Calming & Peace',
+        base: 432, // Universal harmony
+        binaural: 4, // Theta (Deep calm)
+        desc: 'Soothing tensions, peaceful coexistence, gentle presence.'
     }
 };
 

@@ -159,37 +159,6 @@ export const journeys = [
         }
     },
     {
-        id: 'body-scan-chakra-sweep',
-        title: 'Body Scan: Chakra Sweep',
-        icon: 'Activity',
-        description: 'Frequency glide from root to crown (or reverse)',
-        category: 'chakra',
-        short: {
-            duration: 420, // 7 minutes (7 chakras × 1 min each)
-            phases: [
-                { name: 'Root (Muladhara)', duration: 60, freq: 396, bothEars: 0, noiseType: 'brown', desc: 'Grounding' },
-                { name: 'Sacral (Svadhisthana)', duration: 60, freq: 417, bothEars: 0, noiseType: 'orange', desc: 'Creativity' },
-                { name: 'Solar (Manipura)', duration: 60, freq: 528, bothEars: 0, noiseType: 'yellow', desc: 'Power' },
-                { name: 'Heart (Anahata)', duration: 60, freq: 639, bothEars: 0, noiseType: 'green', desc: 'Love' },
-                { name: 'Throat (Vishuddha)', duration: 60, freq: 741, bothEars: 0, noiseType: 'blue', desc: 'Expression' },
-                { name: 'Third Eye (Ajna)', duration: 60, freq: 852, bothEars: 0, noiseType: 'violet', desc: 'Intuition' },
-                { name: 'Crown (Sahasrara)', duration: 60, freq: 963, bothEars: 0, noiseType: 'white', desc: 'Connection' }
-            ]
-        },
-        long: {
-            duration: 2100, // 35 minutes (7 chakras × 5 min each)
-            phases: [
-                { name: 'Root (Muladhara)', duration: 300, freq: 396, bothEars: 0, noiseType: 'brown', desc: 'Grounding' },
-                { name: 'Sacral (Svadhisthana)', duration: 300, freq: 417, bothEars: 0, noiseType: 'orange', desc: 'Creativity' },
-                { name: 'Solar (Manipura)', duration: 300, freq: 528, bothEars: 0, noiseType: 'yellow', desc: 'Power' },
-                { name: 'Heart (Anahata)', duration: 300, freq: 639, bothEars: 0, noiseType: 'green', desc: 'Love' },
-                { name: 'Throat (Vishuddha)', duration: 300, freq: 741, bothEars: 0, noiseType: 'blue', desc: 'Expression' },
-                { name: 'Third Eye (Ajna)', duration: 300, freq: 852, bothEars: 0, noiseType: 'violet', desc: 'Intuition' },
-                { name: 'Crown (Sahasrara)', duration: 300, freq: 963, bothEars: 0, noiseType: 'white', desc: 'Connection' }
-            ]
-        }
-    },
-    {
         id: 'vagus-nerve-reset',
         title: 'Vagus Nerve Reset',
         icon: 'Waves',

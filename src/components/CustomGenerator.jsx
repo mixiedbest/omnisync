@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sliders, Plus, X } from 'lucide-react';
+import { Sliders, Plus, X, Headphones, Speaker, Palette, Waves } from 'lucide-react';
 import './CustomGenerator.css';
 
 export function CustomGenerator({ onGenerate, isActive }) {
@@ -109,7 +109,7 @@ export function CustomGenerator({ onGenerate, isActive }) {
                 {/* Frequency Layers */}
                 <div className="mixer-section">
                     <div className="section-title-with-action">
-                        <span>🎧 Binaural Beat Layers</span>
+                        <span className="section-label"><Headphones size={18} /> Binaural Beat Layers</span>
                         <button className="add-layer-btn" onClick={addFrequencyLayer}>
                             <Plus size={16} /> Add Layer
                         </button>
@@ -180,7 +180,7 @@ export function CustomGenerator({ onGenerate, isActive }) {
 
                 {/* Both Ears Section */}
                 <div className="mixer-section">
-                    <div className="section-title">🔊 Both Ears Layer (Optional)</div>
+                    <div className="section-title"><Speaker size={18} /> Both Ears Layer (Optional)</div>
                     <div className="layer-controls">
                         <div className="input-group">
                             <label>Frequency (Hz)</label>
@@ -214,7 +214,7 @@ export function CustomGenerator({ onGenerate, isActive }) {
 
                 {/* Color Noise Section */}
                 <div className="mixer-section">
-                    <div className="section-title">🌈 Background Color Noise</div>
+                    <div className="section-title"><Palette size={18} /> Background Color Noise</div>
                     <select
                         value={selectedNoise}
                         onChange={(e) => setSelectedNoise(e.target.value)}
@@ -243,7 +243,7 @@ export function CustomGenerator({ onGenerate, isActive }) {
 
                 {/* Soundscape Section */}
                 <div className="mixer-section">
-                    <div className="section-title">🌊 Ambient Soundscape</div>
+                    <div className="section-title"><Waves size={18} /> Ambient Soundscape</div>
                     <select
                         value={selectedScape}
                         onChange={(e) => setSelectedScape(e.target.value)}

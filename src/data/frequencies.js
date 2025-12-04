@@ -11,6 +11,7 @@ export const categories = [
             { id: "h4", title: "Stress Dissolver", beat: 6, left: 396, right: 402, desc: "Anxiety, panic, overwhelm. Layers: 7.83 Hz" },
             { id: "h5", title: "Nervous System Reboot", beat: 8, left: 432, right: 440, desc: "Calm vagus nerve, release tension. Layers: Soft brown noise" },
             { id: "h6", title: "Deep Sleep Gateway", beat: 2.5, left: 432, right: 434.5, desc: "Faster sleep onset. Layers: 174 Hz, 7.83 Hz" },
+            { id: "h7", title: "Digestion (Gut–Brain Harmony)", beat: 3.5, left: 528, right: 531.5, desc: "Parasympathetic activation, solar plexus resonance. Layers: Brown noise, slow breath pulse" },
         ]
     },
     {
