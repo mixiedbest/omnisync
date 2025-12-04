@@ -130,6 +130,13 @@ function App() {
       <>
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <HomePage onNavigate={handleNavigate} />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
       </>
     );
   }
@@ -139,6 +146,13 @@ function App() {
       <>
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <AboutPage onBack={handleBack} />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
       </>
     );
   }
@@ -154,6 +168,13 @@ function App() {
           </button>
           <Disclaimer />
         </div>
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
       </>
     );
   }
@@ -217,6 +238,13 @@ function App() {
           onBack={handleBack}
           onSelectJourney={handleSelectJourney}
         />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
       </>
     );
   }
@@ -242,6 +270,13 @@ function App() {
           onPlay={handleSelectFrequency}
           currentTrack={displayTrack}
           isPlaying={isPlaying}
+        />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
         />
       </>
     );
