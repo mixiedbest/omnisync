@@ -14,6 +14,8 @@ import { ColorNoisesPage } from './pages/ColorNoisesPage';
 import { SoundscapesPage } from './pages/SoundscapesPage';
 import { EnergyProfilesPage } from './pages/EnergyProfilesPage';
 import { EnergyCleanseMode } from './pages/EnergyCleanseMode';
+import { JourneysPage } from './pages/JourneysPage';
+import { JourneyPlayer } from './components/JourneyPlayer';
 import './App.css';
 
 function App() {
@@ -22,7 +24,8 @@ function App() {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [sequenceStep, setSequenceStep] = useState(0);
   const sequenceTimerRef = useRef(null);
-  const [currentPage, setCurrentPage] = useState('home'); // 'home', 'about', 'custom', 'presets', 'disclaimer'
+  const [currentPage, setCurrentPage] = useState('home'); // 'home', 'about', 'custom', 'presets', 'disclaimer', 'journeys', 'journey-player'
+  const [selectedJourney, setSelectedJourney] = useState(null);
 
   // Sleep Sequence Logic
   useEffect(() => {
@@ -111,6 +114,12 @@ function App() {
 
   const handleBack = () => {
     setCurrentPage('home');
+    setSelectedJourney(null);
+  };
+
+  const handleSelectJourney = (journey) => {
+    setSelectedJourney(journey);
+    setCurrentPage('journey-player');
   };
 
   // Render different pages
@@ -194,6 +203,30 @@ function App() {
       <>
         <div className="animated-bg" />
         <EnergyCleanseMode onBack={handleBack} />
+      </>
+    );
+  }
+
+  if (currentPage === 'journeys') {
+    return (
+      <>
+        <div className="animated-bg" />
+        <JourneysPage
+          onBack={handleBack}
+          onSelectJourney={handleSelectJourney}
+        />
+      </>
+    );
+  }
+
+  if (currentPage === 'journey-player' && selectedJourney) {
+    return (
+      <>
+        <div className="animated-bg" />
+        <JourneyPlayer
+          journey={selectedJourney}
+          onBack={() => setCurrentPage('journeys')}
+        />
       </>
     );
   }
