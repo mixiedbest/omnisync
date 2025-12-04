@@ -160,17 +160,19 @@ export function useBinauralBeat() {
             nodes.push(source, gain, filter, lfo, lfoGain);
         }
         else if (type === 'rain') {
+            // Gentler rain: Pink noise with softer filtering
             const buffer = createNoiseBuffer(ctx, 'pink');
             const source = ctx.createBufferSource();
             source.buffer = buffer;
             source.loop = true;
 
             const filter = ctx.createBiquadFilter();
-            filter.type = 'highpass';
-            filter.frequency.value = 800;
+            filter.type = 'bandpass';
+            filter.frequency.value = 1200; // Softer, less harsh
+            filter.Q.value = 0.5;
 
             const gain = ctx.createGain();
-            gain.gain.value = 0.4;
+            gain.gain.value = 0.25; // Quieter
 
             source.connect(filter);
             filter.connect(gain);
@@ -178,6 +180,292 @@ export function useBinauralBeat() {
             source.start();
 
             nodes.push(source, filter, gain);
+        }
+        else if (type === 'firewood') {
+            // Crackling fire: Random noise bursts
+            const interval = setInterval(() => {
+                if (Math.random() > 0.3) { // 70% chance of crackle
+                    const t = ctx.currentTime;
+                    const buffer = createNoiseBuffer(ctx, 'white');
+                    const source = ctx.createBufferSource();
+                    source.buffer = buffer;
+
+                    const filter = ctx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 800 + Math.random() * 1200;
+                    filter.Q.value = 2;
+
+                    const gain = ctx.createGain();
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(Math.random() * 0.3, t + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1 + Math.random() * 0.2);
+
+                    source.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(destination);
+                    source.start(t);
+                    source.stop(t + 0.4);
+                }
+            }, 100 + Math.random() * 200); // Random timing
+
+            nodes.push({ stop: () => clearInterval(interval) });
+        }
+        else if (type === 'nature-walk') {
+            // Layered: Brown noise (wind) + chirps + water
+            const windBuffer = createNoiseBuffer(ctx, 'brown');
+            const windSource = ctx.createBufferSource();
+            windSource.buffer = windBuffer;
+            windSource.loop = true;
+
+            const windFilter = ctx.createBiquadFilter();
+            windFilter.type = 'lowpass';
+            windFilter.frequency.value = 300;
+
+            const windGain = ctx.createGain();
+            windGain.gain.value = 0.15;
+
+            windSource.connect(windFilter);
+            windFilter.connect(windGain);
+            windGain.connect(destination);
+            windSource.start();
+
+            // Bird chirps (random high-freq oscillators)
+            const birdInterval = setInterval(() => {
+                if (Math.random() > 0.6) {
+                    const t = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    osc.frequency.value = 1500 + Math.random() * 2000;
+
+                    const gain = ctx.createGain();
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.1, t + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+                    osc.connect(gain);
+                    gain.connect(destination);
+                    osc.start(t);
+                    osc.stop(t + 0.3);
+                }
+            }, 2000 + Math.random() * 3000);
+
+            nodes.push(windSource, windFilter, windGain, { stop: () => clearInterval(birdInterval) });
+        }
+        else if (type === 'japanese-garden') {
+            // Water drips + bamboo + chimes
+            const dripInterval = setInterval(() => {
+                const t = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                osc.frequency.value = 800;
+
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0, t);
+                gain.gain.linearRampToValueAtTime(0.15, t + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+
+                osc.connect(gain);
+                gain.connect(destination);
+                osc.start(t);
+                osc.stop(t + 0.4);
+            }, 1500 + Math.random() * 2500);
+
+            // Wind chime (FM synthesis, occasional)
+            const chimeInterval = setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const t = ctx.currentTime;
+                    const carrier = ctx.createOscillator();
+                    carrier.frequency.value = 1200 + Math.random() * 800;
+
+                    const gain = ctx.createGain();
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.08, t + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 2);
+
+                    carrier.connect(gain);
+                    gain.connect(destination);
+                    carrier.start(t);
+                    carrier.stop(t + 2.5);
+                }
+            }, 4000 + Math.random() * 6000);
+
+            nodes.push({ stop: () => { clearInterval(dripInterval); clearInterval(chimeInterval); } });
+        }
+        else if (type === 'thunder') {
+            // Low rumble with occasional peaks
+            const rumbleBuffer = createNoiseBuffer(ctx, 'brown');
+            const rumbleSource = ctx.createBufferSource();
+            rumbleSource.buffer = rumbleBuffer;
+            rumbleSource.loop = true;
+
+            const rumbleFilter = ctx.createBiquadFilter();
+            rumbleFilter.type = 'lowpass';
+            rumbleFilter.frequency.value = 80;
+
+            const rumbleGain = ctx.createGain();
+            rumbleGain.gain.value = 0.3;
+
+            rumbleSource.connect(rumbleFilter);
+            rumbleFilter.connect(rumbleGain);
+            rumbleGain.connect(destination);
+            rumbleSource.start();
+
+            // Thunder claps
+            const thunderInterval = setInterval(() => {
+                const t = ctx.currentTime;
+                const buffer = createNoiseBuffer(ctx, 'white');
+                const source = ctx.createBufferSource();
+                source.buffer = buffer;
+
+                const filter = ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 200;
+
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0, t);
+                gain.gain.linearRampToValueAtTime(0.6, t + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 2);
+
+                source.connect(filter);
+                filter.connect(gain);
+                gain.connect(destination);
+                source.start(t);
+                source.stop(t + 2.5);
+            }, 8000 + Math.random() * 12000);
+
+            nodes.push(rumbleSource, rumbleFilter, rumbleGain, { stop: () => clearInterval(thunderInterval) });
+        }
+        else if (type === 'waterfall') {
+            // White noise + low rumble
+            const whiteBuffer = createNoiseBuffer(ctx, 'white');
+            const whiteSource = ctx.createBufferSource();
+            whiteSource.buffer = whiteBuffer;
+            whiteSource.loop = true;
+
+            const whiteFilter = ctx.createBiquadFilter();
+            whiteFilter.type = 'highpass';
+            whiteFilter.frequency.value = 400;
+
+            const whiteGain = ctx.createGain();
+            whiteGain.gain.value = 0.3;
+
+            whiteSource.connect(whiteFilter);
+            whiteFilter.connect(whiteGain);
+            whiteGain.connect(destination);
+            whiteSource.start();
+
+            // Low rumble
+            const rumbleOsc = ctx.createOscillator();
+            rumbleOsc.frequency.value = 60;
+            const rumbleGain = ctx.createGain();
+            rumbleGain.gain.value = 0.2;
+
+            rumbleOsc.connect(rumbleGain);
+            rumbleGain.connect(destination);
+            rumbleOsc.start();
+
+            nodes.push(whiteSource, whiteFilter, whiteGain, rumbleOsc, rumbleGain);
+        }
+        else if (type === 'cat-purr') {
+            // Low frequency oscillation ~25Hz
+            const purr = ctx.createOscillator();
+            purr.type = 'triangle';
+            purr.frequency.value = 25;
+
+            const purrGain = ctx.createGain();
+            purrGain.gain.value = 0.3;
+
+            // LFO for vibrato
+            const lfo = ctx.createOscillator();
+            lfo.frequency.value = 2;
+            const lfoGain = ctx.createGain();
+            lfoGain.gain.value = 2;
+
+            lfo.connect(lfoGain);
+            lfoGain.connect(purr.frequency);
+
+            purr.connect(purrGain);
+            purrGain.connect(destination);
+            purr.start();
+            lfo.start();
+
+            nodes.push(purr, purrGain, lfo, lfoGain);
+        }
+        else if (type === 'in-utero') {
+            // Heartbeat + muffled pink noise
+            const pinkBuffer = createNoiseBuffer(ctx, 'pink');
+            const pinkSource = ctx.createBufferSource();
+            pinkSource.buffer = pinkBuffer;
+            pinkSource.loop = true;
+
+            const pinkFilter = ctx.createBiquadFilter();
+            pinkFilter.type = 'lowpass';
+            pinkFilter.frequency.value = 200;
+
+            const pinkGain = ctx.createGain();
+            pinkGain.gain.value = 0.2;
+
+            pinkSource.connect(pinkFilter);
+            pinkFilter.connect(pinkGain);
+            pinkGain.connect(destination);
+            pinkSource.start();
+
+            // Heartbeat
+            const heartbeatInterval = setInterval(() => {
+                const t = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                osc.frequency.value = 60;
+
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0, t);
+                gain.gain.linearRampToValueAtTime(0.4, t + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+                osc.connect(gain);
+                gain.connect(destination);
+                osc.start(t);
+                osc.stop(t + 0.3);
+            }, 800); // ~75 BPM
+
+            nodes.push(pinkSource, pinkFilter, pinkGain, { stop: () => clearInterval(heartbeatInterval) });
+        }
+        else if (type === 'underwater') {
+            // Muffled blue noise + bubbles
+            const buffer = createNoiseBuffer(ctx, 'white');
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.loop = true;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 600;
+
+            const gain = ctx.createGain();
+            gain.gain.value = 0.25;
+
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(destination);
+            source.start();
+
+            // Bubbles (random high-freq pops)
+            const bubbleInterval = setInterval(() => {
+                if (Math.random() > 0.5) {
+                    const t = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    osc.frequency.value = 800 + Math.random() * 1200;
+
+                    const gain = ctx.createGain();
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.05, t + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+
+                    osc.connect(gain);
+                    gain.connect(destination);
+                    osc.start(t);
+                    osc.stop(t + 0.15);
+                }
+            }, 500 + Math.random() * 1500);
+
+            nodes.push(source, filter, gain, { stop: () => clearInterval(bubbleInterval) });
         }
         else if (type === 'cosmic') {
             // Drone: 3 detuned oscillators

@@ -1,4 +1,4 @@
-import { ArrowLeft, Play, Pause, Sparkles, Mountain, Waves, CloudRain, CircleDot, Hexagon, Disc } from 'lucide-react';
+import { ArrowLeft, Play, Pause, Sparkles, Mountain, Waves, CloudRain, CircleDot, Hexagon, Disc, Flame, TreePine, Flower2, CloudLightning, Droplets, Heart, Baby, Fish } from 'lucide-react';
 import { soundscapes } from '../data/soundscapes';
 import './SoundscapesPage.css';
 
@@ -8,8 +8,16 @@ const iconMap = {
     Waves,
     CloudRain,
     CircleDot,
-    Diamond: Hexagon, // Mapping Crystal to Hexagon
-    Drum: Disc // Mapping Drum to Disc (closest shape)
+    Diamond: Hexagon,
+    Drum: Disc,
+    Flame,
+    Trees: TreePine,
+    Flower: Flower2,
+    CloudLightning,
+    Droplets,
+    Heart,
+    Baby,
+    Fish
 };
 
 export function SoundscapesPage({ onBack, onPlay, currentTrack, isPlaying }) {
