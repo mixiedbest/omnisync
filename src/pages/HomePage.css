@@ -105,9 +105,37 @@
     line-height: 1.5;
 }
 
+.settings-link-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.settings-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(17, 24, 39, 0.6);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.settings-nav-btn:hover {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: var(--accent-purple);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
 .manifestation-link {
     text-align: center;
-    margin: 40px 0 20px;
+    margin-bottom: 40px;
 }
 
 .anthem-link {

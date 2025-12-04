@@ -20,6 +20,7 @@ import { Visualizer } from './components/Visualizer';
 import { CosmicAlignmentPage } from './pages/CosmicAlignmentPage';
 import { InnerSyncPage } from './pages/InnerSyncPage';
 import { ConnectionsPage } from './pages/ConnectionsPage';
+import { SettingsPage } from './pages/SettingsPage';
 import './App.css';
 
 function App() {
@@ -335,6 +336,22 @@ function App() {
       <>
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <ConnectionsPage onBack={handleBack} />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+        />
+      </>
+    );
+  }
+
+  if (currentPage === 'settings') {
+    return (
+      <>
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
+        <SettingsPage onBack={handleBack} />
         <PlayerControls
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}

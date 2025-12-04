@@ -1,4 +1,4 @@
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
@@ -99,6 +99,16 @@ export function HomePage({ onNavigate }) {
                         </button>
                     );
                 })}
+            </div>
+
+            <div className="settings-link-container">
+                <button
+                    className="settings-nav-btn"
+                    onClick={() => onNavigate('settings')}
+                >
+                    <Settings size={20} />
+                    <span>App Settings</span>
+                </button>
             </div>
 
             <div className="manifestation-link">
