@@ -1,10 +1,12 @@
-import { useState } from 'react';
-import { ArrowLeft, Star, Moon, Sun, Users, Heart, Zap, MessageCircle, Sparkles, Plus, X, Play, Pause } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Star, Moon, Sun, Users, Heart, Zap, MessageCircle, Sparkles, Plus, X, Play, Pause, Globe } from 'lucide-react';
 import { zodiacData, elementProfiles, intentionProfiles, getZodiacSign } from '../data/zodiacData';
+import { planetaryFrequencies, getCurrentMoonPhase, zodiacRulers } from '../data/planetaryData';
 import './CosmicAlignmentPage.css';
 
 export function CosmicAlignmentPage({ onBack, onPlay, currentTrack, isPlaying }) {
-    const [activeTab, setActiveTab] = useState('personal'); // 'personal' or 'relationship'
+    const [activeTab, setActiveTab] = useState('personal'); // 'personal', 'relationship', or 'lunar'
+    const [currentMoonPhase, setCurrentMoonPhase] = useState(null);
 
     // Personal State
     const [birthDate, setBirthDate] = useState('');
@@ -15,6 +17,11 @@ export function CosmicAlignmentPage({ onBack, onPlay, currentTrack, isPlaying })
     // Relationship State
     const [people, setPeople] = useState([{ id: 1, name: 'Person 1', sign: 'aries' }, { id: 2, name: 'Person 2', sign: 'libra' }]);
     const [intention, setIntention] = useState('romance');
+
+    // Calculate current moon phase on mount
+    useEffect(() => {
+        setCurrentMoonPhase(getCurrentMoonPhase());
+    }, []);
 
     // --- Personal Logic ---
     const calculateSunSign = (date) => {
@@ -119,6 +126,37 @@ export function CosmicAlignmentPage({ onBack, onPlay, currentTrack, isPlaying })
         });
     };
 
+    // --- Lunar & Planetary Logic ---
+    const playMoonPhase = () => {
+        if (!currentMoonPhase) return;
+
+        onPlay({
+            id: `lunar-${currentMoonPhase.id}`,
+            title: `${currentMoonPhase.emoji} ${currentMoonPhase.name}`,
+            left: currentMoonPhase.frequencies.base,
+            right: currentMoonPhase.frequencies.base + currentMoonPhase.frequencies.binaural,
+            bothEars: currentMoonPhase.frequencies.harmonics[0], // First harmonic
+            noiseType: currentMoonPhase.noise,
+            type: currentMoonPhase.soundscape,
+            desc: currentMoonPhase.intention
+        });
+    };
+
+    const playPlanetaryFrequency = (planetId) => {
+        const planet = planetaryFrequencies[planetId];
+
+        onPlay({
+            id: `planetary-${planetId}`,
+            title: `${planet.name} Frequency`,
+            left: planet.frequency,
+            right: planet.frequency + 7.83, // Add Schumann resonance as binaural
+            bothEars: 0,
+            noiseType: 'pink',
+            type: null,
+            desc: `${planet.purpose} • ${planet.chakra} Chakra`
+        });
+    };
+
     return (
         <div className="cosmic-page">
             <div className="page-header">
@@ -142,7 +180,13 @@ export function CosmicAlignmentPage({ onBack, onPlay, currentTrack, isPlaying })
                     className={`tab-btn ${activeTab === 'relationship' ? 'active' : ''}`}
                     onClick={() => setActiveTab('relationship')}
                 >
-                    <Users size={16} /> Relationship Harmonics
+                    <Users size={16} /> Relationship
+                </button>
+                <button
+                    className={`tab-btn ${activeTab === 'lunar' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('lunar')}
+                >
+                    <Moon size={16} /> Lunar & Planetary
                 </button>
             </div>
 
@@ -277,7 +321,53 @@ export function CosmicAlignmentPage({ onBack, onPlay, currentTrack, isPlaying })
                         </button>
                     </div>
                 </div>
-            )}
+            ) : activeTab === 'lunar' ? (
+            <div className="tab-content fade-in">
+                {/* Moon Phase Section */}
+                {currentMoonPhase && (
+                    <div className="lunar-section glass-card">
+                        <h3>🌙 Current Moon Phase</h3>
+                        <div className="moon-phase-card">
+                            <div className="moon-emoji">{currentMoonPhase.emoji}</div>
+                            <h4>{currentMoonPhase.name}</h4>
+                            <p className="moon-purpose">{currentMoonPhase.purpose}</p>
+                            <p className="moon-intention">{currentMoonPhase.intention}</p>
+                            <button
+                                className="play-action-btn"
+                                onClick={playMoonPhase}
+                            >
+                                {isPlaying && currentTrack?.id.includes('lunar') ? <Pause size={24} /> : <Play size={24} />}
+                                {isPlaying && currentTrack?.id.includes('lunar') ? 'Pause Lunar Frequency' : 'Play Lunar Frequency'}
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Planetary Frequencies Section */}
+                <div className="planetary-section glass-card">
+                    <h3>🪐 Planetary Frequencies</h3>
+                    <p className="section-subtitle">Tune into the cosmic octave</p>
+                    <div className="planetary-grid">
+                        {Object.values(planetaryFrequencies).map(planet => (
+                            <button
+                                key={planet.id}
+                                className={`planetary-card ${isPlaying && currentTrack?.id === `planetary-${planet.id}` ? 'active' : ''}`}
+                                onClick={() => playPlanetaryFrequency(planet.id)}
+                                style={{ borderColor: planet.color }}
+                            >
+                                <div className="planet-header">
+                                    <div className="planet-icon" style={{ background: planet.color }}></div>
+                                    <h4>{planet.name}</h4>
+                                </div>
+                                <div className="planet-freq">{planet.frequency.toFixed(2)} Hz</div>
+                                <div className="planet-chakra">{planet.chakra}</div>
+                                <p className="planet-purpose">{planet.purpose}</p>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            ) : null}
         </div>
     );
 }
