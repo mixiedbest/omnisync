@@ -91,17 +91,24 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
         localStorage.setItem('omnisync_favorites', JSON.stringify(updatedFavorites));
     };
 
-    const emotions = [
+    const currentEmotions = [
         { value: 'anxious', label: 'Anxious', icon: Frown, freq: { left: 200, right: 210, beat: 10 } },
         { value: 'stressed', label: 'Stressed', icon: Zap, freq: { left: 200, right: 208, beat: 8 } },
         { value: 'sad', label: 'Sad', icon: Cloud, freq: { left: 200, right: 206, beat: 6 } },
         { value: 'tired', label: 'Tired', icon: BatteryLow, freq: { left: 200, right: 204, beat: 4 } },
         { value: 'neutral', label: 'Neutral', icon: Meh, freq: { left: 200, right: 210, beat: 10 } },
+        { value: 'overwhelmed', label: 'Overwhelmed', icon: Wind, freq: { left: 200, right: 212, beat: 12 } },
+        { value: 'restless', label: 'Restless', icon: Flame, freq: { left: 200, right: 215, beat: 15 } },
+    ];
+
+    const desiredEmotions = [
         { value: 'calm', label: 'Calm', icon: Wind, freq: { left: 200, right: 208, beat: 8 } },
         { value: 'happy', label: 'Happy', icon: Smile, freq: { left: 200, right: 212, beat: 12 } },
         { value: 'energized', label: 'Energized', icon: Flame, freq: { left: 200, right: 220, beat: 20 } },
         { value: 'focused', label: 'Focused', icon: Sparkles, freq: { left: 200, right: 214, beat: 14 } },
         { value: 'creative', label: 'Creative', icon: Star, freq: { left: 200, right: 210, beat: 10 } },
+        { value: 'peaceful', label: 'Peaceful', icon: Heart, freq: { left: 200, right: 206, beat: 6 } },
+        { value: 'confident', label: 'Confident', icon: Zap, freq: { left: 200, right: 216, beat: 16 } },
     ];
 
     const symptoms = [
@@ -126,8 +133,8 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
     const generateAuraScan = () => {
         if (!currentEmotion || !desiredEmotion) return;
 
-        const current = emotions.find(e => e.value === currentEmotion);
-        const desired = emotions.find(e => e.value === desiredEmotion);
+        const current = currentEmotions.find(e => e.value === currentEmotion);
+        const desired = desiredEmotions.find(e => e.value === desiredEmotion);
 
         // Create a transitional frequency
         const avgBeat = (current.freq.beat + desired.freq.beat) / 2;
@@ -266,7 +273,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                             How are you feeling right now?
                         </h3>
                         <div className="emotion-grid">
-                            {emotions.map(emotion => {
+                            {currentEmotions.map(emotion => {
                                 const IconComponent = emotion.icon;
                                 return (
                                     <button
@@ -288,7 +295,7 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying }) {
                             How would you like to feel?
                         </h3>
                         <div className="emotion-grid">
-                            {emotions.map(emotion => {
+                            {desiredEmotions.map(emotion => {
                                 const IconComponent = emotion.icon;
                                 return (
                                     <button
