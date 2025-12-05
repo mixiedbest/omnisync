@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Sparkles, Heart, Zap, Link2 } from 'lucide-react';
+import { ArrowLeft, Users, Sparkles, Heart, Zap, Link2, Activity, MessageCircle, Award, Gift, Music } from 'lucide-react';
 import './ConnectionsPage.css';
 
 export function ConnectionsPage({ onBack }) {
@@ -112,6 +112,45 @@ export function ConnectionsPage({ onBack }) {
                     </div>
                     <div className="stat-label">Mutual Links</div>
                 </div>
+            </div>
+
+            {/* Connection Features Grid */}
+            <div className="connections-features-grid">
+                <button className="feature-card blocked">
+                    <Activity size={24} className="feature-icon" />
+                    <span>Shared Waveform</span>
+                    <span className="coming-soon-badge">Soon</span>
+                </button>
+                <button className="feature-card blocked">
+                    <Users size={24} className="feature-icon" />
+                    <span>Group Rooms</span>
+                    <span className="coming-soon-badge">Soon</span>
+                </button>
+                <button className="feature-card blocked">
+                    <Music size={24} className="feature-icon" />
+                    <span>Collab Playlists</span>
+                    <span className="coming-soon-badge">Soon</span>
+                </button>
+                <button className="feature-card blocked">
+                    <MessageCircle size={24} className="feature-icon" />
+                    <span>Message Drops</span>
+                    <span className="coming-soon-badge">Soon</span>
+                </button>
+                <button className="feature-card blocked">
+                    <Award size={24} className="feature-icon" />
+                    <span>Milestones</span>
+                    <span className="coming-soon-badge">Soon</span>
+                </button>
+                <button className="feature-card blocked">
+                    <Heart size={24} className="feature-icon" />
+                    <span>Partner Sync</span>
+                    <span className="coming-soon-badge">Soon</span>
+                </button>
+                <button className="feature-card blocked">
+                    <Gift size={24} className="feature-icon" />
+                    <span>Frequency Gifts</span>
+                    <span className="coming-soon-badge">Soon</span>
+                </button>
             </div>
 
             <button

@@ -15,6 +15,9 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
     // Journal State
     const [journalEntries, setJournalEntries] = useState([]);
     const [showJournalPrompt, setShowJournalPrompt] = useState(false);
+    const [gratitudeEntries, setGratitudeEntries] = useState([]);
+    const [todayGratitude, setTodayGratitude] = useState('');
+    const [additionalGratitude, setAdditionalGratitude] = useState(['', '', '']);
 
     useEffect(() => {
         // Load username from localStorage
@@ -28,6 +31,12 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
         const savedEntries = localStorage.getItem('omnisync_journal');
         if (savedEntries) {
             setJournalEntries(JSON.parse(savedEntries));
+        }
+
+        // Load gratitude entries
+        const savedGratitude = localStorage.getItem('omnisync_gratitude');
+        if (savedGratitude) {
+            setGratitudeEntries(JSON.parse(savedGratitude));
         }
     }, []);
 
@@ -72,6 +81,25 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
         if (onToggleFavorite) {
             onToggleFavorite(preset);
         }
+    };
+
+    const handleSaveGratitude = () => {
+        if (!todayGratitude.trim()) return;
+
+        const newEntry = {
+            id: Date.now(),
+            date: new Date().toLocaleDateString(),
+            timestamp: new Date().toISOString(),
+            content: todayGratitude,
+            extras: additionalGratitude.filter(g => g.trim())
+        };
+
+        const updatedGratitude = [newEntry, ...gratitudeEntries];
+        setGratitudeEntries(updatedGratitude);
+        localStorage.setItem('omnisync_gratitude', JSON.stringify(updatedGratitude));
+
+        setTodayGratitude('');
+        setAdditionalGratitude(['', '', '']);
     };
 
     const currentEmotions = [
@@ -388,30 +416,108 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
             {activeTab === 'journal' && (
                 <div className="journal-container">
                     <h3 className="section-title">Your Sonic Healing Archive</h3>
-                    <p className="journal-subtitle">Track your journey and discover patterns</p>
+                    <p className="journal-subtitle">Track your journey and gratitude</p>
 
-                    {journalEntries.length === 0 ? (
-                        <div className="empty-journal">
-                            <BookOpen size={48} />
-                            <p>No entries yet. Start your first session to begin logging!</p>
+                    {/* Daily Gratitude Section */}
+                    <div className="gratitude-section">
+                        <div className="gratitude-card">
+                            <div className="gratitude-header">
+                                <Heart size={20} className="gratitude-icon" />
+                                <h4>Daily Gratitude</h4>
+                            </div>
+                            <p className="gratitude-prompt">What is one thing you are grateful for today?</p>
+
+                            <div className="gratitude-input-group">
+                                <input
+                                    type="text"
+                                    className="gratitude-input"
+                                    placeholder="I am grateful for..."
+                                    value={todayGratitude}
+                                    onChange={(e) => setTodayGratitude(e.target.value)}
+                                />
+
+                                {additionalGratitude.map((item, index) => (
+                                    item !== null && (
+                                        <input
+                                            key={index}
+                                            type="text"
+                                            className="gratitude-input extra"
+                                            placeholder="Also grateful for..."
+                                            value={item}
+                                            onChange={(e) => {
+                                                const newExtras = [...additionalGratitude];
+                                                newExtras[index] = e.target.value;
+                                                setAdditionalGratitude(newExtras);
+                                            }}
+                                        />
+                                    )
+                                ))}
+                            </div>
+
+                            <div className="gratitude-actions">
+                                <button
+                                    className="add-gratitude-btn"
+                                    onClick={() => handleSaveGratitude()}
+                                    disabled={!todayGratitude.trim()}
+                                >
+                                    Log Gratitude
+                                </button>
+                            </div>
                         </div>
-                    ) : (
-                        <div className="journal-entries">
-                            {journalEntries.map((entry, index) => (
-                                <div key={index} className="journal-entry">
-                                    <div className="entry-header">
-                                        <span className="entry-date">{entry.date}</span>
-                                        <span className="entry-frequency">{entry.frequency}</span>
-                                    </div>
-                                    <div className="entry-moods">
-                                        <span>Before: {entry.moodBefore}</span>
-                                        <span>→</span>
-                                        <span>After: {entry.moodAfter}</span>
-                                    </div>
+                    </div>
+
+                    <div className="journal-history-split">
+                        {/* Gratitude History */}
+                        <div className="history-column">
+                            <h4 className="history-title">Gratitude Log</h4>
+                            {gratitudeEntries.length === 0 ? (
+                                <p className="empty-text">No gratitude entries yet.</p>
+                            ) : (
+                                <div className="gratitude-list">
+                                    {gratitudeEntries.map(entry => (
+                                        <div key={entry.id} className="gratitude-entry-card">
+                                            <span className="entry-date-sm">{entry.date}</span>
+                                            <p className="gratitude-main">{entry.content}</p>
+                                            {entry.extras && entry.extras.length > 0 && (
+                                                <ul className="gratitude-extras">
+                                                    {entry.extras.map((extra, i) => (
+                                                        <li key={i}>{extra}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            )}
                         </div>
-                    )}
+
+                        {/* Session History */}
+                        <div className="history-column">
+                            <h4 className="history-title">Session Log</h4>
+                            {journalEntries.length === 0 ? (
+                                <div className="empty-journal">
+                                    <BookOpen size={48} />
+                                    <p>No sessions yet.</p>
+                                </div>
+                            ) : (
+                                <div className="journal-entries">
+                                    {journalEntries.map((entry, index) => (
+                                        <div key={index} className="journal-entry">
+                                            <div className="entry-header">
+                                                <span className="entry-date">{entry.date}</span>
+                                                <span className="entry-frequency">{entry.frequency}</span>
+                                            </div>
+                                            <div className="entry-moods">
+                                                <span>Before: {entry.moodBefore}</span>
+                                                <span>→</span>
+                                                <span>After: {entry.moodAfter}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
 
