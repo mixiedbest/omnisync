@@ -23,6 +23,7 @@ import { ConnectionsPage } from './pages/ConnectionsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { UserProfilePage } from './pages/UserProfilePage';
 import { PlaylistsPage } from './pages/PlaylistsPage';
+import { PlaylistSelectorModal } from './components/PlaylistSelectorModal';
 import './App.css';
 
 function App() {
@@ -36,6 +37,8 @@ function App() {
   const [favorites, setFavorites] = useState([]);
   const [sleepTimer, setSleepTimer] = useState(null);
   const sleepTimerRef = useRef(null);
+  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+  const [itemToAdd, setItemToAdd] = useState(null);
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -87,34 +90,12 @@ function App() {
 
   // Add to playlist function
   const handleAddToPlaylist = (item) => {
-    // Get existing playlists
-    const savedPlaylists = localStorage.getItem('omnisync_playlists');
-    const playlists = savedPlaylists ? JSON.parse(savedPlaylists) : [];
+    setItemToAdd(item);
+    setShowPlaylistModal(true);
+  };
 
-    if (playlists.length === 0) {
-      alert('Please create a playlist first! Go to Playlists page to create one.');
-      return;
-    }
-
-    // For now, add to the first playlist (we can add a modal to select later)
-    const targetPlaylist = playlists[0];
-
-    // Check if already in playlist
-    if (targetPlaylist.tracks.some(t => t.id === item.id)) {
-      alert(`"${item.title}" is already in "${targetPlaylist.name}"`);
-      return;
-    }
-
-    // Add track to playlist
-    targetPlaylist.tracks.push({
-      id: item.id,
-      title: item.title,
-      type: 'preset',
-      ...item
-    });
-
-    localStorage.setItem('omnisync_playlists', JSON.stringify(playlists));
-    alert(`Added "${item.title}" to "${targetPlaylist.name}"!`);
+  const handlePlaylistSelected = (playlist) => {
+    alert(`Added "${itemToAdd.title || itemToAdd.name}" to "${playlist.name}"!`);
   };
 
   // Sleep Sequence Logic
@@ -551,6 +532,14 @@ function App() {
           onSetSleepTimer={setSleepTimer}
         />
       </div>
+
+      {showPlaylistModal && itemToAdd && (
+        <PlaylistSelectorModal
+          item={itemToAdd}
+          onClose={() => setShowPlaylistModal(false)}
+          onSelect={handlePlaylistSelected}
+        />
+      )}
     </>
   );
 }
