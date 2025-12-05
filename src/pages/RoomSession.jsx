@@ -294,10 +294,7 @@ export function RoomSession({ room, onBack, username }) {
                                 </button>
                                 <button
                                     className={`source-tab ${soundSource === 'custom' ? 'active' : ''}`}
-                                    onClick={() => {
-                                        setSoundSource('custom');
-                                        setShowCustomGenerator(true);
-                                    }}
+                                    onClick={() => setSoundSource('custom')}
                                 >
                                     <Sliders size={16} />
                                     Custom
@@ -376,20 +373,22 @@ export function RoomSession({ room, onBack, username }) {
                             )}
 
                             {/* Custom Generator */}
-                            {soundSource === 'custom' && showCustomGenerator && (
-                                <div className="custom-generator-embed">
-                                    <p className="custom-note">
-                                        Create a custom mix for this session. Click "Generate" to set it as the session sound.
-                                    </p>
-                                    <button
-                                        className="custom-confirm-btn"
-                                        onClick={() => {
-                                            setSelectedSound({ id: 'custom', title: 'Custom Mix' });
-                                            setShowCustomGenerator(false);
-                                        }}
-                                    >
-                                        Use Custom Mix
-                                    </button>
+                            {soundSource === 'custom' && (
+                                <div className="sound-options">
+                                    <div className="custom-generator-embed">
+                                        <p className="custom-note">
+                                            Create a custom mix for this session
+                                        </p>
+                                        <div className="generator-container">
+                                            <CustomGenerator
+                                                onGenerate={(config) => {
+                                                    console.log('Custom generator config:', config);
+                                                    setSelectedSound({ id: 'custom', title: 'Custom Mix', config });
+                                                }}
+                                                isActive={false}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
 
