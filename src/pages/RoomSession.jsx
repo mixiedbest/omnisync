@@ -19,6 +19,8 @@ export function RoomSession({ room, onBack, username }) {
     const [chatMessages, setChatMessages] = useState([]);
     const [messageInput, setMessageInput] = useState('');
     const [sessionTime, setSessionTime] = useState(0);
+    const [personalToneFreq, setPersonalToneFreq] = useState(432);
+    const [personalToneVol, setPersonalToneVol] = useState(0.5);
     const [isPlaying, setIsPlaying] = useState(false);
     const [selectedSound, setSelectedSound] = useState(null);
     const [soundSource, setSoundSource] = useState('presets'); // 'presets', 'soundscapes', 'journeys', 'custom'
@@ -140,8 +142,51 @@ export function RoomSession({ room, onBack, username }) {
         }
     }, [sessionState, members, sessionTime, room.theme]);
 
+    // Helper to construct playback parameters merging Session Sound + Personal Layers + Element
+    const getPlaybackParams = () => {
+        if (!selectedSound) return null;
+
+        let left = selectedSound.left || 0;
+        let right = selectedSound.right || 0;
+
+        if (selectedSound.frequencies) {
+            left = selectedSound.frequencies.left;
+            right = selectedSound.frequencies.right;
+        } else if (selectedSound.stages) {
+            const stage = selectedSound.stages[0];
+            left = stage.left;
+            right = stage.right;
+        }
+
+        // Element Soundscape Mapping
+        const elementMap = { fire: 'firewood', water: 'ocean', earth: 'earth', air: 'nature-walk' };
+        // Priority: User Element > Session Soundscape
+        const soundscapeType = (userElement && elementMap[userElement]) || selectedSound.type || selectedSound.soundscapeType || null;
+
+        // Layers
+        const layers = [...(selectedSound.layers || [])];
+        if (userMode === 'add-tone') {
+            layers.push({
+                id: 'personal',
+                carrierFreq: personalToneFreq,
+                beatFreq: 0,
+                volume: personalToneVol
+            });
+        }
+
+        return {
+            left, right,
+            bothEars: selectedSound.bothEars || 0,
+            noiseType: selectedSound.noiseType || null,
+            soundscapeType,
+            volumes: selectedSound.volumes || {},
+            layers
+        };
+    };
+
     const handleStartSession = () => {
-        if (!selectedSound) {
+        const params = getPlaybackParams();
+        if (!params) {
             alert('Please select a sound to begin');
             return;
         }
@@ -149,29 +194,14 @@ export function RoomSession({ room, onBack, username }) {
         setDebugStatus('Initializing playback...');
 
         try {
-            // Extract parameters based on sound object type
-            let left = selectedSound.left || 0;
-            let right = selectedSound.right || 0;
-
-            // Handle wrapper objects (e.g. soundscapes might wrap freqs)
-            if (selectedSound.frequencies) {
-                left = selectedSound.frequencies.left;
-                right = selectedSound.frequencies.right;
-            } else if (selectedSound.stages) {
-                // Journey - start with first stage
-                const stage = selectedSound.stages[0];
-                left = stage.left;
-                right = stage.right;
-            }
-
             play(
-                left,
-                right,
-                selectedSound.bothEars || 0,
-                selectedSound.noiseType || null,
-                selectedSound.type || selectedSound.soundscapeType || null,
-                selectedSound.volumes || {},
-                selectedSound.layers || []
+                params.left,
+                params.right,
+                params.bothEars,
+                params.noiseType,
+                params.soundscapeType,
+                params.volumes,
+                params.layers
             );
 
             setDebugStatus('Playback started');
@@ -199,28 +229,19 @@ export function RoomSession({ room, onBack, username }) {
             setIsPlaying(false);
         } else {
             // Resume playback
-            let left = selectedSound.left || 0;
-            let right = selectedSound.right || 0;
-
-            if (selectedSound.frequencies) {
-                left = selectedSound.frequencies.left;
-                right = selectedSound.frequencies.right;
-            } else if (selectedSound.stages) {
-                const stage = selectedSound.stages[0];
-                left = stage.left;
-                right = stage.right;
+            const params = getPlaybackParams();
+            if (params) {
+                play(
+                    params.left,
+                    params.right,
+                    params.bothEars,
+                    params.noiseType,
+                    params.soundscapeType,
+                    params.volumes,
+                    params.layers
+                );
+                setIsPlaying(true);
             }
-
-            play(
-                left,
-                right,
-                selectedSound.bothEars || 0,
-                selectedSound.noiseType || null,
-                selectedSound.type || selectedSound.soundscapeType || null,
-                selectedSound.volumes || {},
-                selectedSound.layers || []
-            );
-            setIsPlaying(true);
         }
     };
 
@@ -353,6 +374,45 @@ export function RoomSession({ room, onBack, username }) {
                                 <span>Add Personal Tone</span>
                             </button>
                         </div>
+
+                        {/* Personal Tone Configuration */}
+                        {userMode === 'add-tone' && (
+                            <div className="personal-tone-config" style={{
+                                marginTop: '16px',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                padding: '16px',
+                                borderRadius: '12px',
+                                border: '1px solid rgba(139, 92, 246, 0.2)'
+                            }}>
+                                <h4 style={{ marginBottom: '12px', color: 'var(--text-primary)', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <Sliders size={14} /> Configure Tone
+                                </h4>
+                                <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                                    <div style={{ flex: 1, minWidth: '120px' }}>
+                                        <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
+                                            Frequency: {personalToneFreq} Hz
+                                        </label>
+                                        <input
+                                            type="range" min="50" max="800" step="1"
+                                            value={personalToneFreq}
+                                            onChange={(e) => setPersonalToneFreq(Number(e.target.value))}
+                                            style={{ width: '100%', accentColor: '#8b5cf6' }}
+                                        />
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: '120px' }}>
+                                        <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
+                                            Volume: {Math.round(personalToneVol * 100)}%
+                                        </label>
+                                        <input
+                                            type="range" min="0" max="1" step="0.05"
+                                            value={personalToneVol}
+                                            onChange={(e) => setPersonalToneVol(Number(e.target.value))}
+                                            style={{ width: '100%', accentColor: '#8b5cf6' }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Sound Selection (Host) */}
