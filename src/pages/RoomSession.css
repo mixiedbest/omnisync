@@ -645,6 +645,14 @@
     background: var(--accent-teal);
 }
 
+.custom-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    font-style: italic;
+    text-align: center;
+}
+
 .selected-sound-preview {
     display: flex;
     align-items: center;

@@ -377,17 +377,25 @@ export function RoomSession({ room, onBack, username }) {
                                 <div className="sound-options">
                                     <div className="custom-generator-embed">
                                         <p className="custom-note">
-                                            Create a custom mix for this session
+                                            Custom generator mode will allow you to create a unique mix for this session.
                                         </p>
-                                        <div className="generator-container">
-                                            <CustomGenerator
-                                                onGenerate={(config) => {
-                                                    console.log('Custom generator config:', config);
-                                                    setSelectedSound({ id: 'custom', title: 'Custom Mix', config });
-                                                }}
-                                                isActive={false}
-                                            />
-                                        </div>
+                                        <button
+                                            className="custom-confirm-btn"
+                                            onClick={() => {
+                                                setSelectedSound({
+                                                    id: 'custom',
+                                                    title: 'Custom Mix',
+                                                    left: 200,
+                                                    right: 210,
+                                                    desc: 'Custom binaural beat configuration'
+                                                });
+                                            }}
+                                        >
+                                            Use Custom Mode
+                                        </button>
+                                        <p className="custom-hint">
+                                            You'll be able to configure the custom generator after starting the session
+                                        </p>
                                     </div>
                                 </div>
                             )}
