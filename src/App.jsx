@@ -21,6 +21,7 @@ import { CosmicAlignmentPage } from './pages/CosmicAlignmentPage';
 import { InnerSyncPage } from './pages/InnerSyncPage';
 import { ConnectionsPage } from './pages/ConnectionsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { UserProfilePage } from './pages/UserProfilePage';
 import './App.css';
 
 function App() {
@@ -399,6 +400,24 @@ function App() {
           volume={volume}
           onVolumeChange={setVolume}
           currentTrack={displayTrack}
+        />
+      </>
+    );
+  }
+
+  if (currentPage === 'profile') {
+    return (
+      <>
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
+        <UserProfilePage onBack={handleBack} customSounds={[]} />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
+          sleepTimer={sleepTimer}
+          onSetSleepTimer={setSleepTimer}
         />
       </>
     );

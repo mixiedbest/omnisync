@@ -103,6 +103,14 @@ export function HomePage({ onNavigate }) {
 
             <div className="settings-link-container">
                 <button
+                    className="settings-nav-btn profile-btn"
+                    onClick={() => onNavigate('profile')}
+                >
+                    <User size={20} />
+                    <span>Your Profile</span>
+                </button>
+
+                <button
                     className="settings-nav-btn"
                     onClick={() => onNavigate('settings')}
                 >

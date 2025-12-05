@@ -108,6 +108,8 @@
 .settings-link-container {
     display: flex;
     justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
     margin-bottom: 16px;
 }
 
@@ -124,6 +126,11 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
+.settings-nav-btn.profile-btn {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(20, 184, 166, 0.2));
+    border-color: var(--accent-purple);
 }
 
 .settings-nav-btn:hover {
