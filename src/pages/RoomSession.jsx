@@ -172,6 +172,8 @@ export function RoomSession({ room, onBack, username }) {
 
         let left = sound.left || 0;
         let right = sound.right || 0;
+        let noiseType = sound.noiseType || null;
+        let soundscapeType = sound.type || sound.soundscapeType || null;
 
         if (sound.frequencies) {
             left = sound.frequencies.left;
@@ -203,7 +205,13 @@ export function RoomSession({ room, onBack, username }) {
         // Element Soundscape Mapping
         const elementMap = { fire: 'firewood', water: 'ocean', earth: 'earth', air: 'nature-walk' };
         // Priority: User Element > Session Soundscape
-        const soundscapeType = (userElement && elementMap[userElement]) || sound.type || sound.soundscapeType || null;
+        // Priority: User Element > Session Soundscape
+        if (userElement && elementMap[userElement]) {
+            soundscapeType = elementMap[userElement];
+        } else if (!soundscapeType) {
+            // If not set by element or sound, checks above handle it, 
+            // but if Journey set it, it's already in 'soundscapeType' var.
+        }
 
         // Layers
         const layers = [...(sound.layers || [])];
