@@ -24,6 +24,9 @@ export function RoomSession({ room, onBack, username }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [selectedSound, setSelectedSound] = useState(null);
     const [showLiveGenerator, setShowLiveGenerator] = useState(false);
+    // Custom Layering State
+    const [customLayer, setCustomLayer] = useState(null);
+    const [isCustomLayerActive, setIsCustomLayerActive] = useState(false);
     const [soundSource, setSoundSource] = useState('presets'); // 'presets', 'soundscapes', 'journeys', 'custom'
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [showCustomGenerator, setShowCustomGenerator] = useState(false);
@@ -176,10 +179,33 @@ export function RoomSession({ room, onBack, username }) {
             });
         }
 
+        // Custom Generator Layering (if active and not source)
+        if (isCustomLayerActive && customLayer && soundSource !== 'custom') {
+            // Main Beat from Generator
+            if (customLayer.left && customLayer.right) {
+                layers.push({
+                    id: 'custom-main',
+                    carrierFreq: customLayer.left,
+                    beatFreq: customLayer.right - customLayer.left,
+                    volume: (customLayer.volumes?.binaural || 0.5)
+                });
+            }
+            // Extra Layers from Generator
+            if (customLayer.layers) {
+                layers.push(...customLayer.layers);
+            }
+            // Noise Override (optional, prioritized if present)
+            // If Generator has noise, use it? Or mix? 
+            // We'll let generator override for 'DJ' feel.
+            if (customLayer.noiseType) {
+                // params object is created below, we can capture noiseType there
+            }
+        }
+
         return {
             left, right,
             bothEars: sound.bothEars || 0,
-            noiseType: sound.noiseType || null,
+            noiseType: (isCustomLayerActive && customLayer?.noiseType) || sound.noiseType || null,
             soundscapeType,
             volumes: sound.volumes || {},
             layers
@@ -669,37 +695,92 @@ export function RoomSession({ room, onBack, username }) {
 
 
                 {/* Live Generator Panel (Host) */}
-                {
-                    showLiveGenerator && members[0].isHost && (
-                        <div className="live-generator-panel" style={{
-                            position: 'absolute', top: '80px', left: '50%', transform: 'translateX(-50%)',
-                            width: '95%', maxWidth: '600px', maxHeight: '70vh', overflowY: 'auto',
-                            background: 'rgba(17, 24, 39, 0.95)', border: '1px solid var(--accent-purple)',
-                            borderRadius: '16px', padding: '20px', zIndex: 1000, boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-                            backdropFilter: 'blur(10px)'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', alignItems: 'center' }}>
-                                <h3 style={{ margin: 0, color: 'var(--accent-teal)' }}>Live Session Mixer</h3>
-                                <button style={{ background: 'none', border: 'none', color: 'white', fontSize: '20px', cursor: 'pointer' }} onClick={() => setShowLiveGenerator(false)}>✕</button>
+                {showLiveGenerator && members[0].isHost && (
+                    <div className="live-generator-panel" style={{
+                        position: 'absolute', top: '80px', left: '50%', transform: 'translateX(-50%)',
+                        width: '95%', maxWidth: '600px', maxHeight: '70vh', overflowY: 'auto',
+                        background: 'rgba(17, 24, 39, 0.95)', border: '1px solid var(--accent-purple)',
+                        borderRadius: '16px', padding: '20px', zIndex: 1000, boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                        backdropFilter: 'blur(10px)'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                <h3 style={{ margin: 0, color: 'var(--accent-teal)' }}>Live Mixer</h3>
+                                <label className="layer-toggle" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: '20px' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={isCustomLayerActive}
+                                        onChange={(e) => {
+                                            setIsCustomLayerActive(e.target.checked);
+                                            // Force update if playing
+                                            setTimeout(() => {
+                                                if (isPlaying) {
+                                                    const params = getPlaybackParams();
+                                                    if (params) play(params.left, params.right, params.bothEars, params.noiseType, params.soundscapeType, params.volumes, params.layers);
+                                                }
+                                            }, 0);
+                                        }}
+                                        style={{ accentColor: 'var(--accent-purple)' }}
+                                    />
+                                    <span style={{ fontSize: '12px', fontWeight: '600' }}>Layer ON</span>
+                                </label>
                             </div>
-                            <CustomGenerator
-                                onGenerate={(sound) => {
-                                    setSelectedSound(sound);
-                                    if (isPlaying) {
-                                        const params = getPlaybackParams(sound);
-                                        if (params) play(
-                                            params.left, params.right, params.bothEars,
-                                            params.noiseType, params.soundscapeType,
-                                            params.volumes, params.layers
-                                        );
-                                    }
-                                }}
-                                actionLabel="Update Live Sound"
-                                isActive={true}
-                            />
+                            <button style={{ background: 'none', border: 'none', color: 'white', fontSize: '20px', cursor: 'pointer' }} onClick={() => setShowLiveGenerator(false)}>✕</button>
                         </div>
-                    )
-                }
+                        <CustomGenerator
+                            onGenerate={(sound) => {
+                                setCustomLayer(sound);
+                                // If active, update live
+                                if (isPlaying && isCustomLayerActive) {
+                                    // Use timeout to allow state to settle? 
+                                    // Actually passing 'sound' directly to helper is safer but helper uses state.
+                                    // Better: We must pass 'customLayerOverride' to helper?
+                                    // Or simplified: Just trigger play() with merged object manually here?
+                                    // Helper is complex.
+                                    // We will rely on React State update + Effect?
+                                    // No, effect is slow/risky.
+                                    // Let's modify logic:
+                                    // We update state 'customLayer'.
+                                    // AND we trigger play with mixed params immediately using 'sound' as the custom layer.
+                                    // But helper read 'isCustomLayerActive' from state.
+                                    // We assume isActive is true (since onGenerate typically happens when active).
+                                    // Wait, onGenerate happens on slider drag?
+                                    // CustomGenerator generates on button click mostly.
+                                    // If dragging sliders, it might not generate.
+                                    // If user clicks "Update Live Sound".
+
+                                    // Manual Mix for Immediate Feedback:
+                                    const base = selectedSound;
+                                    const layers = [...(base.layers || [])];
+                                    if (sound.left && sound.right) {
+                                        layers.push({
+                                            id: 'custom-main',
+                                            carrierFreq: sound.left,
+                                            beatFreq: sound.right - sound.left,
+                                            volume: sound.volumes?.binaural || 0.5
+                                        });
+                                    }
+                                    if (sound.layers) layers.push(...sound.layers);
+
+                                    play(
+                                        base.left, base.right, // Maintain base binaural
+                                        base.bothEars || 0,
+                                        sound.noiseType || base.noiseType, // Override noise
+                                        base.type || base.soundscapeType, // Maintain base soundscape
+                                        base.volumes || {}, // Maintain base volumes? Wait. Custom has volumes too.
+                                        // If we want to mix volumes? simpler to keep base.
+                                        layers
+                                    );
+                                }
+                            }}
+                            actionLabel="Update Mix Layer"
+                            isActive={isCustomLayerActive}
+                        />
+                        <p style={{ fontSize: '11px', color: '#aaa', marginTop: '8px', textAlign: 'center' }}>
+                            Toggle "Layer ON" to hear this generator on top of the preset.
+                        </p>
+                    </div>
+                )}
 
                 {/* Mandala Visualization */}
                 <div className="visualization-container">
