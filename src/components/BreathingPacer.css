@@ -71,8 +71,39 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
-    transition: transform 4s ease-in-out;
-    /* Matches the 4s phase duration */
+    /* transition: transform 4s ease-in-out; Removed for keyframes */
+}
+
+.breathing-circle.animate-box {
+    animation: boxBreathing 16s infinite ease-in-out;
+}
+
+@keyframes boxBreathing {
+    0% {
+        transform: scale(1);
+    }
+
+    /* Start Inhale */
+    25% {
+        transform: scale(1.5);
+    }
+
+    /* End Inhale / Start Hold */
+    50% {
+        transform: scale(1.5);
+    }
+
+    /* End Hold / Start Exhale */
+    75% {
+        transform: scale(1);
+    }
+
+    /* End Exhale / Start Hold */
+    100% {
+        transform: scale(1);
+    }
+
+    /* End Hold / Loop */
 }
 
 .inner-text {

@@ -3,40 +3,19 @@ import { X, Wind } from 'lucide-react';
 import './BreathingPacer.css';
 
 export function BreathingPacer({ onClose }) {
-    const [phase, setPhase] = useState('inhale');
     const [text, setText] = useState('Inhale');
-    const [scale, setScale] = useState(1);
 
     useEffect(() => {
-        const cycle = () => {
-            // Inhale (4s) - grow from 1 to 1.5
-            setPhase('inhale');
-            setText('Inhale');
-            setScale(1);
-            setTimeout(() => setScale(1.5), 50); // Trigger animation
+        const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+        let step = 0;
 
-            setTimeout(() => {
-                // Hold (4s) - stay at 1.5
-                setPhase('hold');
-                setText('Hold');
+        // Initial Set
+        setText(phases[0]);
 
-                setTimeout(() => {
-                    // Exhale (4s) - shrink from 1.5 to 1
-                    setPhase('exhale');
-                    setText('Exhale');
-                    setScale(1);
-
-                    setTimeout(() => {
-                        // Hold (4s) - stay at 1
-                        setPhase('hold2');
-                        setText('Hold');
-                    }, 4000);
-                }, 4000);
-            }, 4000);
-        };
-
-        cycle();
-        const interval = setInterval(cycle, 16000); // 4+4+4+4 = 16s cycle
+        const interval = setInterval(() => {
+            step = (step + 1) % 4;
+            setText(phases[step]);
+        }, 4000);
 
         return () => clearInterval(interval);
     }, []);
@@ -54,7 +33,7 @@ export function BreathingPacer({ onClose }) {
                         <span>Box Breathing</span>
                     </div>
 
-                    <div className={`breathing-circle ${phase}`} style={{ transform: `scale(${scale})` }}>
+                    <div className="breathing-circle animate-box">
                         <div className="inner-text">{text}</div>
                     </div>
 
