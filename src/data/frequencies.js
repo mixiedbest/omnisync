@@ -210,5 +210,104 @@ export const categories = [
             { id: "dr2", title: "Midday Reset", beat: 8, left: 432, right: 440, desc: "Midday Reset. Layers: 7.83 Hz" },
             { id: "dr3", title: "Night Wind-Down", beat: 3, left: 396, right: 399, desc: "Night Wind-Down. Layers: 174 Hz" },
         ]
+    },
+    {
+        id: "tinnitus",
+        title: "TINNITUS RELIEF",
+        icon: "Ear",
+        color: "from-indigo-900 to-violet-900",
+        items: [
+            {
+                id: "tin1",
+                title: "High-Tone Soother",
+                beat: 0.5,
+                left: 10000,
+                right: 10000.5,
+                noiseType: "pink",
+                desc: "Gentle high-frequency masking (8-12 kHz range). Wideband hiss with warm pink noise to mask high-pitched ringing. Layers: 432 Hz calm pad",
+                volumes: { noise: 0.3, binaural: 0.2 }
+            },
+            {
+                id: "tin2",
+                title: "Brain Quieting Tone",
+                beat: 2.5,
+                left: 100,
+                right: 102.5,
+                noiseType: "brown",
+                desc: "Deep delta waves (2.5 Hz) to reduce tinnitus intensity through relaxation. Warm brown noise base. Layers: 7.83 Hz Schumann",
+                volumes: { noise: 0.25, binaural: 0.4 }
+            },
+            {
+                id: "tin3",
+                title: "Notched Noise Therapy",
+                beat: 0,
+                left: 0,
+                right: 0,
+                noiseType: "white",
+                desc: "White noise therapy designed to desensitize neurons at tinnitus frequency. Works best with regular use. Layers: Shaped noise spectrum",
+                volumes: { noise: 0.35 }
+            },
+            {
+                id: "tin4",
+                title: "Ocean Masker",
+                beat: 0.15,
+                left: 60,
+                right: 60.15,
+                noiseType: "pink",
+                type: "ocean",
+                desc: "Natural ocean-like movement with slow wave modulation (0.1-0.2 Hz). Pink noise shaped with low rumble (40-80 Hz). Layers: Ocean soundscape",
+                volumes: { noise: 0.3, soundscape: 0.4, binaural: 0.15 }
+            },
+            {
+                id: "tin5",
+                title: "Gentle High-Band Whisper",
+                beat: 0,
+                left: 16000,
+                right: 16000,
+                noiseType: "pink",
+                desc: "Ultra-light airband (14-18 kHz) for hissing/steam-like tinnitus. Very low volume pink noise blends with internal sound. Layers: Soft air texture",
+                volumes: { noise: 0.2, binaural: 0.15 }
+            },
+            {
+                id: "tin6",
+                title: "Neuromodulation Sweep",
+                beat: 8,
+                left: 500,
+                right: 508,
+                noiseType: "white",
+                desc: "Slowly sweeping tone (500-8000 Hz cycle) interrupts neural firing patterns. 10-20 sec sweep cycle. Layers: Soft broadband noise",
+                volumes: { noise: 0.25, binaural: 0.3 }
+            },
+            {
+                id: "tin7",
+                title: "Low-Tone Grounder",
+                beat: 0.2,
+                left: 95,
+                right: 95.2,
+                noiseType: "brown",
+                desc: "For low-frequency humming tinnitus. Heavy brown noise base with gentle 70-120 Hz tone. Minimal pulse modulation. Layers: Deep rumble",
+                volumes: { noise: 0.4, binaural: 0.25 }
+            },
+            {
+                id: "tin8",
+                title: "Somatic Stress Relief",
+                beat: 9,
+                left: 200,
+                right: 209,
+                noiseType: "pink",
+                desc: "Alpha waves (8-10 Hz) for stress-linked tinnitus. Increases alpha activity to quiet stress-induced spikes. Layers: Soft pink noise",
+                volumes: { noise: 0.3, binaural: 0.35 }
+            },
+            {
+                id: "tin9",
+                title: "Sleep Tinnitus Masker",
+                beat: 0.5,
+                left: 396,
+                right: 396.5,
+                noiseType: "brown",
+                desc: "Warm brown/pink noise mix with gentle 0.5 Hz delta pulse. Makes tinnitus less noticeable during sleep. Layers: 396 Hz or 417 Hz drift pads",
+                volumes: { noise: 0.35, binaural: 0.25 }
+            }
+        ]
     }
 ];
