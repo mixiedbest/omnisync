@@ -396,17 +396,17 @@
 }
 
 .visualization-container {
-    margin: 40px 0;
+    margin: 10px 0;
 }
 
 .energy-canvas {
     display: block;
     margin: 0 auto;
-    filter: drop-shadow(0 0 40px rgba(236, 72, 153, 0.3));
+    filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.3));
 }
 
 .breathing-guide {
-    margin: 40px 0;
+    margin: 20px 0 10px;
 }
 
 .breath-circle {
@@ -467,8 +467,8 @@
     gap: 20px;
     align-items: center;
     justify-content: center;
-    margin-top: 48px;
-    margin-bottom: 120px;
+    margin-top: 24px;
+    margin-bottom: 40px;
 }
 
 .control-btn {

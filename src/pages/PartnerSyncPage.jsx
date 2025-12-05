@@ -551,28 +551,22 @@ export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
                         </div>
                     )}
 
-                    {/* Affirmation */}
-                    <div className="sync-affirmation">
-                        <Sparkles size={20} />
-                        <p>You're tuning into harmony</p>
-                    </div>
-
-                    {/* Energy Cord Visualization */}
-                    <div className="visualization-container">
-                        <canvas
-                            ref={canvasRef}
-                            width={400}
-                            height={300}
-                            className="energy-canvas"
-                        />
-                    </div>
-
                     {/* Breathing Guide */}
                     <div className="breathing-guide">
                         <div className={`breath-circle ${breathPhase}`}>
                             <span className="breath-label">{breathPhase}</span>
                             <span className="breath-count">{breathCount}</span>
                         </div>
+                    </div>
+
+                    {/* Energy Cord Visualization */}
+                    <div className="visualization-container">
+                        <canvas
+                            ref={canvasRef}
+                            width={340}
+                            height={220}
+                            className="energy-canvas"
+                        />
                     </div>
 
                     {/* Shared Intention Display */}
