@@ -9,13 +9,14 @@ const AVAILABLE_ICONS = [
     'Music', 'Headphones', 'Radio', 'Disc', 'Activity', 'Target', 'Award'
 ];
 
-export function UserProfilePage({ onBack, customSounds = [] }) {
+export function UserProfilePage({ onBack }) {
     const [profile, setProfile] = useState({
         username: '',
         avatar: 'Heart',
         goals: '',
         sharedSounds: []
     });
+    const [customSounds, setCustomSounds] = useState([]);
 
     useEffect(() => {
         // Load profile from localStorage
@@ -32,6 +33,16 @@ export function UserProfilePage({ onBack, customSounds = [] }) {
         const savedUsername = localStorage.getItem('omnisync_username');
         if (savedUsername && !profile.username) {
             setProfile(prev => ({ ...prev, username: savedUsername }));
+        }
+
+        // Load custom sounds
+        const savedSounds = localStorage.getItem('omnisync_custom_sounds');
+        if (savedSounds) {
+            try {
+                setCustomSounds(JSON.parse(savedSounds));
+            } catch (e) {
+                console.error('Failed to load custom sounds:', e);
+            }
         }
     }, []);
 

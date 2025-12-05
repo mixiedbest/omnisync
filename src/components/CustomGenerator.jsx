@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sliders, Plus, X, Headphones, Speaker, Palette, Waves } from 'lucide-react';
+import { Sliders, Plus, X, Headphones, Speaker, Palette, Waves, Save } from 'lucide-react';
 import './CustomGenerator.css';
 
 export function CustomGenerator({ onGenerate, isActive }) {
@@ -8,6 +8,7 @@ export function CustomGenerator({ onGenerate, isActive }) {
         { id: 1, carrierFreq: 200, beatFreq: 10, volume: 0.7 }
     ]);
 
+    const [soundName, setSoundName] = useState('');
     const [bothEarsFreq, setBothEarsFreq] = useState(0);
     const [bothEarsVolume, setBothEarsVolume] = useState(0.5);
     const [selectedNoise, setSelectedNoise] = useState('none');
@@ -68,7 +69,7 @@ export function CustomGenerator({ onGenerate, isActive }) {
 
         onGenerate({
             id: 'custom-combined',
-            title: 'Custom Sound Mix',
+            title: soundName || 'Custom Sound Mix',
             beat: primaryLayer.beatFreq,
             left: primaryLayer.carrierFreq,
             right: primaryLayer.carrierFreq + primaryLayer.beatFreq,
@@ -85,6 +86,46 @@ export function CustomGenerator({ onGenerate, isActive }) {
             },
             layers: frequencyLayers
         });
+    };
+
+    const saveCustomSound = () => {
+        if (!soundName.trim()) {
+            alert('Please give your sound a name first!');
+            return;
+        }
+
+        const primaryLayer = frequencyLayers[0];
+        const soundToSave = {
+            id: `custom-${Date.now()}`,
+            title: soundName,
+            beat: primaryLayer.beatFreq,
+            left: primaryLayer.carrierFreq,
+            right: primaryLayer.carrierFreq + primaryLayer.beatFreq,
+            bothEars: bothEarsFreq,
+            noiseType: selectedNoise !== 'none' ? selectedNoise : null,
+            type: selectedScape !== 'none' ? selectedScape : null,
+            desc: buildDescription(),
+            volumes: {
+                binaural: primaryLayer.volume,
+                bothEars: bothEarsVolume,
+                noise: noiseVolume,
+                soundscape: scapeVolume
+            },
+            layers: frequencyLayers,
+            savedAt: new Date().toISOString()
+        };
+
+        // Load existing saved sounds
+        const savedSounds = JSON.parse(localStorage.getItem('omnisync_custom_sounds') || '[]');
+
+        // Add new sound
+        savedSounds.push(soundToSave);
+
+        // Save back to localStorage
+        localStorage.setItem('omnisync_custom_sounds', JSON.stringify(savedSounds));
+
+        alert(`✨ "${soundName}" saved to your profile!`);
+        setSoundName(''); // Clear the name field
     };
 
     const buildDescription = () => {
@@ -268,6 +309,32 @@ export function CustomGenerator({ onGenerate, isActive }) {
                             />
                         </div>
                     )}
+                </div>
+
+                {/* Name and Save Section */}
+                <div className="save-section">
+                    <label className="save-label">
+                        <Save size={16} />
+                        Name Your Sound (to save to profile)
+                    </label>
+                    <div className="save-controls">
+                        <input
+                            type="text"
+                            className="sound-name-input"
+                            placeholder="e.g., Deep Focus Mix, Sleep Sanctuary..."
+                            value={soundName}
+                            onChange={(e) => setSoundName(e.target.value)}
+                            maxLength={40}
+                        />
+                        <button
+                            className="save-sound-btn"
+                            onClick={saveCustomSound}
+                            disabled={!soundName.trim()}
+                        >
+                            <Save size={18} />
+                            Save
+                        </button>
+                    </div>
                 </div>
 
                 <button

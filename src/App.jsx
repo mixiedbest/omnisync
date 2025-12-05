@@ -409,7 +409,7 @@ function App() {
     return (
       <>
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
-        <UserProfilePage onBack={handleBack} customSounds={[]} />
+        <UserProfilePage onBack={handleBack} />
         <PlayerControls
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
