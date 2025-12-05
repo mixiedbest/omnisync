@@ -4,6 +4,7 @@ import { categories } from '../data/frequencies';
 import { journeys } from '../data/journeys';
 import { soundscapes } from '../data/soundscapes';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
+import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
@@ -148,20 +149,31 @@ export function RoomSession({ room, onBack, username }) {
         setDebugStatus('Initializing playback...');
 
         try {
-            // Play the selected sound
-            if (selectedSound.left !== undefined && selectedSound.right !== undefined) {
-                // Binaural beat from presets
-                play(selectedSound.left, selectedSound.right);
-            } else if (selectedSound.frequencies) {
-                // Soundscape
-                play(selectedSound.frequencies.left, selectedSound.frequencies.right);
+            // Extract parameters based on sound object type
+            let left = selectedSound.left || 0;
+            let right = selectedSound.right || 0;
+
+            // Handle wrapper objects (e.g. soundscapes might wrap freqs)
+            if (selectedSound.frequencies) {
+                left = selectedSound.frequencies.left;
+                right = selectedSound.frequencies.right;
             } else if (selectedSound.stages) {
-                // Journey - play first stage
-                const firstStage = selectedSound.stages[0];
-                if (firstStage.left && firstStage.right) {
-                    play(firstStage.left, firstStage.right);
-                }
+                // Journey - start with first stage
+                const stage = selectedSound.stages[0];
+                left = stage.left;
+                right = stage.right;
             }
+
+            play(
+                left,
+                right,
+                selectedSound.bothEars || 0,
+                selectedSound.noiseType || null,
+                selectedSound.type || selectedSound.soundscapeType || null,
+                selectedSound.volumes || {},
+                selectedSound.layers || []
+            );
+
             setDebugStatus('Playback started');
         } catch (e) {
             console.error(e);
@@ -187,11 +199,27 @@ export function RoomSession({ room, onBack, username }) {
             setIsPlaying(false);
         } else {
             // Resume playback
-            if (selectedSound.left !== undefined && selectedSound.right !== undefined) {
-                play(selectedSound.left, selectedSound.right);
-            } else if (selectedSound.frequencies) {
-                play(selectedSound.frequencies.left, selectedSound.frequencies.right);
+            let left = selectedSound.left || 0;
+            let right = selectedSound.right || 0;
+
+            if (selectedSound.frequencies) {
+                left = selectedSound.frequencies.left;
+                right = selectedSound.frequencies.right;
+            } else if (selectedSound.stages) {
+                const stage = selectedSound.stages[0];
+                left = stage.left;
+                right = stage.right;
             }
+
+            play(
+                left,
+                right,
+                selectedSound.bothEars || 0,
+                selectedSound.noiseType || null,
+                selectedSound.type || selectedSound.soundscapeType || null,
+                selectedSound.volumes || {},
+                selectedSound.layers || []
+            );
             setIsPlaying(true);
         }
     };
@@ -436,26 +464,20 @@ export function RoomSession({ room, onBack, username }) {
                             {soundSource === 'custom' && (
                                 <div className="sound-options">
                                     <div className="custom-generator-embed">
-                                        <p className="custom-note">
-                                            Custom generator mode will allow you to create a unique mix for this session.
-                                        </p>
-                                        <button
-                                            className="custom-confirm-btn"
-                                            onClick={() => {
-                                                setSelectedSound({
-                                                    id: 'custom',
-                                                    title: 'Custom Mix',
-                                                    left: 200,
-                                                    right: 210,
-                                                    desc: 'Custom binaural beat configuration'
-                                                });
+                                        <CustomGenerator
+                                            onGenerate={(sound) => {
+                                                setSelectedSound(sound);
+                                                // Feedback
+                                                const btn = document.querySelector('.generate-btn');
+                                                if (btn) {
+                                                    const originalText = btn.innerText;
+                                                    btn.innerText = 'Sound Set! ✓';
+                                                    setTimeout(() => btn.innerText = originalText, 2000);
+                                                }
                                             }}
-                                        >
-                                            Use Custom Mode
-                                        </button>
-                                        <p className="custom-hint">
-                                            You'll be able to configure the custom generator after starting the session
-                                        </p>
+                                            actionLabel="Set Session Sound"
+                                            isActive={selectedSound?.id === 'custom-combined' && isPlaying}
+                                        />
                                     </div>
                                 </div>
                             )}

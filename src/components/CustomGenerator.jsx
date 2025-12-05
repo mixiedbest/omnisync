@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Sliders, Volume2, Zap, Wind, Music, Play, Pause, Save, ListPlus, Plus, X, Headphones, Speaker, Palette, Waves } from 'lucide-react';
 import './CustomGenerator.css';
 
-export function CustomGenerator({ onGenerate, isActive }) {
+export function CustomGenerator({ onGenerate, isActive, actionLabel }) {
     // Frequency Layers (can add multiple)
     const [frequencyLayers, setFrequencyLayers] = useState([
         { id: 1, carrierFreq: 200, beatFreq: 10, volume: 0.7 }
@@ -361,8 +361,8 @@ export function CustomGenerator({ onGenerate, isActive }) {
                         </>
                     ) : (
                         <>
-                            <Play size={24} />
-                            Generate & Play
+                            {actionLabel === 'Set Session Sound' ? <Save size={24} /> : <Play size={24} />}
+                            {actionLabel || 'Generate & Play'}
                         </>
                     )}
                 </button>

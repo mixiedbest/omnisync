@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
+import { enableMobileAudio, disableMobileAudio } from '../utils/mobileAudio';
 
 export function useBinauralBeat() {
     const audioContextRef = useRef(null);
@@ -84,6 +85,11 @@ export function useBinauralBeat() {
             document.removeEventListener('touchstart', unlockAudio);
             document.removeEventListener('keydown', unlockAudio);
         };
+    }, []);
+
+    // Cleanup Mobile Audio on unmount
+    useEffect(() => {
+        return () => disableMobileAudio();
     }, []);
 
     // Noise Generator
@@ -794,6 +800,9 @@ export function useBinauralBeat() {
     };
 
     const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null, soundscapeType = null, volumes = {}, layers = []) => {
+        // Enable Mobile Audio (Wake Lock + Silent Track)
+        enableMobileAudio();
+
         console.log('useBinauralBeat.play called with:', { leftFreq, rightFreq, bothEarsFreq, noiseType, soundscapeType });
 
         // Default volumes if not provided
@@ -1126,6 +1135,7 @@ export function useBinauralBeat() {
                     soundscapeNodesRef.current = [];
                 }
 
+                disableMobileAudio();
                 setIsPlaying(false);
                 setCurrentFrequencies({ left: 0, right: 0, bothEars: 0, noiseType: null, soundscapeType: null });
             }, rampTime * 1000);
