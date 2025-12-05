@@ -121,6 +121,33 @@
     background: rgba(236, 72, 153, 0.2);
 }
 
+.playlist-add-btn {
+    position: absolute;
+    top: 12px;
+    right: 52px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    color: var(--accent-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+.frequency-item-wrapper:hover .playlist-add-btn {
+    opacity: 1;
+}
+
+.playlist-add-btn:hover {
+    background: rgba(139, 92, 246, 0.2);
+    transform: scale(1.1);
+}
+
 .frequency-item:hover {
     background: rgba(139, 92, 246, 0.15);
     border-color: rgba(139, 92, 246, 0.3);

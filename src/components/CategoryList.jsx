@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { ChevronDown, Moon, Waves, Flame, Heart, Zap, Sparkles, CircleDot, Feather, Activity, Globe, Sun, HeartCrack, Star, Accessibility, Shield, Baby, Eye, Brain, Wind, Smile, Sunrise, CloudRain } from 'lucide-react';
+import { ChevronDown, Moon, Waves, Flame, Heart, Zap, Sparkles, CircleDot, Feather, Activity, Globe, Sun, HeartCrack, Star, Accessibility, Shield, Baby, Eye, Brain, Wind, Smile, Sunrise, CloudRain, Plus } from 'lucide-react';
 import './CategoryList.css';
 
 const iconMap = {
     Moon, Waves, Flame, Heart, Zap, Sparkles, CircleDot, Feather, Activity, Globe, Sun, HeartCrack, Star, Accessibility, Shield, Baby, Eye, Brain, Wind, Smile, Sunrise, CloudRain
 };
 
-export function CategoryList({ categories, onSelectFrequency, activeId, favorites = [], onToggleFavorite }) {
+export function CategoryList({ categories, onSelectFrequency, activeId, favorites = [], onToggleFavorite, onAddToPlaylist }) {
     const [expandedCategories, setExpandedCategories] = useState({});
 
     const toggleCategory = (categoryId) => {
@@ -68,6 +68,18 @@ export function CategoryList({ categories, onSelectFrequency, activeId, favorite
                                             title={isFavorited(item.id) ? 'Remove from favorites' : 'Add to favorites'}
                                         >
                                             <Heart size={18} fill={isFavorited(item.id) ? 'currentColor' : 'none'} />
+                                        </button>
+                                    )}
+                                    {onAddToPlaylist && (
+                                        <button
+                                            className="playlist-add-btn"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onAddToPlaylist(item);
+                                            }}
+                                            title="Add to playlist"
+                                        >
+                                            <Plus size={18} />
                                         </button>
                                     )}
                                 </div>

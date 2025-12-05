@@ -1,4 +1,4 @@
-import { ArrowLeft, Play, Pause, Sparkles, Mountain, Waves, CloudRain, CircleDot, Hexagon, Disc, Flame, TreePine, Flower2, CloudLightning, Droplets, Heart, Baby, Fish } from 'lucide-react';
+import { ArrowLeft, Play, Pause, Sparkles, Mountain, Waves, CloudRain, CircleDot, Hexagon, Disc, Flame, TreePine, Flower2, CloudLightning, Droplets, Heart, Baby, Fish, Plus } from 'lucide-react';
 import { soundscapes } from '../data/soundscapes';
 import './SoundscapesPage.css';
 
@@ -20,7 +20,7 @@ const iconMap = {
     Fish
 };
 
-export function SoundscapesPage({ onBack, onPlay, currentTrack, isPlaying }) {
+export function SoundscapesPage({ onBack, onPlay, currentTrack, isPlaying, onAddToPlaylist }) {
     return (
         <div className="soundscapes-page">
             <div className="page-header">
@@ -59,6 +59,19 @@ export function SoundscapesPage({ onBack, onPlay, currentTrack, isPlaying }) {
                             >
                                 {isActive && isPlaying ? <Pause size={32} /> : <Play size={32} />}
                             </button>
+
+                            {onAddToPlaylist && (
+                                <button
+                                    className="scape-playlist-btn"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onAddToPlaylist(scape);
+                                    }}
+                                    title="Add to playlist"
+                                >
+                                    <Plus size={20} />
+                                </button>
+                            )}
                         </div>
                     );
                 })}

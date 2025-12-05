@@ -97,8 +97,35 @@
 }
 
 .play-button-large.playing {
-    background: var(--accent-teal);
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-teal));
     animation: pulse 2s infinite;
+}
+
+.scape-playlist-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    color: var(--accent-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+.scape-card:hover .scape-playlist-btn {
+    opacity: 1;
+}
+
+.scape-playlist-btn:hover {
+    background: rgba(139, 92, 246, 0.2);
+    transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
