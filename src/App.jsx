@@ -27,7 +27,7 @@ import { PlaylistSelectorModal } from './components/PlaylistSelectorModal';
 import './App.css';
 
 function App() {
-  const { play, stop, isPlaying, volume, setVolume } = useBinauralBeat();
+  const { play, stop, isPlaying, volume, setVolume, updateLayers, updateNoise, updateSoundscape } = useBinauralBeat();
   useWakeLock(isPlaying);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [sequenceStep, setSequenceStep] = useState(0);
@@ -138,6 +138,14 @@ function App() {
 
   const handleSelectFrequency = (item) => {
     if (currentTrack?.id === item.id && isPlaying) {
+      // If Custom Generator, treat re-selection as UPDATE not Stop (Stop is via Pause button)
+      if (item.id.includes('custom')) {
+        if (updateLayers) updateLayers(item.layers || [], item.volumes);
+        if (updateNoise) updateNoise(item.noiseType, item.volumes?.noise);
+        if (updateSoundscape) updateSoundscape(item.type, item.volumes?.soundscape);
+        setCurrentTrack(item);
+        return;
+      }
       stop();
       setCurrentTrack(null);
     } else {
@@ -500,6 +508,7 @@ function App() {
           {currentPage === 'custom' && (
             <CustomGenerator
               onGenerate={handleSelectFrequency}
+              onPause={() => { stop(); setCurrentTrack(null); }}
               isActive={currentTrack?.id === 'custom-combined' && isPlaying}
             />
           )}
