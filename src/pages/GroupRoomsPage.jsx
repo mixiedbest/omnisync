@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Users, Plus, Lock, Globe, Calendar, Heart, Sparkles, Play, Settings, Eye, EyeOff, X } from 'lucide-react';
 import { RoomSession } from './RoomSession';
+import { PartnerSyncPage } from './PartnerSyncPage';
 import './GroupRoomsPage.css';
 
 export function GroupRoomsPage({ onBack }) {
@@ -8,6 +9,7 @@ export function GroupRoomsPage({ onBack }) {
     const [rooms, setRooms] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [activeRoom, setActiveRoom] = useState(null);
+    const [showPartnerSync, setShowPartnerSync] = useState(false);
     const [username, setUsername] = useState('You');
 
     // Create Room Form State
@@ -90,7 +92,11 @@ export function GroupRoomsPage({ onBack }) {
     };
 
     const handleJoinRoom = (room) => {
-        setActiveRoom(room);
+        if (room.type === 'partner') {
+            setShowPartnerSync(true);
+        } else {
+            setActiveRoom(room);
+        }
     };
 
     const handleDeleteRoom = (roomId) => {
@@ -99,6 +105,16 @@ export function GroupRoomsPage({ onBack }) {
             saveRooms(updatedRooms);
         }
     };
+
+    // If showing Partner Sync
+    if (showPartnerSync) {
+        return (
+            <PartnerSyncPage
+                onBack={() => setShowPartnerSync(false)}
+                username={username}
+            />
+        );
+    }
 
     // If in a room session, render RoomSession component
     if (activeRoom) {
