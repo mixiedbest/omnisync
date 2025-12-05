@@ -16,10 +16,19 @@ export function GroupRoomsPage({ onBack }) {
     const [roomName, setRoomName] = useState('');
     const [roomType, setRoomType] = useState('private'); // 'private', 'community', 'aura', 'partner'
     const [roomPassword, setRoomPassword] = useState('');
-    const [roomTheme, setRoomTheme] = useState('cosmic');
-    const [intention, setIntention] = useState('');
-    const [isScheduled, setIsScheduled] = useState(false);
-    const [scheduleType, setScheduleType] = useState('once');
+    const [roomTheme, setRoomTheme] = useState('cosmic-purple');
+    const [roomIntention, setRoomIntention] = useState('');
+    const [roomSchedule, setRoomSchedule] = useState('one-time');
+    const [sessionDuration, setSessionDuration] = useState('');
+
+    const sessionDurations = [
+        { id: '3', label: '3 minutes', minutes: 3 },
+        { id: '9', label: '9 minutes', minutes: 9 },
+        { id: '15', label: '15 minutes', minutes: 15 },
+        { id: '30', label: '30 minutes', minutes: 30 },
+        { id: '60', label: '1 hour', minutes: 60 },
+        { id: 'unlimited', label: 'Unlimited', minutes: null }
+    ];
 
     useEffect(() => {
         const savedRooms = localStorage.getItem('omnisync_rooms');
@@ -315,6 +324,23 @@ export function GroupRoomsPage({ onBack }) {
                                 <option value="">Choose an intention...</option>
                                 {intentions.map(int => (
                                     <option key={int} value={int}>{int}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Session Duration */}
+                        <div className="form-section">
+                            <label>Session Duration (Optional)</label>
+                            <select
+                                className="modal-input"
+                                value={sessionDuration}
+                                onChange={(e) => setSessionDuration(e.target.value)}
+                            >
+                                <option value="">No time limit</option>
+                                {sessionDurations.map(duration => (
+                                    <option key={duration.id} value={duration.id}>
+                                        {duration.label}
+                                    </option>
                                 ))}
                             </select>
                         </div>
