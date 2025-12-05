@@ -554,35 +554,7 @@ export function RoomSession({ room, onBack, username }) {
                         </div>
                     )}
 
-                    {/* Custom Generator Layer Option (Host) */}
-                    {members[0].isHost && selectedSound && soundSource !== 'custom' && (
-                        <div className="custom-layer-option">
-                            <label className="checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    checked={showCustomGenerator}
-                                    onChange={(e) => setShowCustomGenerator(e.target.checked)}
-                                />
-                                <span>
-                                    <Sliders size={16} />
-                                    Layer Custom Generator on top
-                                </span>
-                            </label>
 
-                            {showCustomGenerator && (
-                                <div className="custom-generator-embed">
-                                    <p className="custom-note">
-                                        Custom layering will allow you to add additional frequencies on top of {selectedSound.title || selectedSound.name}
-                                    </p>
-                                    <div className="custom-layer-controls">
-                                        <p className="custom-hint">
-                                            Custom frequency layering coming soon! For now, you can use the base sound.
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
 
                     {/* Intention Prompt */}
                     {showIntentionPrompt && (
@@ -887,16 +859,7 @@ export function RoomSession({ room, onBack, username }) {
                         />
                     </div>
 
-                    {/* Mandala Snapshot */}
-                    <div className="post-section">
-                        <h3>Group Mandala</h3>
-                        <div className="mandala-snapshot">
-                            <canvas ref={canvasRef} width={300} height={300} />
-                            <button className="save-mandala-btn">
-                                Save to Sync History
-                            </button>
-                        </div>
-                    </div>
+
 
                     <button className="return-btn" onClick={onBack}>
                         Return to Rooms
