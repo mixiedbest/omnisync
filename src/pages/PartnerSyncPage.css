@@ -129,6 +129,33 @@
     box-shadow: 0 0 20px var(--type-color);
 }
 
+.mood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.mood-option {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(236, 72, 153, 0.1);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13px;
+}
+
+.mood-option:hover {
+    background: rgba(236, 72, 153, 0.1);
+}
+
+.mood-option.selected {
+    background: rgba(236, 72, 153, 0.2);
+    border-color: #ec4899;
+    color: white;
+}
+
 .start-sync-btn {
     width: 100%;
     max-width: 400px;

@@ -17,8 +17,19 @@ export function PartnerSyncPage({ onBack, username }) {
     const [showJournal, setShowJournal] = useState(false);
     const [myReflection, setMyReflection] = useState('');
     const [shareReflection, setShareReflection] = useState(false);
+    const [currentMood, setCurrentMood] = useState('');
     const canvasRef = useRef(null);
     const timerRef = useRef(null);
+
+    const moods = [
+        { id: 'calm', label: 'Calm', freq: 4 },
+        { id: 'anxious', label: 'Anxious', freq: 10 },
+        { id: 'tired', label: 'Tired', freq: 2.5 },
+        { id: 'energized', label: 'Energized', freq: 15 },
+        { id: 'stressed', label: 'Stressed', freq: 7.83 },
+        { id: 'happy', label: 'Happy', freq: 8 },
+        { id: 'sad', label: 'Sad', freq: 5 }
+    ];
 
     const syncGoals = [
         { id: 'relax', label: 'Relax + Calm Together', freq: 4, chakra: 'root' },
@@ -146,16 +157,38 @@ export function PartnerSyncPage({ onBack, username }) {
         }
     }, [sessionState]);
 
+    const buildSyncSound = () => {
+        // Get base frequency from goal
+        const selectedGoal = syncGoals.find(g => g.id === syncGoal);
+        let baseFreq = selectedGoal ? selectedGoal.freq : 7.83;
+
+        // Adjust for mood
+        const selectedMood = moods.find(m => m.id === currentMood);
+        if (selectedMood) {
+            // Blend goal and mood frequencies
+            baseFreq = (baseFreq + selectedMood.freq) / 2;
+        }
+
+        // Adjust for relationship type
+        const relationshipAdjustments = {
+            'romantic': { left: baseFreq, right: baseFreq + 5 }, // Heart-centered
+            'friends': { left: baseFreq, right: baseFreq + 8 }, // Playful energy
+            'family': { left: baseFreq, right: baseFreq + 3 }, // Grounding
+            'creative': { left: baseFreq, right: baseFreq + 12 }, // Higher activation
+            'healing': { left: baseFreq, right: baseFreq + 2 } // Gentle, subtle
+        };
+
+        return relationshipAdjustments[relationshipType] || { left: baseFreq, right: baseFreq + 7 };
+    };
+
     const handleStartSync = () => {
-        if (!syncGoal || !relationshipType) {
-            alert('Please select a sync goal and relationship type');
+        if (!syncGoal || !relationshipType || !currentMood) {
+            alert('Please complete all fields before starting');
             return;
         }
 
-        const selectedGoal = syncGoals.find(g => g.id === syncGoal);
-        if (selectedGoal) {
-            play(selectedGoal.freq, selectedGoal.freq + 10);
-        }
+        const soundConfig = buildSyncSound();
+        play(soundConfig.left, soundConfig.right);
 
         setSessionState('active');
         setIsPlaying(true);
@@ -231,6 +264,22 @@ export function PartnerSyncPage({ onBack, username }) {
                                     style={{ '--type-color': type.color }}
                                 >
                                     {type.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Current Mood */}
+                    <div className="setup-section">
+                        <label>How are you feeling right now?</label>
+                        <div className="mood-grid">
+                            {moods.map(mood => (
+                                <button
+                                    key={mood.id}
+                                    className={`mood-option ${currentMood === mood.id ? 'selected' : ''}`}
+                                    onClick={() => setCurrentMood(mood.id)}
+                                >
+                                    {mood.label}
                                 </button>
                             ))}
                         </div>
