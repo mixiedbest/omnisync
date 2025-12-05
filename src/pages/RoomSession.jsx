@@ -8,7 +8,7 @@ import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
-    const { play, stop, isPlaying: audioIsPlaying, enableMicrophone, disableMicrophone, setMicVolume, isMicActive } = useBinauralBeat();
+    const { play, stop, isPlaying: audioIsPlaying, enableMicrophone, disableMicrophone, setMicVolume, isMicActive, updateLayers, updateNoise } = useBinauralBeat();
     const [sessionState, setSessionState] = useState('lobby'); // 'lobby', 'active', 'post'
     const [members, setMembers] = useState([
         { id: 1, name: username || 'You', color: '#8b5cf6', isHost: true, mode: 'listen', element: 'air' }
@@ -145,6 +145,24 @@ export function RoomSession({ room, onBack, username }) {
             drawMandala();
         }
     }, [sessionState, members, sessionTime, room.theme]);
+
+    // Sync Layers seamlessly when Custom Layer/State changes (without restarting Base)
+    useEffect(() => {
+        if (isPlaying && selectedSound) {
+            const params = getPlaybackParams(); // Uses current state (customLayer, isCustomLayerActive, etc)
+            if (params) {
+                // Seamlessly update Layers and Noise
+                if (updateLayers) {
+                    updateLayers(params.layers, params.volumes);
+                }
+                if (updateNoise) {
+                    // Use noise volume from params (or default to previous/0.5)
+                    // If custom layer active, use its volume, else use 0.5 (or base volume if tracked, but we default 0.5)
+                    updateNoise(params.noiseType, params.volumes?.noise);
+                }
+            }
+        }
+    }, [customLayer, isCustomLayerActive, userMode, personalToneFreq, personalToneVol, isPlaying, selectedSound, updateLayers, updateNoise]);
 
     // Helper to construct playback parameters merging Session Sound + Personal Layers + Element
     const getPlaybackParams = (soundOverride = null) => {
@@ -730,49 +748,10 @@ export function RoomSession({ room, onBack, username }) {
                         <CustomGenerator
                             onGenerate={(sound) => {
                                 setCustomLayer(sound);
-                                // If active, update live
-                                if (isPlaying && isCustomLayerActive) {
-                                    // Use timeout to allow state to settle? 
-                                    // Actually passing 'sound' directly to helper is safer but helper uses state.
-                                    // Better: We must pass 'customLayerOverride' to helper?
-                                    // Or simplified: Just trigger play() with merged object manually here?
-                                    // Helper is complex.
-                                    // We will rely on React State update + Effect?
-                                    // No, effect is slow/risky.
-                                    // Let's modify logic:
-                                    // We update state 'customLayer'.
-                                    // AND we trigger play with mixed params immediately using 'sound' as the custom layer.
-                                    // But helper read 'isCustomLayerActive' from state.
-                                    // We assume isActive is true (since onGenerate typically happens when active).
-                                    // Wait, onGenerate happens on slider drag?
-                                    // CustomGenerator generates on button click mostly.
-                                    // If dragging sliders, it might not generate.
-                                    // If user clicks "Update Live Sound".
-
-                                    // Manual Mix for Immediate Feedback:
-                                    const base = selectedSound;
-                                    const layers = [...(base.layers || [])];
-                                    if (sound.left && sound.right) {
-                                        layers.push({
-                                            id: 'custom-main',
-                                            carrierFreq: sound.left,
-                                            beatFreq: sound.right - sound.left,
-                                            volume: sound.volumes?.binaural || 0.5
-                                        });
-                                    }
-                                    if (sound.layers) layers.push(...sound.layers);
-
-                                    play(
-                                        base.left, base.right, // Maintain base binaural
-                                        base.bothEars || 0,
-                                        sound.noiseType || base.noiseType, // Override noise
-                                        base.type || base.soundscapeType, // Maintain base soundscape
-                                        base.volumes || {}, // Maintain base volumes? Wait. Custom has volumes too.
-                                        // If we want to mix volumes? simpler to keep base.
-                                        layers
-                                    );
-                                }
+                                // React Effect handles the audio update seamlessly now!
+                                if (!isCustomLayerActive) setIsCustomLayerActive(true);
                             }}
+                            onPause={() => setIsCustomLayerActive(false)}
                             actionLabel="Update Mix Layer"
                             isActive={isCustomLayerActive}
                         />

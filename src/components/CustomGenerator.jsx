@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Sliders, Volume2, Zap, Wind, Music, Play, Pause, Save, ListPlus, Plus, X, Headphones, Speaker, Palette, Waves } from 'lucide-react';
 import './CustomGenerator.css';
 
-export function CustomGenerator({ onGenerate, isActive, actionLabel }) {
+export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause }) {
     // Frequency Layers (can add multiple)
     const [frequencyLayers, setFrequencyLayers] = useState([
         { id: 1, carrierFreq: 200, beatFreq: 10, volume: 0.7 }
@@ -63,11 +63,11 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel }) {
         ));
     };
 
-    const handleGenerate = () => {
-        // Use the first layer as the primary binaural beat
-        const primaryLayer = frequencyLayers[0];
 
-        onGenerate({
+
+    const getSoundObject = () => {
+        const primaryLayer = frequencyLayers[0];
+        return {
             id: 'custom-combined',
             title: soundName || 'Custom Sound Mix',
             beat: primaryLayer.beatFreq,
@@ -77,7 +77,6 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel }) {
             noiseType: selectedNoise !== 'none' ? selectedNoise : null,
             type: selectedScape !== 'none' ? selectedScape : null,
             desc: buildDescription(),
-            // Pass volume controls
             volumes: {
                 binaural: primaryLayer.volume,
                 bothEars: bothEarsVolume,
@@ -85,8 +84,27 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel }) {
                 soundscape: scapeVolume
             },
             layers: frequencyLayers
-        });
+        };
     };
+
+    const handleGenerate = () => {
+        if (isActive && onPause) {
+            onPause();
+            return;
+        }
+        onGenerate(getSoundObject());
+    };
+
+    // Real-time update effect
+    useEffect(() => {
+        if (isActive) {
+            const timer = setTimeout(() => {
+                onGenerate(getSoundObject());
+            }, 50); // Fast debounce for smooth slider drag
+            return () => clearTimeout(timer);
+        }
+    }, [frequencyLayers, bothEarsFreq, bothEarsVolume, selectedNoise, noiseVolume, selectedScape, scapeVolume, isActive]);
+
 
     const saveCustomSound = () => {
         if (!soundName.trim()) {

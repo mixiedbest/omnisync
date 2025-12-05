@@ -859,93 +859,8 @@ export function useBinauralBeat() {
             soundscapeNodesRef.current = nodes;
         }
 
-        // Stop existing noise if switching types or turning off
-        if (noiseNodeRef.current && (!noiseType || noiseType !== currentFrequencies.noiseType)) {
-            noiseGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
-            setTimeout(() => {
-                if (noiseNodeRef.current) {
-                    noiseNodeRef.current.stop();
-                    noiseNodeRef.current.disconnect();
-                    noiseNodeRef.current = null;
-                }
-            }, rampTime * 1000);
-        }
-
         // Handle Noise
-        if (noiseType) {
-            if (!noiseNodeRef.current) {
-                // Configure Filter based on Type
-                const filter = noiseFilterRef.current;
-                // Reset filter
-                filter.type = 'allpass';
-                filter.frequency.value = 0;
-                filter.Q.value = 1; // Reset Q
-                filter.gain.value = 0; // Reset gain for peaking
-
-                switch (noiseType) {
-                    case 'blue':
-                        filter.type = 'highpass';
-                        filter.frequency.value = 500;
-                        break;
-                    case 'violet':
-                        filter.type = 'highpass';
-                        filter.frequency.value = 2000;
-                        break;
-                    case 'green':
-                        filter.type = 'bandpass';
-                        filter.frequency.value = 500;
-                        filter.Q.value = 0.5;
-                        break;
-                    case 'turquoise':
-                        filter.type = 'bandpass';
-                        filter.frequency.value = 2000;
-                        filter.Q.value = 0.5;
-                        break;
-                    case 'grey':
-                        // Approximate grey with a gentle bandpass
-                        filter.type = 'peaking';
-                        filter.frequency.value = 1000;
-                        filter.Q.value = 1;
-                        filter.gain.value = -5;
-                        break;
-                    case 'yellow':
-                        filter.type = 'bandpass';
-                        filter.frequency.value = 800;
-                        filter.Q.value = 1;
-                        break;
-                    case 'orange':
-                        filter.type = 'lowpass';
-                        filter.frequency.value = 1000;
-                        break;
-                    case 'burgundy':
-                        filter.type = 'lowpass';
-                        filter.frequency.value = 200;
-                        break;
-                    case 'black':
-                        // Silence (handled by gain)
-                        break;
-                    default:
-                        // White, Pink, Brown, Red use their specific buffers and no filter (or default white)
-                        break;
-                }
-
-                const buffer = createNoiseBuffer(ctx, noiseType);
-                noiseNodeRef.current = ctx.createBufferSource();
-                noiseNodeRef.current.buffer = buffer;
-                noiseNodeRef.current.loop = true;
-
-                // Connect: Source -> Filter -> Gain -> Master
-                noiseNodeRef.current.connect(noiseFilterRef.current);
-
-                noiseNodeRef.current.start();
-
-                // Gain handling
-                noiseGainRef.current.gain.setValueAtTime(0, now);
-                const targetGain = noiseType === 'black' ? (noise * 0.1) : noise; // Very low for black
-                noiseGainRef.current.gain.linearRampToValueAtTime(targetGain, now + rampTime);
-            }
-            // If noise is already playing and type is same, do nothing (it loops)
-        }
+        updateNoise(noiseType, noise);
 
         // Handle Binaural Beats (Sine Waves)
         const layersToPlay = (layers && layers.length > 0)
@@ -1092,6 +1007,138 @@ export function useBinauralBeat() {
         setCurrentFrequencies({ left: leftFreq, right: rightFreq, bothEars: bothEarsFreq, noiseType, soundscapeType });
     }, [initAudio, isPlaying, currentFrequencies]);
 
+    // Update Noise separately
+    const updateNoise = useCallback((noiseType, volume = 0.5) => {
+        if (!audioContextRef.current) return;
+        const ctx = audioContextRef.current;
+        const now = ctx.currentTime;
+        const rampTime = 0.5;
+
+        // Stop existing noise if switching types or turning off
+        if (noiseNodeRef.current && (!noiseType || (currentFrequencies.noiseType && noiseType !== currentFrequencies.noiseType))) {
+            noiseGainRef.current.gain.cancelScheduledValues(now);
+            noiseGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
+            setTimeout(() => {
+                if (noiseNodeRef.current) {
+                    noiseNodeRef.current.stop();
+                    noiseNodeRef.current.disconnect();
+                    noiseNodeRef.current = null;
+                }
+            }, rampTime * 1000);
+        }
+
+        // Start or Update Noise
+        if (noiseType) {
+            if (!noiseNodeRef.current) {
+                // Configure Filter based on Type
+                const filter = noiseFilterRef.current;
+                filter.type = 'allpass'; filter.frequency.value = 0; filter.Q.value = 1; filter.gain.value = 0;
+
+                switch (noiseType) {
+                    case 'blue': filter.type = 'highpass'; filter.frequency.value = 500; break;
+                    case 'violet': filter.type = 'highpass'; filter.frequency.value = 2000; break;
+                    case 'green': filter.type = 'bandpass'; filter.frequency.value = 500; filter.Q.value = 0.5; break;
+                    case 'turquoise': filter.type = 'bandpass'; filter.frequency.value = 2000; filter.Q.value = 0.5; break;
+                    case 'grey': filter.type = 'peaking'; filter.frequency.value = 1000; filter.Q.value = 1; filter.gain.value = -5; break;
+                    case 'yellow': filter.type = 'bandpass'; filter.frequency.value = 800; filter.Q.value = 1; break;
+                    case 'orange': filter.type = 'lowpass'; filter.frequency.value = 1000; break;
+                    case 'burgundy': filter.type = 'lowpass'; filter.frequency.value = 200; break;
+                    case 'black': break;
+                    default: break;
+                }
+
+                const buffer = createNoiseBuffer(ctx, noiseType);
+                noiseNodeRef.current = ctx.createBufferSource();
+                noiseNodeRef.current.buffer = buffer;
+                noiseNodeRef.current.loop = true;
+                noiseNodeRef.current.connect(noiseFilterRef.current);
+                noiseNodeRef.current.start();
+
+                noiseGainRef.current.gain.setValueAtTime(0, now);
+            }
+
+            // Always update gain (Volume)
+            const targetGain = noiseType === 'black' ? (volume * 0.1) : volume;
+            noiseGainRef.current.gain.linearRampToValueAtTime(targetGain, now + rampTime);
+
+            // Update state to prevent loop restarts
+            if (currentFrequencies.noiseType !== noiseType) {
+                setCurrentFrequencies(prev => ({ ...prev, noiseType }));
+            }
+        } else if (currentFrequencies.noiseType) {
+            // If noise turned off, update state
+            setCurrentFrequencies(prev => ({ ...prev, noiseType: null }));
+        }
+    }, [currentFrequencies.noiseType]);
+
+    // Update Layers separately to avoid restarting Main/Base oscillators
+    const updateLayers = useCallback((newLayers, volumes = {}) => {
+        if (!audioContextRef.current) return;
+        const ctx = audioContextRef.current;
+        const now = ctx.currentTime;
+        const rampTime = 0.5;
+
+        // Stop current layers
+        if (layersRef.current.length > 0) {
+            layersRef.current.forEach(layer => {
+                if (layer.leftGain) { layer.leftGain.gain.cancelScheduledValues(now); layer.leftGain.gain.linearRampToValueAtTime(0, now + 0.2); }
+                if (layer.rightGain) { layer.rightGain.gain.cancelScheduledValues(now); layer.rightGain.gain.linearRampToValueAtTime(0, now + 0.2); }
+                setTimeout(() => {
+                    if (layer.leftOsc) { layer.leftOsc.stop(); layer.leftOsc.disconnect(); }
+                    if (layer.rightOsc) { layer.rightOsc.stop(); layer.rightOsc.disconnect(); }
+                    if (layer.leftPanner) { layer.leftPanner.disconnect(); }
+                    if (layer.rightPanner) { layer.rightPanner.disconnect(); }
+                }, 250);
+            });
+            layersRef.current = [];
+        }
+
+        // Start new layers
+        if (newLayers && newLayers.length > 0) {
+            newLayers.forEach(layer => {
+                const lFreq = layer.carrierFreq;
+                const rFreq = layer.carrierFreq + (layer.beatFreq || 0);
+                const vol = (layer.volume || 0.5) * (volumes.binaural || 1);
+
+                const lOsc = ctx.createOscillator();
+                const rOsc = ctx.createOscillator();
+                const lGain = ctx.createGain();
+                const rGain = ctx.createGain();
+                const lPanner = ctx.createStereoPanner();
+                const rPanner = ctx.createStereoPanner();
+
+                lPanner.pan.value = -1;
+                rPanner.pan.value = 1;
+                lPanner.connect(masterGainRef.current);
+                rPanner.connect(masterGainRef.current);
+
+                lOsc.type = 'sine';
+                lOsc.frequency.setValueAtTime(lFreq, now);
+                lOsc.connect(lGain);
+                lGain.connect(lPanner);
+
+                rOsc.type = 'sine';
+                rOsc.frequency.setValueAtTime(rFreq, now);
+                rOsc.connect(rGain);
+                rGain.connect(rPanner);
+
+                lOsc.start();
+                rOsc.start();
+
+                lGain.gain.setValueAtTime(0, now);
+                lGain.gain.linearRampToValueAtTime(vol, now + rampTime);
+                rGain.gain.setValueAtTime(0, now);
+                rGain.gain.linearRampToValueAtTime(vol, now + rampTime);
+
+                layersRef.current.push({
+                    leftOsc: lOsc, rightOsc: rOsc,
+                    leftGain: lGain, rightGain: rGain,
+                    leftPanner: lPanner, rightPanner: rPanner
+                });
+            });
+        }
+    }, [isPlaying]);
+
     const stop = useCallback(() => {
         if (audioContextRef.current && isPlaying) {
             const now = audioContextRef.current.currentTime;
@@ -1220,6 +1267,8 @@ export function useBinauralBeat() {
         enableMicrophone,
         disableMicrophone,
         setMicVolume,
-        isMicActive
+        isMicActive,
+        updateLayers,
+        updateNoise
     };
 }
