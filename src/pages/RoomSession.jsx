@@ -8,7 +8,7 @@ import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
-    const { play, stop, isPlaying: audioIsPlaying } = useBinauralBeat();
+    const { play, stop, isPlaying: audioIsPlaying, enableMicrophone, disableMicrophone, setMicVolume, isMicActive } = useBinauralBeat();
     const [sessionState, setSessionState] = useState('lobby'); // 'lobby', 'active', 'post'
     const [members, setMembers] = useState([
         { id: 1, name: username || 'You', color: '#8b5cf6', isHost: true, mode: 'listen', element: 'air' }
@@ -23,6 +23,7 @@ export function RoomSession({ room, onBack, username }) {
     const [personalToneVol, setPersonalToneVol] = useState(0.5);
     const [isPlaying, setIsPlaying] = useState(false);
     const [selectedSound, setSelectedSound] = useState(null);
+    const [showLiveGenerator, setShowLiveGenerator] = useState(false);
     const [soundSource, setSoundSource] = useState('presets'); // 'presets', 'soundscapes', 'journeys', 'custom'
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [showCustomGenerator, setShowCustomGenerator] = useState(false);
@@ -143,17 +144,18 @@ export function RoomSession({ room, onBack, username }) {
     }, [sessionState, members, sessionTime, room.theme]);
 
     // Helper to construct playback parameters merging Session Sound + Personal Layers + Element
-    const getPlaybackParams = () => {
-        if (!selectedSound) return null;
+    const getPlaybackParams = (soundOverride = null) => {
+        const sound = soundOverride || selectedSound;
+        if (!sound) return null;
 
-        let left = selectedSound.left || 0;
-        let right = selectedSound.right || 0;
+        let left = sound.left || 0;
+        let right = sound.right || 0;
 
-        if (selectedSound.frequencies) {
-            left = selectedSound.frequencies.left;
-            right = selectedSound.frequencies.right;
-        } else if (selectedSound.stages) {
-            const stage = selectedSound.stages[0];
+        if (sound.frequencies) {
+            left = sound.frequencies.left;
+            right = sound.frequencies.right;
+        } else if (sound.stages) {
+            const stage = sound.stages[0];
             left = stage.left;
             right = stage.right;
         }
@@ -161,10 +163,10 @@ export function RoomSession({ room, onBack, username }) {
         // Element Soundscape Mapping
         const elementMap = { fire: 'firewood', water: 'ocean', earth: 'earth', air: 'nature-walk' };
         // Priority: User Element > Session Soundscape
-        const soundscapeType = (userElement && elementMap[userElement]) || selectedSound.type || selectedSound.soundscapeType || null;
+        const soundscapeType = (userElement && elementMap[userElement]) || sound.type || sound.soundscapeType || null;
 
         // Layers
-        const layers = [...(selectedSound.layers || [])];
+        const layers = [...(sound.layers || [])];
         if (userMode === 'add-tone') {
             layers.push({
                 id: 'personal',
@@ -176,10 +178,10 @@ export function RoomSession({ room, onBack, username }) {
 
         return {
             left, right,
-            bothEars: selectedSound.bothEars || 0,
-            noiseType: selectedSound.noiseType || null,
+            bothEars: sound.bothEars || 0,
+            noiseType: sound.noiseType || null,
             soundscapeType,
-            volumes: selectedSound.volumes || {},
+            volumes: sound.volumes || {},
             layers
         };
     };
@@ -667,6 +669,16 @@ export function RoomSession({ room, onBack, username }) {
                         </span>
                     </div>
                     <div className="session-controls">
+                        {members[0].isHost && (
+                            <button
+                                className={`control-btn ${showLiveGenerator ? 'active' : ''}`}
+                                onClick={() => setShowLiveGenerator(!showLiveGenerator)}
+                                title="Live Sound Mixer"
+                                style={showLiveGenerator ? { background: 'var(--accent-purple)', color: 'white' } : {}}
+                            >
+                                <Sliders size={20} />
+                            </button>
+                        )}
                         <button
                             className="control-btn"
                             onClick={() => setAnonymousMode(!anonymousMode)}
@@ -682,6 +694,40 @@ export function RoomSession({ room, onBack, username }) {
                         </button>
                     </div>
                 </div>
+
+
+                {/* Live Generator Panel (Host) */}
+                {
+                    showLiveGenerator && members[0].isHost && (
+                        <div className="live-generator-panel" style={{
+                            position: 'absolute', top: '80px', left: '50%', transform: 'translateX(-50%)',
+                            width: '95%', maxWidth: '600px', maxHeight: '70vh', overflowY: 'auto',
+                            background: 'rgba(17, 24, 39, 0.95)', border: '1px solid var(--accent-purple)',
+                            borderRadius: '16px', padding: '20px', zIndex: 1000, boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                            backdropFilter: 'blur(10px)'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', alignItems: 'center' }}>
+                                <h3 style={{ margin: 0, color: 'var(--accent-teal)' }}>Live Session Mixer</h3>
+                                <button style={{ background: 'none', border: 'none', color: 'white', fontSize: '20px', cursor: 'pointer' }} onClick={() => setShowLiveGenerator(false)}>✕</button>
+                            </div>
+                            <CustomGenerator
+                                onGenerate={(sound) => {
+                                    setSelectedSound(sound);
+                                    if (isPlaying) {
+                                        const params = getPlaybackParams(sound);
+                                        if (params) play(
+                                            params.left, params.right, params.bothEars,
+                                            params.noiseType, params.soundscapeType,
+                                            params.volumes, params.layers
+                                        );
+                                    }
+                                }}
+                                actionLabel="Update Live Sound"
+                                isActive={true}
+                            />
+                        </div>
+                    )
+                }
 
                 {/* Mandala Visualization */}
                 <div className="visualization-container">
@@ -717,32 +763,34 @@ export function RoomSession({ room, onBack, username }) {
                 </div>
 
                 {/* Chat Panel */}
-                {showChat && (
-                    <div className="chat-panel">
-                        <div className="chat-messages">
-                            {chatMessages.map(msg => (
-                                <div key={msg.id} className="chat-message">
-                                    <span className="message-sender">{msg.sender}</span>
-                                    <span className="message-text">{msg.text}</span>
-                                    <span className="message-time">{msg.timestamp}</span>
-                                </div>
-                            ))}
+                {
+                    showChat && (
+                        <div className="chat-panel">
+                            <div className="chat-messages">
+                                {chatMessages.map(msg => (
+                                    <div key={msg.id} className="chat-message">
+                                        <span className="message-sender">{msg.sender}</span>
+                                        <span className="message-text">{msg.text}</span>
+                                        <span className="message-time">{msg.timestamp}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="chat-input-container">
+                                <input
+                                    type="text"
+                                    className="chat-input"
+                                    placeholder="Send a supportive message..."
+                                    value={messageInput}
+                                    onChange={(e) => setMessageInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                />
+                                <button className="send-btn" onClick={handleSendMessage}>
+                                    <Send size={18} />
+                                </button>
+                            </div>
                         </div>
-                        <div className="chat-input-container">
-                            <input
-                                type="text"
-                                className="chat-input"
-                                placeholder="Send a supportive message..."
-                                value={messageInput}
-                                onChange={(e) => setMessageInput(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                            />
-                            <button className="send-btn" onClick={handleSendMessage}>
-                                <Send size={18} />
-                            </button>
-                        </div>
-                    </div>
-                )}
+                    )
+                }
 
                 {/* Playback Controls */}
                 <div className="playback-controls">
@@ -790,7 +838,7 @@ export function RoomSession({ room, onBack, username }) {
                         </button>
                     )}
                 </div>
-            </div>
+            </div >
         );
     }
 
