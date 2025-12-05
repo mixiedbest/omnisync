@@ -3,9 +3,12 @@ import { ArrowLeft, Users, Play, Pause, Volume2, MessageCircle, Heart, Sparkles,
 import { categories } from '../data/frequencies';
 import { journeys } from '../data/journeys';
 import { soundscapes } from '../data/soundscapes';
+import { useBinauralBeat } from '../hooks/useBinauralBeat';
+import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
+    const { play, stop, isPlaying: audioIsPlaying } = useBinauralBeat();
     const [sessionState, setSessionState] = useState('lobby'); // 'lobby', 'active', 'post'
     const [members, setMembers] = useState([
         { id: 1, name: username || 'You', color: '#8b5cf6', isHost: true, mode: 'listen', element: 'air' }
@@ -114,14 +117,46 @@ export function RoomSession({ room, onBack, username }) {
             alert('Please select a sound to begin');
             return;
         }
+
+        // Play the selected sound
+        if (selectedSound.left !== undefined && selectedSound.right !== undefined) {
+            // Binaural beat from presets
+            play(selectedSound.left, selectedSound.right);
+        } else if (selectedSound.frequencies) {
+            // Soundscape
+            play(selectedSound.frequencies.left, selectedSound.frequencies.right);
+        } else if (selectedSound.stages) {
+            // Journey - play first stage
+            const firstStage = selectedSound.stages[0];
+            if (firstStage.left && firstStage.right) {
+                play(firstStage.left, firstStage.right);
+            }
+        }
+
         setSessionState('active');
         setIsPlaying(true);
         setShowIntentionPrompt(false);
     };
 
     const handleEndSession = () => {
+        stop();
         setIsPlaying(false);
         setSessionState('post');
+    };
+
+    const handlePlayPause = () => {
+        if (isPlaying) {
+            stop();
+            setIsPlaying(false);
+        } else {
+            // Resume playback
+            if (selectedSound.left !== undefined && selectedSound.right !== undefined) {
+                play(selectedSound.left, selectedSound.right);
+            } else if (selectedSound.frequencies) {
+                play(selectedSound.frequencies.left, selectedSound.frequencies.right);
+            }
+            setIsPlaying(true);
+        }
     };
 
     const handleSendMessage = () => {
@@ -390,15 +425,15 @@ export function RoomSession({ room, onBack, username }) {
                                     <p className="custom-note">
                                         Create additional tones to layer with {selectedSound.title || selectedSound.name}
                                     </p>
-                                    <button
-                                        className="custom-confirm-btn"
-                                        onClick={() => {
-                                            // Custom generator settings would be saved here
-                                            alert('Custom layer configured!');
-                                        }}
-                                    >
-                                        Configure Custom Layer
-                                    </button>
+                                    <div className="generator-container">
+                                        <CustomGenerator
+                                            onGenerate={(config) => {
+                                                console.log('Custom generator config:', config);
+                                                alert('Custom layer configured!');
+                                            }}
+                                            isActive={false}
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -525,7 +560,7 @@ export function RoomSession({ room, onBack, username }) {
                 <div className="playback-controls">
                     <button
                         className="playback-btn"
-                        onClick={() => setIsPlaying(!isPlaying)}
+                        onClick={handlePlayPause}
                     >
                         {isPlaying ? <Pause size={32} /> : <Play size={32} />}
                     </button>

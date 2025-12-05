@@ -715,6 +715,13 @@
     margin-top: 16px;
 }
 
+.generator-container {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+}
+
 /* Post-Session Styles */
 .room-session.post {
     display: flex;
