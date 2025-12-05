@@ -18,6 +18,11 @@ export function useBinauralBeat() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(0.5);
     const [currentFrequencies, setCurrentFrequencies] = useState({ left: 0, right: 0, bothEars: 0, noiseType: null });
+    // Microphone Refs
+    const micStreamRef = useRef(null);
+    const micSourceRef = useRef(null);
+    const micGainRef = useRef(null);
+    const [isMicActive, setIsMicActive] = useState(false);
 
     const initAudio = useCallback(() => {
         if (!audioContextRef.current) {
@@ -1149,12 +1154,72 @@ export function useBinauralBeat() {
         }
     }, []);
 
+    const enableMicrophone = useCallback(async () => {
+        if (!audioContextRef.current) initAudio();
+        // Ensure context is running
+        if (audioContextRef.current.state === 'suspended') {
+            await audioContextRef.current.resume();
+        }
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
+            });
+            micStreamRef.current = stream;
+
+            const ctx = audioContextRef.current;
+            const source = ctx.createMediaStreamSource(stream);
+            const gain = ctx.createGain();
+            gain.gain.value = 1.0;
+
+            source.connect(gain);
+            gain.connect(ctx.destination);
+
+            micSourceRef.current = source;
+            micGainRef.current = gain;
+            setIsMicActive(true);
+            return true;
+        } catch (err) {
+            console.error("Mic Error:", err);
+            alert("Could not access microphone: " + err.message);
+            return false;
+        }
+    }, [initAudio]);
+
+    const disableMicrophone = useCallback(() => {
+        if (micStreamRef.current) {
+            micStreamRef.current.getTracks().forEach(track => track.stop());
+            micStreamRef.current = null;
+        }
+        if (micSourceRef.current) {
+            micSourceRef.current.disconnect();
+            micSourceRef.current = null;
+        }
+        setIsMicActive(false);
+    }, []);
+
+    const setMicVolume = useCallback((val) => {
+        if (micGainRef.current) {
+            // Smooth transition
+            micGainRef.current.gain.setTargetAtTime(val, audioContextRef.current.currentTime, 0.1);
+        }
+    }, []);
+
     return {
         play,
         stop,
         isPlaying,
         volume,
         setVolume: updateVolume,
-        currentFrequencies
+        setVolume: updateVolume,
+        currentFrequencies,
+        enableMicrophone,
+        disableMicrophone,
+        setMicVolume,
+        isMicActive
     };
 }

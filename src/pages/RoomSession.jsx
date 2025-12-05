@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Users, Play, Pause, Volume2, MessageCircle, Heart, Sparkles, Zap, Wind, Sun, Moon, Star, Circle, Square, Triangle, Send, Settings as SettingsIcon, Eye, EyeOff, Crown, UserCheck, Sliders } from 'lucide-react';
+import { ArrowLeft, Users, Play, Pause, Volume2, MessageCircle, Heart, Sparkles, Zap, Wind, Sun, Moon, Star, Circle, Square, Triangle, Send, Settings as SettingsIcon, Eye, EyeOff, Crown, UserCheck, Sliders, Mic, MicOff } from 'lucide-react';
 import { categories } from '../data/frequencies';
 import { journeys } from '../data/journeys';
 import { soundscapes } from '../data/soundscapes';
@@ -523,22 +523,20 @@ export function RoomSession({ room, onBack, username }) {
                             {/* Custom Generator */}
                             {soundSource === 'custom' && (
                                 <div className="sound-options">
-                                    <div className="custom-generator-embed">
-                                        <CustomGenerator
-                                            onGenerate={(sound) => {
-                                                setSelectedSound(sound);
-                                                // Feedback
-                                                const btn = document.querySelector('.generate-btn');
-                                                if (btn) {
-                                                    const originalText = btn.innerText;
-                                                    btn.innerText = 'Sound Set! ✓';
-                                                    setTimeout(() => btn.innerText = originalText, 2000);
-                                                }
-                                            }}
-                                            actionLabel="Set Session Sound"
-                                            isActive={selectedSound?.id === 'custom-combined' && isPlaying}
-                                        />
-                                    </div>
+                                    <CustomGenerator
+                                        onGenerate={(sound) => {
+                                            setSelectedSound(sound);
+                                            // Feedback
+                                            const btn = document.querySelector('.generate-btn');
+                                            if (btn) {
+                                                const originalText = btn.innerText;
+                                                btn.innerText = 'Sound Set! ✓';
+                                                setTimeout(() => btn.innerText = originalText, 2000);
+                                            }
+                                        }}
+                                        actionLabel="Set Session Sound"
+                                        isActive={selectedSound?.id === 'custom-combined' && isPlaying}
+                                    />
                                 </div>
                             )}
 
@@ -748,6 +746,35 @@ export function RoomSession({ room, onBack, username }) {
 
                 {/* Playback Controls */}
                 <div className="playback-controls">
+                    {/* Host Mic Control */}
+                    {members[0].isHost && (
+                        <div className="mic-control-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginRight: '16px' }}>
+                            <button
+                                className={`control-btn ${isMicActive ? 'active' : ''}`}
+                                onClick={isMicActive ? disableMicrophone : enableMicrophone}
+                                title={isMicActive ? "Mute Mic" : "Enable Mic"}
+                                style={isMicActive ? { background: 'var(--accent-purple)', color: 'white', borderColor: 'transparent', boxShadow: '0 0 15px rgba(139, 92, 246, 0.5)' } : {}}
+                            >
+                                {isMicActive ? <Mic size={24} /> : <MicOff size={24} />}
+                            </button>
+
+                            {isMicActive && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    <label style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: '600' }}>MIC VOL</label>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="2"
+                                        step="0.1"
+                                        defaultValue="1"
+                                        onChange={(e) => setMicVolume(parseFloat(e.target.value))}
+                                        style={{ width: '80px', accentColor: 'var(--accent-purple)', height: '4px' }}
+                                        title="Mic Volume"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <button
                         className="playback-btn"
                         onClick={handlePlayPause}
