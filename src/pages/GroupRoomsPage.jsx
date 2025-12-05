@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Plus, Lock, Globe, Calendar, Heart, Sparkles, Play, Settings, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Users, Plus, Lock, Globe, Calendar, Heart, Sparkles, Play, Settings, Eye, EyeOff, X } from 'lucide-react';
 import { RoomSession } from './RoomSession';
 import './GroupRoomsPage.css';
 
@@ -93,6 +93,13 @@ export function GroupRoomsPage({ onBack }) {
         setActiveRoom(room);
     };
 
+    const handleDeleteRoom = (roomId) => {
+        if (window.confirm('Are you sure you want to delete this room?')) {
+            const updatedRooms = rooms.filter(r => r.id !== roomId);
+            saveRooms(updatedRooms);
+        }
+    };
+
     // If in a room session, render RoomSession component
     if (activeRoom) {
         return (
@@ -171,7 +178,19 @@ export function GroupRoomsPage({ onBack }) {
                                             {getRoomTypeIcon(room.type)}
                                             <span>{room.type}</span>
                                         </div>
-                                        {room.isActive && <span className="live-badge">LIVE</span>}
+                                        <div className="room-header-actions">
+                                            {room.isActive && <span className="live-badge">LIVE</span>}
+                                            <button
+                                                className="delete-room-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteRoom(room.id);
+                                                }}
+                                                title="Delete room"
+                                            >
+                                                <X size={16} />
+                                            </button>
+                                        </div>
                                     </div>
                                     <h3>{room.name}</h3>
                                     <div className="room-meta">

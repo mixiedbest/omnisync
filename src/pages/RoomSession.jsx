@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Users, Play, Pause, Volume2, MessageCircle, Heart, Sparkles, Zap, Wind, Sun, Moon, Star, Circle, Square, Triangle, Send, Settings as SettingsIcon, Eye, EyeOff, Crown, UserCheck } from 'lucide-react';
+import { ArrowLeft, Users, Play, Pause, Volume2, MessageCircle, Heart, Sparkles, Zap, Wind, Sun, Moon, Star, Circle, Square, Triangle, Send, Settings as SettingsIcon, Eye, EyeOff, Crown, UserCheck, Sliders } from 'lucide-react';
+import { categories } from '../data/frequencies';
+import { journeys } from '../data/journeys';
+import { soundscapes } from '../data/soundscapes';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
@@ -15,6 +18,9 @@ export function RoomSession({ room, onBack, username }) {
     const [sessionTime, setSessionTime] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [selectedSound, setSelectedSound] = useState(null);
+    const [soundSource, setSoundSource] = useState('presets'); // 'presets', 'soundscapes', 'journeys', 'custom'
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [showCustomGenerator, setShowCustomGenerator] = useState(false);
     const [showIntentionPrompt, setShowIntentionPrompt] = useState(true);
     const [userIntention, setUserIntention] = useState('');
     const [postSessionMood, setPostSessionMood] = useState('');
@@ -230,18 +236,137 @@ export function RoomSession({ room, onBack, username }) {
                     {members[0].isHost && (
                         <div className="sound-selection">
                             <h3>Choose Session Sound</h3>
-                            <select
-                                className="sound-select"
-                                value={selectedSound || ''}
-                                onChange={(e) => setSelectedSound(e.target.value)}
-                            >
-                                <option value="">Select a sound...</option>
-                                <option value="alpha-focus">Alpha Focus (10Hz)</option>
-                                <option value="theta-meditation">Theta Meditation (6Hz)</option>
-                                <option value="delta-sleep">Delta Deep Sleep (2Hz)</option>
-                                <option value="gamma-insight">Gamma Insight (40Hz)</option>
-                                <option value="schumann">Schumann Resonance (7.83Hz)</option>
-                            </select>
+
+                            {/* Sound Source Tabs */}
+                            <div className="sound-source-tabs">
+                                <button
+                                    className={`source-tab ${soundSource === 'presets' ? 'active' : ''}`}
+                                    onClick={() => setSoundSource('presets')}
+                                >
+                                    Presets
+                                </button>
+                                <button
+                                    className={`source-tab ${soundSource === 'soundscapes' ? 'active' : ''}`}
+                                    onClick={() => setSoundSource('soundscapes')}
+                                >
+                                    Soundscapes
+                                </button>
+                                <button
+                                    className={`source-tab ${soundSource === 'journeys' ? 'active' : ''}`}
+                                    onClick={() => setSoundSource('journeys')}
+                                >
+                                    Journeys
+                                </button>
+                                <button
+                                    className={`source-tab ${soundSource === 'custom' ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setSoundSource('custom');
+                                        setShowCustomGenerator(true);
+                                    }}
+                                >
+                                    <Sliders size={16} />
+                                    Custom
+                                </button>
+                            </div>
+
+                            {/* Presets */}
+                            {soundSource === 'presets' && (
+                                <div className="sound-options">
+                                    <select
+                                        className="category-select"
+                                        value={selectedCategory || ''}
+                                        onChange={(e) => setSelectedCategory(e.target.value)}
+                                    >
+                                        <option value="">Select a category...</option>
+                                        {categories.map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.title}</option>
+                                        ))}
+                                    </select>
+
+                                    {selectedCategory && (
+                                        <select
+                                            className="sound-select"
+                                            value={selectedSound?.id || ''}
+                                            onChange={(e) => {
+                                                const cat = categories.find(c => c.id === selectedCategory);
+                                                const sound = cat?.items.find(i => i.id === e.target.value);
+                                                setSelectedSound(sound);
+                                            }}
+                                        >
+                                            <option value="">Select a sound...</option>
+                                            {categories.find(c => c.id === selectedCategory)?.items.map(item => (
+                                                <option key={item.id} value={item.id}>{item.title}</option>
+                                            ))}
+                                        </select>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Soundscapes */}
+                            {soundSource === 'soundscapes' && (
+                                <div className="sound-options">
+                                    <select
+                                        className="sound-select"
+                                        value={selectedSound?.id || ''}
+                                        onChange={(e) => {
+                                            const sound = soundscapes.find(s => s.id === e.target.value);
+                                            setSelectedSound(sound);
+                                        }}
+                                    >
+                                        <option value="">Select a soundscape...</option>
+                                        {soundscapes.map(scape => (
+                                            <option key={scape.id} value={scape.id}>{scape.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {/* Journeys */}
+                            {soundSource === 'journeys' && (
+                                <div className="sound-options">
+                                    <select
+                                        className="sound-select"
+                                        value={selectedSound?.id || ''}
+                                        onChange={(e) => {
+                                            const sound = journeys.find(j => j.id === e.target.value);
+                                            setSelectedSound(sound);
+                                        }}
+                                    >
+                                        <option value="">Select a journey...</option>
+                                        {journeys.map(journey => (
+                                            <option key={journey.id} value={journey.id}>{journey.title}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {/* Custom Generator */}
+                            {soundSource === 'custom' && showCustomGenerator && (
+                                <div className="custom-generator-embed">
+                                    <p className="custom-note">
+                                        Create a custom mix for this session. Click "Generate" to set it as the session sound.
+                                    </p>
+                                    <button
+                                        className="custom-confirm-btn"
+                                        onClick={() => {
+                                            setSelectedSound({ id: 'custom', title: 'Custom Mix' });
+                                            setShowCustomGenerator(false);
+                                        }}
+                                    >
+                                        Use Custom Mix
+                                    </button>
+                                </div>
+                            )}
+
+                            {selectedSound && (
+                                <div className="selected-sound-preview">
+                                    <div className="preview-icon">♪</div>
+                                    <div className="preview-info">
+                                        <span className="preview-title">{selectedSound.title || selectedSound.name}</span>
+                                        <span className="preview-desc">{selectedSound.desc || selectedSound.description || 'Ready to play'}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
 
