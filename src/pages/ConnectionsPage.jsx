@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Users, Sparkles, Heart, Zap, Link2, Activity, MessageCircle, Award, Gift, Music } from 'lucide-react';
+import { ArrowLeft, Users, Sparkles, Heart, Zap, Link2, Activity, MessageCircle, Award, Gift } from 'lucide-react';
 import './ConnectionsPage.css';
 
 import { GiftsAndMessagesPage } from './GiftsAndMessagesPage';
