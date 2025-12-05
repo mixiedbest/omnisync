@@ -11,6 +11,7 @@ export function GroupRoomsPage({ onBack }) {
     const [activeRoom, setActiveRoom] = useState(null);
     const [showPartnerSync, setShowPartnerSync] = useState(false);
     const [username, setUsername] = useState('You');
+    const [connections, setConnections] = useState([]);
 
     // Create Room Form State
     const [roomName, setRoomName] = useState('');
@@ -20,6 +21,9 @@ export function GroupRoomsPage({ onBack }) {
     const [roomIntention, setRoomIntention] = useState('');
     const [roomSchedule, setRoomSchedule] = useState('one-time');
     const [sessionDuration, setSessionDuration] = useState('');
+    const [isScheduled, setIsScheduled] = useState(false);
+    const [scheduleType, setScheduleType] = useState('once');
+    const [invitedPartner, setInvitedPartner] = useState('');
 
     const sessionDurations = [
         { id: '3', label: '3 minutes', minutes: 3 },
@@ -34,6 +38,11 @@ export function GroupRoomsPage({ onBack }) {
         const savedRooms = localStorage.getItem('omnisync_rooms');
         if (savedRooms) {
             setRooms(JSON.parse(savedRooms));
+        }
+
+        const savedConnections = localStorage.getItem('omnisync_connections');
+        if (savedConnections) {
+            setConnections(JSON.parse(savedConnections));
         }
     }, []);
 
@@ -66,11 +75,13 @@ export function GroupRoomsPage({ onBack }) {
             type: roomType,
             password: roomType === 'private' ? roomPassword : null,
             theme: roomTheme,
-            intention: intention,
+            intention: roomIntention,
             host: 'You',
             members: [],
             isScheduled: isScheduled,
             scheduleType: scheduleType,
+            sessionDuration: sessionDuration,
+            invitedPartner: roomType === 'partner' ? invitedPartner : null,
             createdAt: new Date().toISOString(),
             isActive: false
         };
@@ -85,16 +96,17 @@ export function GroupRoomsPage({ onBack }) {
         setRoomType('private');
         setRoomPassword('');
         setRoomTheme('cosmic');
-        setIntention('');
+        setRoomIntention('');
+        setSessionDuration('');
         setIsScheduled(false);
         setScheduleType('once');
+        setInvitedPartner('');
     };
 
     const getRoomTypeIcon = (type) => {
         switch (type) {
             case 'private': return <Lock size={16} />;
             case 'community': return <Globe size={16} />;
-            case 'aura': return <Sparkles size={16} />;
             case 'partner': return <Heart size={16} />;
             default: return <Users size={16} />;
         }
@@ -115,12 +127,30 @@ export function GroupRoomsPage({ onBack }) {
         }
     };
 
+    const handlePartnerSyncComplete = (partnerName, sessionDuration) => {
+        // Find the connection by name and update their session count
+        const updatedConnections = connections.map(conn => {
+            if (conn.name.toLowerCase() === partnerName.toLowerCase()) {
+                return {
+                    ...conn,
+                    sessionsSynced: (conn.sessionsSynced || 0) + 1
+                };
+            }
+            return conn;
+        });
+
+        // Save updated connections
+        localStorage.setItem('omnisync_connections', JSON.stringify(updatedConnections));
+        setConnections(updatedConnections);
+    };
+
     // If showing Partner Sync
     if (showPartnerSync) {
         return (
             <PartnerSyncPage
                 onBack={() => setShowPartnerSync(false)}
                 username={username}
+                onSessionComplete={handlePartnerSyncComplete}
             />
         );
     }
@@ -172,11 +202,6 @@ export function GroupRoomsPage({ onBack }) {
                         <Globe size={24} className="type-icon" />
                         <h3>Community Rooms</h3>
                         <p>Public or discoverable themed sessions</p>
-                    </div>
-                    <div className="type-card">
-                        <Sparkles size={24} className="type-icon" />
-                        <h3>Aura Rooms</h3>
-                        <p>Color shifts based on group mood & elements</p>
                     </div>
                     <div className="type-card">
                         <Heart size={24} className="type-icon" />
@@ -269,7 +294,6 @@ export function GroupRoomsPage({ onBack }) {
                                 {[
                                     { id: 'private', label: 'Private', icon: Lock },
                                     { id: 'community', label: 'Community', icon: Globe },
-                                    { id: 'aura', label: 'Aura Room', icon: Sparkles },
                                     { id: 'partner', label: 'Partner Sync', icon: Heart }
                                 ].map(type => (
                                     <button
@@ -297,6 +321,29 @@ export function GroupRoomsPage({ onBack }) {
                             </div>
                         )}
 
+                        {roomType === 'partner' && (
+                            <div className="form-section">
+                                <label>Invite Partner</label>
+                                <select
+                                    className="modal-input"
+                                    value={invitedPartner}
+                                    onChange={(e) => setInvitedPartner(e.target.value)}
+                                >
+                                    <option value="">Select a connection...</option>
+                                    {connections.map(conn => (
+                                        <option key={conn.id} value={conn.name}>
+                                            {conn.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                {connections.length === 0 && (
+                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                                        No connections yet. Add connections first to invite them.
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
                         <div className="form-section">
                             <label>Room Theme</label>
                             <div className="theme-selector">
@@ -318,8 +365,8 @@ export function GroupRoomsPage({ onBack }) {
                             <label>Group Intention</label>
                             <select
                                 className="modal-input"
-                                value={intention}
-                                onChange={(e) => setIntention(e.target.value)}
+                                value={roomIntention}
+                                onChange={(e) => setRoomIntention(e.target.value)}
                             >
                                 <option value="">Choose an intention...</option>
                                 {intentions.map(int => (

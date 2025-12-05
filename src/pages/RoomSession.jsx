@@ -48,10 +48,36 @@ export function RoomSession({ room, onBack, username }) {
         { id: 'air', name: 'Air', color: '#a78bfa' }
     ];
 
+    const sessionDurations = [
+        { id: '3', label: '3 minutes', minutes: 3 },
+        { id: '9', label: '9 minutes', minutes: 9 },
+        { id: '15', label: '15 minutes', minutes: 15 },
+        { id: '30', label: '30 minutes', minutes: 30 },
+        { id: '60', label: '1 hour', minutes: 60 },
+        { id: 'unlimited', label: 'Unlimited', minutes: null }
+    ];
+
     useEffect(() => {
-        if (sessionState === 'active' && isPlaying) {
+        if (sessionState === 'active' && isPlaying && room && room.sessionDuration) {
             timerRef.current = setInterval(() => {
-                setSessionTime(prev => prev + 1);
+                setSessionTime(prev => {
+                    const newTime = prev + 1;
+
+                    // Check if session duration is set and time is up
+                    const duration = sessionDurations.find(d => d.id === room.sessionDuration);
+                    if (duration && duration.minutes) {
+                        const maxSeconds = duration.minutes * 60;
+                        if (newTime >= maxSeconds) {
+                            // Auto-end session when time is up
+                            stop();
+                            setIsPlaying(false);
+                            setSessionState('post');
+                            return maxSeconds;
+                        }
+                    }
+
+                    return newTime;
+                });
             }, 1000);
         } else {
             if (timerRef.current) clearInterval(timerRef.current);
@@ -59,11 +85,12 @@ export function RoomSession({ room, onBack, username }) {
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };
-    }, [sessionState, isPlaying]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sessionState, isPlaying, room?.sessionDuration]);
 
     // Mandala visualization
     useEffect(() => {
-        if (sessionState === 'active' && canvasRef.current) {
+        if (sessionState === 'active' && canvasRef.current && room) {
             const canvas = canvasRef.current;
             const ctx = canvas.getContext('2d');
             const centerX = canvas.width / 2;
@@ -186,6 +213,29 @@ export function RoomSession({ room, onBack, username }) {
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
+
+    const getTimeRemaining = () => {
+        if (!room.sessionDuration) return null;
+        const duration = sessionDurations.find(d => d.id === room.sessionDuration);
+        if (!duration || !duration.minutes) return null;
+        const remaining = (duration.minutes * 60) - sessionTime;
+        return remaining > 0 ? remaining : 0;
+    };
+
+    // Safety check - render error if room is null
+    if (!room) {
+        return (
+            <div className="room-session">
+                <button className="back-button" onClick={onBack}>
+                    <ArrowLeft size={20} />
+                    Back to Rooms
+                </button>
+                <div style={{ padding: '40px', textAlign: 'center' }}>
+                    <p>Error: Room data not found</p>
+                </div>
+            </div>
+        );
+    }
 
     // LOBBY VIEW
     if (sessionState === 'lobby') {
@@ -478,7 +528,12 @@ export function RoomSession({ room, onBack, username }) {
                 <div className="session-header">
                     <div className="session-info">
                         <h2>{room.name}</h2>
-                        <span className="session-timer">{formatTime(sessionTime)}</span>
+                        <span className="session-timer">
+                            {getTimeRemaining() !== null
+                                ? `${formatTime(getTimeRemaining())} remaining`
+                                : formatTime(sessionTime)
+                            }
+                        </span>
                     </div>
                     <div className="session-controls">
                         <button
@@ -642,4 +697,17 @@ export function RoomSession({ room, onBack, username }) {
             </div>
         );
     }
+
+    // Default fallback (should never reach here)
+    return (
+        <div className="room-session">
+            <button className="back-button" onClick={onBack}>
+                <ArrowLeft size={20} />
+                Back to Rooms
+            </button>
+            <div style={{ padding: '40px', textAlign: 'center' }}>
+                <p>Loading room...</p>
+            </div>
+        </div>
+    );
 }

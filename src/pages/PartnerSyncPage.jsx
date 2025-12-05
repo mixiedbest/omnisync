@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { ArrowLeft, Heart, Users, Play, Pause, Volume2, Sparkles, Wind, Flame, Droplet, Mountain, Send, Eye, EyeOff } from 'lucide-react';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
 import './PartnerSyncPage.css';
 
-export function PartnerSyncPage({ onBack, username }) {
+export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
     const { play, stop } = useBinauralBeat();
     const [sessionState, setSessionState] = useState('setup'); // 'setup', 'waiting', 'active', 'post'
     const [syncGoal, setSyncGoal] = useState('');
@@ -18,6 +18,9 @@ export function PartnerSyncPage({ onBack, username }) {
     const [myReflection, setMyReflection] = useState('');
     const [shareReflection, setShareReflection] = useState(false);
     const [currentMood, setCurrentMood] = useState('');
+    const [syncMode, setSyncMode] = useState('journey'); // 'preset' or 'journey'
+    const [currentStage, setCurrentStage] = useState(0); // 0: grounding, 1: transition, 2: goal
+    const [stageStartTime, setStageStartTime] = useState(0);
     const canvasRef = useRef(null);
     const timerRef = useRef(null);
 
@@ -56,6 +59,50 @@ export function PartnerSyncPage({ onBack, username }) {
         { id: 'air', name: 'Air', icon: Wind, color: '#a78bfa' }
     ];
 
+    // Journey stages - must be defined before useEffects that use it
+    const journeyStages = useMemo(() => {
+        const selectedGoal = syncGoals.find(g => g.id === syncGoal);
+        const selectedMood = moods.find(m => m.id === currentMood);
+        const goalFreq = selectedGoal ? selectedGoal.freq : 7.83;
+        const moodFreq = selectedMood ? selectedMood.freq : 7.83;
+
+        // Relationship type adjustments
+        const relationshipDiff = {
+            'romantic': 5,
+            'friends': 8,
+            'family': 3,
+            'creative': 12,
+            'healing': 2
+        }[relationshipType] || 7;
+
+        return [
+            // Stage 1: Grounding (based on current mood)
+            {
+                name: 'Grounding',
+                duration: 120, // 2 minutes
+                left: moodFreq,
+                right: moodFreq + 2,
+                description: 'Settling into your current state'
+            },
+            // Stage 2: Transition (blend mood → goal)
+            {
+                name: 'Transition',
+                duration: 180, // 3 minutes
+                left: (moodFreq + goalFreq) / 2,
+                right: (moodFreq + goalFreq) / 2 + relationshipDiff / 2,
+                description: 'Moving toward alignment'
+            },
+            // Stage 3: Goal state (full goal frequency)
+            {
+                name: 'Goal State',
+                duration: null, // Unlimited
+                left: goalFreq,
+                right: goalFreq + relationshipDiff,
+                description: 'Aligned in your intention'
+            }
+        ];
+    }, [syncGoal, currentMood, relationshipType]);
+
     // Breathing guide
     useEffect(() => {
         if (sessionState === 'active' && isPlaying) {
@@ -91,6 +138,30 @@ export function PartnerSyncPage({ onBack, username }) {
             if (timerRef.current) clearInterval(timerRef.current);
         };
     }, [sessionState, isPlaying]);
+
+    // Stage progression for journey-style sync
+    useEffect(() => {
+        if (sessionState === 'active' && isPlaying && syncMode === 'journey') {
+            const currentStageData = journeyStages[currentStage];
+
+            if (currentStageData && currentStageData.duration) {
+                const stageElapsed = sessionTime - stageStartTime;
+
+                if (stageElapsed >= currentStageData.duration && currentStage < journeyStages.length - 1) {
+                    // Move to next stage
+                    const nextStage = currentStage + 1;
+                    const nextStageData = journeyStages[nextStage];
+
+                    setCurrentStage(nextStage);
+                    setStageStartTime(sessionTime);
+
+                    // Update audio to next stage frequencies
+                    play(nextStageData.left, nextStageData.right);
+                }
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sessionTime, sessionState, isPlaying, syncMode, currentStage, stageStartTime, journeyStages]);
 
     // Energy cord visualization
     useEffect(() => {
@@ -187,8 +258,17 @@ export function PartnerSyncPage({ onBack, username }) {
             return;
         }
 
-        const soundConfig = buildSyncSound();
-        play(soundConfig.left, soundConfig.right);
+        if (syncMode === 'journey') {
+            // Journey mode: Start with first stage
+            const firstStage = journeyStages[0];
+            play(firstStage.left, firstStage.right);
+            setCurrentStage(0);
+            setStageStartTime(0);
+        } else {
+            // Preset mode: Use single frequency based on goal/mood/relationship
+            const soundConfig = buildSyncSound();
+            play(soundConfig.left, soundConfig.right);
+        }
 
         setSessionState('active');
         setIsPlaying(true);
@@ -198,6 +278,11 @@ export function PartnerSyncPage({ onBack, username }) {
         stop();
         setIsPlaying(false);
         setSessionState('post');
+
+        // Call the callback to update connection milestones
+        if (onSessionComplete && partnerName) {
+            onSessionComplete(partnerName, sessionTime);
+        }
     };
 
     const formatTime = (seconds) => {
@@ -234,6 +319,33 @@ export function PartnerSyncPage({ onBack, username }) {
                             value={partnerName}
                             onChange={(e) => setPartnerName(e.target.value)}
                         />
+                    </div>
+
+                    {/* Sync Mode */}
+                    <div className="setup-section">
+                        <label>Sync Mode</label>
+                        <div className="mode-selector">
+                            <button
+                                className={`mode-option ${syncMode === 'journey' ? 'selected' : ''}`}
+                                onClick={() => setSyncMode('journey')}
+                            >
+                                <Sparkles size={20} />
+                                <div>
+                                    <div className="mode-title">Journey Mode</div>
+                                    <div className="mode-desc">Progressive stages that ease into the goal</div>
+                                </div>
+                            </button>
+                            <button
+                                className={`mode-option ${syncMode === 'preset' ? 'selected' : ''}`}
+                                onClick={() => setSyncMode('preset')}
+                            >
+                                <Volume2 size={20} />
+                                <div>
+                                    <div className="mode-title">Preset Mode</div>
+                                    <div className="mode-desc">Single frequency based on goal & mood</div>
+                                </div>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Sync Goal */}
@@ -316,6 +428,25 @@ export function PartnerSyncPage({ onBack, username }) {
                         <h2>{partnerName ? `Syncing with ${partnerName}` : 'Partner Sync'}</h2>
                         <span className="session-timer">{formatTime(sessionTime)}</span>
                     </div>
+
+                    {/* Journey Stage Indicator - Only in Journey Mode */}
+                    {syncMode === 'journey' && journeyStages && journeyStages[currentStage] && (
+                        <div className="journey-stage-indicator">
+                            {journeyStages.map((stage, index) => (
+                                <div
+                                    key={index}
+                                    className={`stage-dot ${index === currentStage ? 'active' : ''} ${index < currentStage ? 'completed' : ''}`}
+                                    title={stage.name}
+                                >
+                                    {index < currentStage && '✓'}
+                                </div>
+                            ))}
+                            <div className="stage-info">
+                                <span className="stage-name">{journeyStages[currentStage].name}</span>
+                                <span className="stage-desc">{journeyStages[currentStage].description}</span>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Affirmation */}
                     <div className="sync-affirmation">
@@ -426,4 +557,17 @@ export function PartnerSyncPage({ onBack, username }) {
             </div>
         );
     }
+
+    // Default fallback
+    return (
+        <div className="partner-sync-page">
+            <button className="back-button" onClick={onBack}>
+                <ArrowLeft size={20} />
+                Back
+            </button>
+            <div style={{ padding: '40px', textAlign: 'center' }}>
+                <p>Loading...</p>
+            </div>
+        </div>
+    );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Sliders, Volume2, Zap, Wind, Music, Play, Pause, Save, ListPlus } from 'lucide-react';
+import { Sliders, Volume2, Zap, Wind, Music, Play, Pause, Save, ListPlus, Plus, X, Headphones, Speaker, Palette, Waves } from 'lucide-react';
 import './CustomGenerator.css';
 
 export function CustomGenerator({ onGenerate, isActive }) {
@@ -351,10 +351,10 @@ export function CustomGenerator({ onGenerate, isActive }) {
                 </div>
 
                 <button
-                    className={`generate - btn ${isPlaying ? 'playing' : ''} `}
+                    className={`generate-btn ${isActive ? 'playing' : ''}`}
                     onClick={handleGenerate}
                 >
-                    {isPlaying ? (
+                    {isActive ? (
                         <>
                             <Pause size={24} />
                             Pause Session
