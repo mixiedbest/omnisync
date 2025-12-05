@@ -18,6 +18,8 @@ export function PlayerControls({
         if (!sleepTimer) onSetSleepTimer(15);
         else if (sleepTimer === 15) onSetSleepTimer(30);
         else if (sleepTimer === 30) onSetSleepTimer(60);
+        else if (sleepTimer === 60) onSetSleepTimer(90);
+        else if (sleepTimer === 90) onSetSleepTimer(120);
         else onSetSleepTimer(null);
     };
 
