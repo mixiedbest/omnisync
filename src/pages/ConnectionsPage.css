@@ -543,3 +543,158 @@
         height: 250px;
     }
 }
+
+/* New Feature Styles */
+.icon-pair {
+    display: flex;
+    gap: -4px;
+    color: var(--accent-teal);
+    margin-bottom: 4px;
+}
+
+.new-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 10px;
+    padding: 2px 6px;
+    background: var(--accent-purple);
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Connection Card Updates */
+.connection-header-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.milestone-badges {
+    display: flex;
+    gap: 4px;
+    font-size: 14px;
+}
+
+.sync-count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--accent-teal);
+}
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.sync-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(20, 184, 166, 0.1);
+    border: 1px solid rgba(20, 184, 166, 0.3);
+    color: var(--accent-teal);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sync-btn:hover {
+    background: rgba(20, 184, 166, 0.2);
+    border-color: var(--accent-teal);
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(20, 184, 166, 0.3);
+}
+
+/* Milestone Popup */
+.milestone-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 0.3s ease;
+}
+
+.milestone-content {
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(139, 92, 246, 0.1));
+    border: 2px solid var(--accent-purple);
+    border-radius: 24px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 90%;
+    width: 320px;
+}
+
+.milestone-icon {
+    color: #fbbf24;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.6));
+    animation: bounce 1s infinite;
+}
+
+.milestone-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.milestone-name {
+    font-size: 20px;
+    color: var(--accent-teal);
+    font-weight: 600;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}

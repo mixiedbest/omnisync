@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Users, Sparkles, Heart, Zap, Link2, Activity, MessageCircle, Award, Gift, Music } from 'lucide-react';
 import './ConnectionsPage.css';
 
+import { GiftsAndMessagesPage } from './GiftsAndMessagesPage';
+
 export function ConnectionsPage({ onBack }) {
+    const [view, setView] = useState('list'); // 'list' or 'gifts'
     const [username, setUsername] = useState('');
     const [connections, setConnections] = useState([]);
     const [showAddConnection, setShowAddConnection] = useState(false);
     const [newConnectionName, setNewConnectionName] = useState('');
     const [showSparkAnimation, setShowSparkAnimation] = useState(false);
     const [sparkMessage, setSparkMessage] = useState('');
+    const [milestonePopup, setMilestonePopup] = useState(null);
 
     const sparkMessages = [
         "Better Together ✨",
@@ -48,7 +52,8 @@ export function ConnectionsPage({ onBack }) {
             name: newConnectionName.trim(),
             connectedAt: new Date().toISOString(),
             mutualConnections: [], // Will be populated when backend is added
-            color: `hsl(${Math.random() * 360}, 70%, 60%)`
+            color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+            sessionsSynced: 0
         };
 
         const updatedConnections = [...connections, newConnection];
@@ -71,11 +76,37 @@ export function ConnectionsPage({ onBack }) {
         saveConnections(updatedConnections);
     };
 
+    const handleSyncSession = (id) => {
+        const updatedConnections = connections.map(conn => {
+            if (conn.id === id) {
+                const newCount = (conn.sessionsSynced || 0) + 1;
+
+                // Check for milestones
+                if (newCount === 5) triggerMilestone("Harmony Unlocked 🎵");
+                if (newCount === 10) triggerMilestone("Radiant Connection ✨");
+                if (newCount === 20) triggerMilestone("Cosmic Union 🌟");
+
+                return { ...conn, sessionsSynced: newCount };
+            }
+            return conn;
+        });
+        saveConnections(updatedConnections);
+    };
+
+    const triggerMilestone = (message) => {
+        setMilestonePopup(message);
+        setTimeout(() => setMilestonePopup(null), 3000);
+    };
+
     const generateMandala = (connection) => {
         // Generate a unique mandala pattern based on connection
         const numPoints = 6 + (connection.mutualConnections?.length || 0);
         return numPoints;
     };
+
+    if (view === 'gifts') {
+        return <GiftsAndMessagesPage onBack={() => setView('list')} />;
+    }
 
     return (
         <div className="connections-page">
@@ -108,14 +139,25 @@ export function ConnectionsPage({ onBack }) {
                 </div>
                 <div className="stat-card">
                     <div className="stat-number">
-                        {connections.reduce((acc, c) => acc + (c.mutualConnections?.length || 0), 0)}
+                        {connections.reduce((acc, c) => acc + (c.sessionsSynced || 0), 0)}
                     </div>
-                    <div className="stat-label">Mutual Links</div>
+                    <div className="stat-label">Total Syncs</div>
                 </div>
             </div>
 
             {/* Connection Features Grid */}
             <div className="connections-features-grid">
+                <button
+                    className="feature-card"
+                    onClick={() => setView('gifts')}
+                >
+                    <div className="icon-pair">
+                        <MessageCircle size={20} />
+                        <Gift size={20} />
+                    </div>
+                    <span>Gifts & Messages</span>
+                    <span className="new-badge">New</span>
+                </button>
                 <button className="feature-card blocked">
                     <Activity size={24} className="feature-icon" />
                     <span>Shared Waveform</span>
@@ -129,11 +171,6 @@ export function ConnectionsPage({ onBack }) {
                 <button className="feature-card blocked">
                     <Music size={24} className="feature-icon" />
                     <span>Collab Playlists</span>
-                    <span className="coming-soon-badge">Soon</span>
-                </button>
-                <button className="feature-card blocked">
-                    <MessageCircle size={24} className="feature-icon" />
-                    <span>Message Drops</span>
                     <span className="coming-soon-badge">Soon</span>
                 </button>
                 <button className="feature-card blocked">
@@ -206,6 +243,16 @@ export function ConnectionsPage({ onBack }) {
                 </div>
             )}
 
+            {milestonePopup && (
+                <div className="milestone-popup">
+                    <div className="milestone-content">
+                        <Award size={48} className="milestone-icon" />
+                        <div className="milestone-title">Milestone Reached!</div>
+                        <div className="milestone-name">{milestonePopup}</div>
+                    </div>
+                </div>
+            )}
+
             <div className="connections-list">
                 {connections.length === 0 ? (
                     <div className="empty-connections">
@@ -237,26 +284,40 @@ export function ConnectionsPage({ onBack }) {
                                 </svg>
                             </div>
                             <div className="connection-info">
-                                <div className="connection-name">{connection.name}</div>
+                                <div className="connection-header-row">
+                                    <div className="connection-name">{connection.name}</div>
+                                    <div className="milestone-badges">
+                                        {(connection.sessionsSynced >= 5) && <span title="Harmony Unlocked (5+ Syncs)">🎵</span>}
+                                        {(connection.sessionsSynced >= 10) && <span title="Radiant Connection (10+ Syncs)">✨</span>}
+                                        {(connection.sessionsSynced >= 20) && <span title="Cosmic Union (20+ Syncs)">🌟</span>}
+                                    </div>
+                                </div>
                                 <div className="connection-meta">
                                     <span className="connection-date">
                                         Connected {new Date(connection.connectedAt).toLocaleDateString()}
                                     </span>
-                                    {connection.mutualConnections && connection.mutualConnections.length > 0 && (
-                                        <span className="mutual-count">
-                                            <Users size={12} />
-                                            {connection.mutualConnections.length} mutual
-                                        </span>
-                                    )}
+                                    <span className="sync-count">
+                                        <Activity size={12} />
+                                        {connection.sessionsSynced || 0} Syncs
+                                    </span>
                                 </div>
                             </div>
-                            <button
-                                className="remove-connection-btn"
-                                onClick={() => removeConnection(connection.id)}
-                                title="Remove connection"
-                            >
-                                ×
-                            </button>
+                            <div className="card-actions">
+                                <button
+                                    className="sync-btn"
+                                    onClick={() => handleSyncSession(connection.id)}
+                                    title="Simulate a sync session"
+                                >
+                                    <Zap size={16} />
+                                </button>
+                                <button
+                                    className="remove-connection-btn"
+                                    onClick={() => removeConnection(connection.id)}
+                                    title="Remove connection"
+                                >
+                                    ×
+                                </button>
+                            </div>
                         </div>
                     ))
                 )}
