@@ -247,12 +247,26 @@ export function RoomSession({ room, onBack, username }) {
             }
         }
 
+        // Merge volumes (Custom Layer overrides if active)
+        const activeVolumes = { ...(sound.volumes || {}) };
+        if (isCustomLayerActive && customLayer?.volumes) {
+            // Only override if custom layer defines these aspects, or simply merge all?
+            // Custom Generator UI implies control over the specific elements it generates.
+            // If custom layer has a noise type selected, we definitely want its volume.
+            if (customLayer.noiseType && customLayer.noiseType !== 'none') {
+                activeVolumes.noise = customLayer.volumes.noise;
+            }
+            if ((customLayer.type || customLayer.soundscapeType) && (customLayer.type !== 'none' && customLayer.soundscapeType !== 'none')) {
+                activeVolumes.soundscape = customLayer.volumes.soundscape;
+            }
+        }
+
         return {
             left, right,
             bothEars: sound.bothEars || 0,
             noiseType: (isCustomLayerActive && customLayer?.noiseType) || sound.noiseType || null,
             soundscapeType,
-            volumes: sound.volumes || {},
+            volumes: activeVolumes,
             layers
         };
     };
