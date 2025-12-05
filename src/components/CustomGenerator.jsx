@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Sliders, Plus, X, Headphones, Speaker, Palette, Waves, Save } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Sliders, Volume2, Zap, Wind, Music, Play, Pause, Save, ListPlus } from 'lucide-react';
 import './CustomGenerator.css';
 
 export function CustomGenerator({ onGenerate, isActive }) {
@@ -96,7 +96,7 @@ export function CustomGenerator({ onGenerate, isActive }) {
 
         const primaryLayer = frequencyLayers[0];
         const soundToSave = {
-            id: `custom-${Date.now()}`,
+            id: `custom - ${Date.now()} `,
             title: soundName,
             beat: primaryLayer.beatFreq,
             left: primaryLayer.carrierFreq,
@@ -317,31 +317,54 @@ export function CustomGenerator({ onGenerate, isActive }) {
                         <Save size={16} />
                         Name Your Sound (to save to profile)
                     </label>
-                    <div className="save-controls">
-                        <input
-                            type="text"
-                            className="sound-name-input"
-                            placeholder="e.g., Deep Focus Mix, Sleep Sanctuary..."
-                            value={soundName}
-                            onChange={(e) => setSoundName(e.target.value)}
-                            maxLength={40}
-                        />
-                        <button
-                            className="save-sound-btn"
-                            onClick={saveCustomSound}
-                            disabled={!soundName.trim()}
-                        >
-                            <Save size={18} />
-                            Save
-                        </button>
+                    <div className="save-sound-group">
+                        <div className="save-input-wrapper">
+                            <input
+                                type="text"
+                                className="save-sound-input"
+                                placeholder="Name your mix..."
+                                value={soundName}
+                                onChange={(e) => setSoundName(e.target.value)}
+                            />
+                            <button
+                                className="save-sound-btn"
+                                onClick={saveCustomSound}
+                                disabled={!soundName.trim()}
+                                title="Save to Profile"
+                            >
+                                <Save size={20} />
+                            </button>
+                            <button
+                                className="save-sound-btn playlist-add-btn"
+                                onClick={() => {
+                                    // Logic to open playlist selection modal would go here
+                                    // For now, we'll just alert or simulate adding to a default playlist
+                                    alert("Added to your 'My Mixes' playlist!");
+                                }}
+                                disabled={!soundName.trim()}
+                                title="Add to Playlist"
+                            >
+                                <ListPlus size={20} />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <button
-                    className={`generate-btn ${isActive ? 'active' : ''}`}
+                    className={`generate - btn ${isPlaying ? 'playing' : ''} `}
                     onClick={handleGenerate}
                 >
-                    {isActive ? '▶ Playing Mix' : '▶ Generate & Play'}
+                    {isPlaying ? (
+                        <>
+                            <Pause size={24} />
+                            Pause Session
+                        </>
+                    ) : (
+                        <>
+                            <Play size={24} />
+                            Generate & Play
+                        </>
+                    )}
                 </button>
             </div>
         </div>

@@ -46,6 +46,18 @@ export function GiftsAndMessagesPage({ onBack }) {
         }, 1500);
     };
 
+    const postcardOptions = [
+        { id: 'thinking', label: 'Thinking of You', icon: Heart },
+        { id: 'hugs', label: 'Sending Hugs', icon: Wind },
+        { id: 'friend', label: 'Hi Friend', icon: MessageCircle },
+        { id: 'love', label: 'I Love You', icon: Heart },
+        { id: 'bday', label: 'Happy Birthday', icon: Gift },
+        { id: 'proud', label: 'Proud of You', icon: Zap },
+        { id: 'highfive', label: 'High Five', icon: Sun },
+        { id: 'miss', label: 'I Miss You', icon: Moon },
+        { id: 'befriends', label: "Let's Be Friends?", icon: Music }
+    ];
+
     return (
         <div className="gifts-page">
             <button className="back-button" onClick={onBack}>
@@ -127,14 +139,31 @@ export function GiftsAndMessagesPage({ onBack }) {
                                     </button>
                                 </div>
 
-                                <textarea
-                                    className="message-input"
-                                    placeholder={messageType === 'postcard' ? "Add a short note to your tone..." : "Write your affirmation..."}
-                                    value={customMessage}
-                                    onChange={(e) => setCustomMessage(e.target.value)}
-                                    maxLength={140}
-                                />
-                                <div className="char-count">{customMessage.length}/140</div>
+                                {messageType === 'postcard' ? (
+                                    <div className="postcard-grid">
+                                        {postcardOptions.map(opt => (
+                                            <button
+                                                key={opt.id}
+                                                className={`postcard-option ${customMessage === opt.label ? 'selected' : ''}`}
+                                                onClick={() => setCustomMessage(opt.label)}
+                                            >
+                                                <opt.icon size={18} />
+                                                <span>{opt.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <>
+                                        <textarea
+                                            className="message-input"
+                                            placeholder="Write your affirmation..."
+                                            value={customMessage}
+                                            onChange={(e) => setCustomMessage(e.target.value)}
+                                            maxLength={140}
+                                        />
+                                        <div className="char-count">{customMessage.length}/140</div>
+                                    </>
+                                )}
                             </div>
                         ) : (
                             <div className="gift-grid">

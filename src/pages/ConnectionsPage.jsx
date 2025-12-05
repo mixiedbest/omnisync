@@ -174,18 +174,8 @@ export function ConnectionsPage({ onBack }) {
                     <span className="coming-soon-badge">Soon</span>
                 </button>
                 <button className="feature-card blocked">
-                    <Award size={24} className="feature-icon" />
-                    <span>Milestones</span>
-                    <span className="coming-soon-badge">Soon</span>
-                </button>
-                <button className="feature-card blocked">
                     <Heart size={24} className="feature-icon" />
                     <span>Partner Sync</span>
-                    <span className="coming-soon-badge">Soon</span>
-                </button>
-                <button className="feature-card blocked">
-                    <Gift size={24} className="feature-icon" />
-                    <span>Frequency Gifts</span>
                     <span className="coming-soon-badge">Soon</span>
                 </button>
             </div>

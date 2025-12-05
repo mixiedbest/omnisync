@@ -22,6 +22,7 @@ import { InnerSyncPage } from './pages/InnerSyncPage';
 import { ConnectionsPage } from './pages/ConnectionsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { UserProfilePage } from './pages/UserProfilePage';
+import { PlaylistsPage } from './pages/PlaylistsPage';
 import './App.css';
 
 function App() {
@@ -317,6 +318,28 @@ function App() {
         <JourneyPlayer
           journey={selectedJourney}
           onBack={() => setCurrentPage('journeys')}
+        />
+      </>
+    );
+  }
+
+  if (currentPage === 'playlists') {
+    return (
+      <>
+        <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
+        <PlaylistsPage
+          onBack={() => setCurrentPage('home')}
+          onPlayPlaylist={(playlist) => {
+            // Logic to play playlist
+            console.log('Playing playlist:', playlist);
+          }}
+        />
+        <PlayerControls
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+          volume={volume}
+          onVolumeChange={setVolume}
+          currentTrack={displayTrack}
         />
       </>
     );

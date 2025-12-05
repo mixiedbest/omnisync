@@ -102,20 +102,17 @@ export function HomePage({ onNavigate }) {
             </div>
 
             <div className="settings-link-container">
-                <button
-                    className="settings-nav-btn profile-btn"
-                    onClick={() => onNavigate('profile')}
-                >
+                <button className="nav-btn profile-btn" onClick={() => onNavigate('profile')}>
                     <User size={20} />
-                    <span>Your Profile</span>
+                    Your Profile
                 </button>
-
-                <button
-                    className="settings-nav-btn"
-                    onClick={() => onNavigate('settings')}
-                >
+                <button className="nav-btn profile-btn" onClick={() => onNavigate('playlists')}>
+                    <Music size={20} />
+                    Playlists
+                </button>
+                <button className="nav-btn settings-btn" onClick={() => onNavigate('settings')}>
                     <Settings size={20} />
-                    <span>App Settings</span>
+                    App Settings
                 </button>
             </div>
 
