@@ -4,7 +4,6 @@ import { categories } from '../data/frequencies';
 import { journeys } from '../data/journeys';
 import { soundscapes } from '../data/soundscapes';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
-import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
@@ -430,16 +429,12 @@ export function RoomSession({ room, onBack, username }) {
                             {showCustomGenerator && (
                                 <div className="custom-generator-embed">
                                     <p className="custom-note">
-                                        Create additional tones to layer with {selectedSound.title || selectedSound.name}
+                                        Custom layering will allow you to add additional frequencies on top of {selectedSound.title || selectedSound.name}
                                     </p>
-                                    <div className="generator-container">
-                                        <CustomGenerator
-                                            onGenerate={(config) => {
-                                                console.log('Custom generator config:', config);
-                                                alert('Custom layer configured!');
-                                            }}
-                                            isActive={false}
-                                        />
+                                    <div className="custom-layer-controls">
+                                        <p className="custom-hint">
+                                            Custom frequency layering coming soon! For now, you can use the base sound.
+                                        </p>
                                     </div>
                                 </div>
                             )}
