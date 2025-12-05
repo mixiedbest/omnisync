@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Music, Plus, Play, MoreVertical, Users, Heart, Share2, Trash2, Edit2 } from 'lucide-react';
+import { ArrowLeft, Music, Plus, Play, MoreVertical, Users, Heart, Share2, Trash2, Edit2, Lock } from 'lucide-react';
 import './PlaylistsPage.css';
 
 export function PlaylistsPage({ onBack, onPlayPlaylist }) {
@@ -7,6 +7,7 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newPlaylistName, setNewPlaylistName] = useState('');
     const [newPlaylistMood, setNewPlaylistMood] = useState('');
+    const [isPublic, setIsPublic] = useState(false);
     const [activePlaylist, setActivePlaylist] = useState(null);
 
     useEffect(() => {
@@ -28,6 +29,7 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
             id: Date.now(),
             name: newPlaylistName,
             mood: newPlaylistMood,
+            isPublic: isPublic,
             tracks: [],
             collaborators: [],
             creator: 'You',
@@ -39,6 +41,7 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
         setShowCreateModal(false);
         setNewPlaylistName('');
         setNewPlaylistMood('');
+        setIsPublic(false);
     };
 
     const handleDeletePlaylist = (id) => {
@@ -91,12 +94,18 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
                                 <p className="playlist-meta">
                                     {playlist.tracks.length} tracks • {playlist.mood || 'No mood set'}
                                 </p>
-                                {playlist.collaborators.length > 0 && (
-                                    <div className="collaborators-badge">
-                                        <Users size={12} />
-                                        {playlist.collaborators.length}
-                                    </div>
-                                )}
+                                <div className="playlist-badges">
+                                    {playlist.isPublic && (
+                                        <span className="badge public" title="Public Playlist">
+                                            <Share2 size={10} /> Public
+                                        </span>
+                                    )}
+                                    {playlist.collaborators.length > 0 && (
+                                        <span className="badge collaborators">
+                                            <Users size={10} /> {playlist.collaborators.length}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                             <button
                                 className="playlist-play-btn"
@@ -117,7 +126,10 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
                         <div className="panel-header">
                             <div className="panel-title">
                                 <h2>{activePlaylist.name}</h2>
-                                <span className="mood-tag">{activePlaylist.mood}</span>
+                                <div className="tags-row">
+                                    <span className="mood-tag">{activePlaylist.mood}</span>
+                                    {activePlaylist.isPublic && <span className="mood-tag public">Public</span>}
+                                </div>
                             </div>
                             <div className="panel-actions">
                                 <button className="action-btn" title="Add Collaborator">
@@ -178,6 +190,19 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
                             value={newPlaylistMood}
                             onChange={(e) => setNewPlaylistMood(e.target.value)}
                         />
+
+                        <label className="privacy-toggle">
+                            <input
+                                type="checkbox"
+                                checked={isPublic}
+                                onChange={(e) => setIsPublic(e.target.checked)}
+                            />
+                            <span className="toggle-label">
+                                {isPublic ? <Share2 size={16} /> : <Lock size={16} />}
+                                {isPublic ? 'Public (Visible to Connections)' : 'Private (Only You)'}
+                            </span>
+                        </label>
+
                         <div className="modal-actions">
                             <button
                                 className="modal-btn cancel"

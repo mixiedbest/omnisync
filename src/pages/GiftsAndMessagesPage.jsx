@@ -27,10 +27,70 @@ export function GiftsAndMessagesPage({ onBack }) {
         { id: 'clarity', label: 'Mental Clarity', icon: Sun, color: '#f97316', desc: 'Alpha waves for clear thinking' }
     ];
 
+    const [audioContext, setAudioContext] = useState(null);
+
+    useEffect(() => {
+        setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
+    }, []);
+
+    const playTone = (type) => {
+        if (!audioContext) return;
+        const ctx = audioContext;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+
+        // Simple tone mapping
+        const tones = {
+            'thinking': { freq: 330, type: 'sine', dur: 0.5 }, // E4
+            'hugs': { freq: 220, type: 'triangle', dur: 0.8 }, // A3
+            'friend': { freq: 440, type: 'square', dur: 0.3 }, // A4
+            'love': { freq: 523.25, type: 'sine', dur: 0.6 }, // C5
+            'bday': { freq: 392, type: 'sawtooth', dur: 0.4 }, // G4
+            'proud': { freq: 587.33, type: 'triangle', dur: 0.5 }, // D5
+            'highfive': { freq: 880, type: 'sine', dur: 0.2 }, // A5
+            'miss': { freq: 293.66, type: 'sine', dur: 0.7 }, // D4
+            'befriends': { freq: 349.23, type: 'triangle', dur: 0.5 } // F4
+        };
+
+        const sound = tones[type] || { freq: 440, type: 'sine', dur: 0.5 };
+
+        osc.type = sound.type;
+        osc.frequency.setValueAtTime(sound.freq, now);
+        osc.frequency.exponentialRampToValueAtTime(sound.freq / 2, now + sound.dur);
+
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + sound.dur);
+
+        osc.start(now);
+        osc.stop(now + sound.dur);
+    };
+
+    const badWords = ['hate', 'kill', 'stupid', 'idiot', 'ugly', 'die', 'attack', 'punch']; // Simple filter list
+
+    const containsBadWords = (text) => {
+        return badWords.some(word => text.toLowerCase().includes(word));
+    };
+
     const handleSend = () => {
         if (!selectedRecipient) return;
 
+        if (activeTab === 'message' && messageType === 'affirmation') {
+            if (containsBadWords(customMessage)) {
+                alert("Let's keep the vibes high! Please remove any negative language.");
+                return;
+            }
+        }
+
         setIsSending(true);
+        if (activeTab === 'message' && messageType === 'postcard') {
+            const selectedOpt = postcardOptions.find(opt => opt.label === customMessage);
+            if (selectedOpt) playTone(selectedOpt.id);
+        }
 
         // Simulate network delay
         setTimeout(() => {
@@ -162,6 +222,10 @@ export function GiftsAndMessagesPage({ onBack }) {
                                             maxLength={140}
                                         />
                                         <div className="char-count">{customMessage.length}/140</div>
+                                        <p className="message-disclaimer">
+                                            <Heart size={12} />
+                                            Please keep messages positive and supportive.
+                                        </p>
                                     </>
                                 )}
                             </div>

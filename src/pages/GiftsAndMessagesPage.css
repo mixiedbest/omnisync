@@ -208,6 +208,16 @@
     color: var(--text-muted);
 }
 
+.message-disclaimer {
+    font-size: 11px;
+    color: var(--accent-teal);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-style: italic;
+}
+
 /* Postcard Grid */
 .postcard-grid {
     display: grid;
