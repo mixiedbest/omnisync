@@ -23,6 +23,7 @@ export function RoomSession({ room, onBack, username }) {
     const [soundSource, setSoundSource] = useState('presets'); // 'presets', 'soundscapes', 'journeys', 'custom'
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [showCustomGenerator, setShowCustomGenerator] = useState(false);
+    const [debugStatus, setDebugStatus] = useState('');
     const [showIntentionPrompt, setShowIntentionPrompt] = useState(true);
     const [userIntention, setUserIntention] = useState('');
     const [postSessionMood, setPostSessionMood] = useState('');
@@ -144,19 +145,29 @@ export function RoomSession({ room, onBack, username }) {
             return;
         }
 
-        // Play the selected sound
-        if (selectedSound.left !== undefined && selectedSound.right !== undefined) {
-            // Binaural beat from presets
-            play(selectedSound.left, selectedSound.right);
-        } else if (selectedSound.frequencies) {
-            // Soundscape
-            play(selectedSound.frequencies.left, selectedSound.frequencies.right);
-        } else if (selectedSound.stages) {
-            // Journey - play first stage
-            const firstStage = selectedSound.stages[0];
-            if (firstStage.left && firstStage.right) {
-                play(firstStage.left, firstStage.right);
+        setDebugStatus('Initializing playback...');
+
+        try {
+            // Play the selected sound
+            if (selectedSound.left !== undefined && selectedSound.right !== undefined) {
+                // Binaural beat from presets
+                play(selectedSound.left, selectedSound.right);
+            } else if (selectedSound.frequencies) {
+                // Soundscape
+                play(selectedSound.frequencies.left, selectedSound.frequencies.right);
+            } else if (selectedSound.stages) {
+                // Journey - play first stage
+                const firstStage = selectedSound.stages[0];
+                if (firstStage.left && firstStage.right) {
+                    play(firstStage.left, firstStage.right);
+                }
             }
+            setDebugStatus('Playback started');
+        } catch (e) {
+            console.error(e);
+            setDebugStatus('Error: ' + e.message);
+            alert('Playback Error: ' + e.message);
+            return;
         }
 
         setSessionState('active');
@@ -504,6 +515,46 @@ export function RoomSession({ room, onBack, username }) {
                             />
                         </div>
                     )}
+
+                    {/* Audio Debug Status */}
+                    <div style={{ padding: '0 20px 12px' }}>
+                        {debugStatus && (
+                            <div style={{ fontSize: '11px', color: 'var(--accent-teal)', textAlign: 'center', marginBottom: '8px', fontFamily: 'monospace' }}>
+                                Status: {debugStatus}
+                            </div>
+                        )}
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                try {
+                                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                                    const ctx = new AudioContext();
+                                    const osc = ctx.createOscillator();
+                                    const gain = ctx.createGain();
+                                    gain.gain.value = 0.1;
+                                    osc.connect(gain);
+                                    gain.connect(ctx.destination);
+                                    osc.start();
+                                    osc.stop(ctx.currentTime + 0.2);
+                                    setDebugStatus('System audio OK');
+                                } catch (err) {
+                                    setDebugStatus('System audio failed');
+                                }
+                            }}
+                            style={{
+                                width: '100%',
+                                padding: '8px',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                border: '1px dashed rgba(255, 255, 255, 0.2)',
+                                borderRadius: '8px',
+                                color: 'var(--text-muted)',
+                                fontSize: '11px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            🔊 Test System Audio
+                        </button>
+                    </div>
 
                     {/* Start Button (Host) */}
                     {members[0].isHost && (

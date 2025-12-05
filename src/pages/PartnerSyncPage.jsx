@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { ArrowLeft, Heart, Users, Play, Pause, Volume2, Sparkles, Wind, Flame, Droplet, Mountain, Send, Eye, EyeOff } from 'lucide-react';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
+import { categories } from '../data/frequencies';
 import './PartnerSyncPage.css';
 
 export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
@@ -19,6 +20,8 @@ export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
     const [shareReflection, setShareReflection] = useState(false);
     const [currentMood, setCurrentMood] = useState('');
     const [syncMode, setSyncMode] = useState('journey'); // 'preset' or 'journey'
+    const [selectedPreset, setSelectedPreset] = useState(''); // For preset mode
+    const [userElement, setUserElement] = useState('');
     const [currentStage, setCurrentStage] = useState(0); // 0: grounding, 1: transition, 2: goal
     const [stageStartTime, setStageStartTime] = useState(0);
     const canvasRef = useRef(null);
@@ -156,12 +159,15 @@ export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
                     setStageStartTime(sessionTime);
 
                     // Update audio to next stage frequencies
-                    play(nextStageData.left, nextStageData.right);
+                    const elementMap = { fire: 'firewood', water: 'ocean', earth: 'earth', air: 'nature-walk' };
+                    const soundscape = userElement ? elementMap[userElement] : null;
+
+                    play(nextStageData.left, nextStageData.right, 0, null, soundscape);
                 }
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sessionTime, sessionState, isPlaying, syncMode, currentStage, stageStartTime, journeyStages]);
+    }, [sessionTime, sessionState, isPlaying, syncMode, currentStage, stageStartTime, journeyStages, userElement, play]);
 
     // Energy cord visualization
     useEffect(() => {
@@ -253,21 +259,46 @@ export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
     };
 
     const handleStartSync = () => {
-        if (!syncGoal || !relationshipType || !currentMood) {
-            alert('Please complete all fields before starting');
-            return;
+        // Validation based on mode
+        if (syncMode === 'journey') {
+            if (!syncGoal || !relationshipType || !currentMood) {
+                alert('Please complete all fields before starting');
+                return;
+            }
+        } else {
+            // Preset mode only needs preset selection
+            if (!selectedPreset) {
+                alert('Please select a preset sound');
+                return;
+            }
         }
 
         if (syncMode === 'journey') {
             // Journey mode: Start with first stage
             const firstStage = journeyStages[0];
-            play(firstStage.left, firstStage.right);
+            const elementMap = { fire: 'firewood', water: 'ocean', earth: 'earth', air: 'nature-walk' };
+            const soundscape = userElement ? elementMap[userElement] : null;
+
+            play(firstStage.left, firstStage.right, 0, null, soundscape);
             setCurrentStage(0);
             setStageStartTime(0);
         } else {
-            // Preset mode: Use single frequency based on goal/mood/relationship
-            const soundConfig = buildSyncSound();
-            play(soundConfig.left, soundConfig.right);
+            // Preset mode: Use selected preset sound
+            if (!selectedPreset) {
+                alert('Please select a preset sound');
+                return;
+            }
+
+            // Find the selected sound from categories
+            let selectedSound = null;
+            for (const category of categories) {
+                selectedSound = category.items.find(item => item.id === selectedPreset);
+                if (selectedSound) break;
+            }
+
+            if (selectedSound) {
+                play(selectedSound.left, selectedSound.right);
+            }
         }
 
         setSessionState('active');
@@ -326,6 +357,7 @@ export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
                         <label>Sync Mode</label>
                         <div className="mode-selector">
                             <button
+                                type="button"
                                 className={`mode-option ${syncMode === 'journey' ? 'selected' : ''}`}
                                 onClick={() => setSyncMode('journey')}
                             >
@@ -336,6 +368,7 @@ export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
                                 </div>
                             </button>
                             <button
+                                type="button"
                                 className={`mode-option ${syncMode === 'preset' ? 'selected' : ''}`}
                                 onClick={() => setSyncMode('preset')}
                             >
@@ -348,54 +381,124 @@ export function PartnerSyncPage({ onBack, username, onSessionComplete }) {
                         </div>
                     </div>
 
-                    {/* Sync Goal */}
-                    <div className="setup-section">
-                        <label>Sync Goal</label>
-                        <div className="goal-grid">
-                            {syncGoals.map(goal => (
-                                <button
-                                    key={goal.id}
-                                    className={`goal-option ${syncGoal === goal.id ? 'selected' : ''}`}
-                                    onClick={() => setSyncGoal(goal.id)}
-                                >
-                                    {goal.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                    {/* Journey Mode Fields - Only show in Journey Mode */}
+                    {syncMode === 'journey' && (
+                        <>
+                            {/* Sync Goal */}
+                            <div className="setup-section">
+                                <label>Sync Goal</label>
+                                <div className="goal-grid">
+                                    {syncGoals.map(goal => (
+                                        <button
+                                            key={goal.id}
+                                            className={`goal-option ${syncGoal === goal.id ? 'selected' : ''}`}
+                                            onClick={() => setSyncGoal(goal.id)}
+                                        >
+                                            {goal.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
 
-                    {/* Relationship Type */}
-                    <div className="setup-section">
-                        <label>Relationship Type</label>
-                        <div className="relationship-grid">
-                            {relationshipTypes.map(type => (
-                                <button
-                                    key={type.id}
-                                    className={`relationship-option ${relationshipType === type.id ? 'selected' : ''}`}
-                                    onClick={() => setRelationshipType(type.id)}
-                                    style={{ '--type-color': type.color }}
-                                >
-                                    {type.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                            {/* Relationship Type */}
+                            <div className="setup-section">
+                                <label>Relationship Type</label>
+                                <div className="relationship-grid">
+                                    {relationshipTypes.map(type => (
+                                        <button
+                                            key={type.id}
+                                            className={`relationship-option ${relationshipType === type.id ? 'selected' : ''}`}
+                                            onClick={() => setRelationshipType(type.id)}
+                                        >
+                                            {type.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
 
-                    {/* Current Mood */}
-                    <div className="setup-section">
-                        <label>How are you feeling right now?</label>
-                        <div className="mood-grid">
-                            {moods.map(mood => (
-                                <button
-                                    key={mood.id}
-                                    className={`mood-option ${currentMood === mood.id ? 'selected' : ''}`}
-                                    onClick={() => setCurrentMood(mood.id)}
-                                >
-                                    {mood.label}
-                                </button>
-                            ))}
+                            {/* Current Mood */}
+                            <div className="setup-section">
+                                <label>How are you feeling right now?</label>
+                                <div className="mood-grid">
+                                    {moods.map(mood => (
+                                        <button
+                                            key={mood.id}
+                                            className={`mood-option ${currentMood === mood.id ? 'selected' : ''}`}
+                                            onClick={() => setCurrentMood(mood.id)}
+                                        >
+                                            {mood.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Element Selection - Add into the environment */}
+                            <div className="setup-section">
+                                <label>Add an Element (Optional)</label>
+                                <div className="element-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+                                    {elements.map(element => {
+                                        const Icon = element.icon;
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={element.id}
+                                                className={`element-option ${userElement === element.id ? 'selected' : ''}`}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setUserElement(prev => prev === element.id ? '' : element.id);
+                                                }}
+                                                style={{
+                                                    padding: '16px',
+                                                    background: userElement === element.id ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                                                    border: `1px solid ${userElement === element.id ? element.color : 'rgba(255, 255, 255, 0.1)'}`,
+                                                    borderRadius: '12px',
+                                                    color: 'var(--text-primary)',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                            >
+                                                <Icon size={24} color={element.color} />
+                                                <span style={{ fontSize: '12px', fontWeight: '500' }}>{element.name}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Preset Sound Selector - Only in Preset Mode */}
+                    {syncMode === 'preset' && (
+                        <div className="setup-section">
+                            <label>Choose Preset Sound</label>
+                            <div className="preset-categories">
+                                {categories.slice(0, 5).map(category => (
+                                    <div key={category.id} className="preset-category">
+                                        <h4>{category.title}</h4>
+                                        <div className="preset-sounds">
+                                            {category.items.map(sound => (
+                                                <button
+                                                    type="button"
+                                                    key={sound.id}
+                                                    className={`preset-sound-option ${selectedPreset === sound.id ? 'selected' : ''}`}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        setSelectedPreset(sound.id);
+                                                    }}
+                                                >
+                                                    {sound.title}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Shared Intention */}
                     <div className="setup-section">

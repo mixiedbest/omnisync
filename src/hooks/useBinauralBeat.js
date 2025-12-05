@@ -57,8 +57,13 @@ export function useBinauralBeat() {
             noiseFilterRef.current.connect(noiseGainRef.current);
         }
 
+        // Ensure volume is synchronized
+        if (masterGainRef.current) {
+            masterGainRef.current.gain.value = volume;
+        }
+
         if (audioContextRef.current.state === 'suspended') {
-            audioContextRef.current.resume();
+            audioContextRef.current.resume().catch(e => console.error("Resume failed", e));
         }
     }, [volume]);
 
@@ -789,6 +794,8 @@ export function useBinauralBeat() {
     };
 
     const play = useCallback((leftFreq, rightFreq, bothEarsFreq = 0, noiseType = null, soundscapeType = null, volumes = {}, layers = []) => {
+        console.log('useBinauralBeat.play called with:', { leftFreq, rightFreq, bothEarsFreq, noiseType, soundscapeType });
+
         // Default volumes if not provided
         const {
             binaural = 0.7,
@@ -798,6 +805,7 @@ export function useBinauralBeat() {
         } = volumes;
         initAudio();
         const ctx = audioContextRef.current;
+        console.log('AudioContext state:', ctx.state);
         const now = ctx.currentTime;
         const rampTime = 0.5;
 
@@ -961,8 +969,16 @@ export function useBinauralBeat() {
                     leftOscRef.current.frequency.linearRampToValueAtTime(lFreq, now + rampTime);
                     rightOscRef.current.frequency.linearRampToValueAtTime(rFreq, now + rampTime);
                     // Update volume
-                    leftGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
-                    rightGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
+                    if (leftGainRef.current) {
+                        leftGainRef.current.gain.cancelScheduledValues(now);
+                        leftGainRef.current.gain.setValueAtTime(leftGainRef.current.gain.value, now);
+                        leftGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
+                    }
+                    if (rightGainRef.current) {
+                        rightGainRef.current.gain.cancelScheduledValues(now);
+                        rightGainRef.current.gain.setValueAtTime(rightGainRef.current.gain.value, now);
+                        rightGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
+                    }
                 }
             } else {
                 // Additional Layers

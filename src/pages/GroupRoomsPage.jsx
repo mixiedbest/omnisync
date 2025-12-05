@@ -12,6 +12,7 @@ export function GroupRoomsPage({ onBack }) {
     const [showPartnerSync, setShowPartnerSync] = useState(false);
     const [username, setUsername] = useState('You');
     const [connections, setConnections] = useState([]);
+    const [roomToDelete, setRoomToDelete] = useState(null);
 
     // Create Room Form State
     const [roomName, setRoomName] = useState('');
@@ -121,10 +122,19 @@ export function GroupRoomsPage({ onBack }) {
     };
 
     const handleDeleteRoom = (roomId) => {
-        if (window.confirm('Are you sure you want to delete this room?')) {
-            const updatedRooms = rooms.filter(r => r.id !== roomId);
+        setRoomToDelete(roomId);
+    };
+
+    const confirmDeleteRoom = () => {
+        if (roomToDelete) {
+            const updatedRooms = rooms.filter(r => r.id !== roomToDelete);
             saveRooms(updatedRooms);
+            setRoomToDelete(null);
         }
+    };
+
+    const cancelDeleteRoom = () => {
+        setRoomToDelete(null);
     };
 
     const handlePartnerSyncComplete = (partnerName, sessionDuration) => {
@@ -233,6 +243,7 @@ export function GroupRoomsPage({ onBack }) {
                                             <button
                                                 className="delete-room-btn"
                                                 onClick={(e) => {
+                                                    e.preventDefault();
                                                     e.stopPropagation();
                                                     handleDeleteRoom(room.id);
                                                 }}
@@ -433,6 +444,24 @@ export function GroupRoomsPage({ onBack }) {
                                 disabled={!roomName.trim()}
                             >
                                 Create Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {roomToDelete && (
+                <div className="modal-overlay" onClick={cancelDeleteRoom}>
+                    <div className="modal-content delete-modal" onClick={(e) => e.stopPropagation()}>
+                        <h2>Delete Room?</h2>
+                        <p>Are you sure you want to delete this room? This action cannot be undone.</p>
+                        <div className="modal-actions">
+                            <button className="cancel-btn" onClick={cancelDeleteRoom}>
+                                Cancel
+                            </button>
+                            <button className="delete-confirm-btn" onClick={confirmDeleteRoom}>
+                                Delete Room
                             </button>
                         </div>
                     </div>
