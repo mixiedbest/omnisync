@@ -113,59 +113,7 @@ export function ConnectionsPage({ onBack }) {
         return <GroupRoomsPage onBack={() => setView('list')} />;
     }
 
-    if (view === 'playlists') {
-        return (
-            <div className="connections-page">
-                <button className="back-button" onClick={() => setView('list')}>
-                    <ArrowLeft size={20} />
-                    Back to Connections
-                </button>
-                <div className="connections-header">
-                    <h1 className="page-title">
-                        <Music size={32} />
-                        Shared Playlists
-                    </h1>
-                    <p className="page-subtitle">Discover sounds from your circle</p>
-                </div>
 
-                <div className="connections-list">
-                    {connections.length === 0 ? (
-                        <div className="empty-connections">
-                            <Music size={48} />
-                            <p>No connections yet.</p>
-                            <p className="empty-subtitle">Connect with others to see their public playlists.</p>
-                        </div>
-                    ) : (
-                        <div className="shared-playlists-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
-                            {/* Mock Data for demonstration */}
-                            <div className="connection-card" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                                <div className="connection-header-row" style={{ width: '100%', justifyContent: 'space-between' }}>
-                                    <div className="connection-name">Cosmic Vibes</div>
-                                    <span className="badge public" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '2px 6px', borderRadius: '4px', fontSize: '10px' }}>Public</span>
-                                </div>
-                                <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '4px 0 12px' }}>by {connections[0]?.name || 'Unknown'}</p>
-                                <div className="connection-meta">
-                                    <span className="sync-count"><Music size={12} /> 8 Tracks</span>
-                                    <span className="sync-count"><Activity size={12} /> Focus</span>
-                                </div>
-                            </div>
-                            <div className="connection-card" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                                <div className="connection-header-row" style={{ width: '100%', justifyContent: 'space-between' }}>
-                                    <div className="connection-name">Sleepy Time</div>
-                                    <span className="badge public" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '2px 6px', borderRadius: '4px', fontSize: '10px' }}>Public</span>
-                                </div>
-                                <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '4px 0 12px' }}>by {connections[0]?.name || 'Unknown'}</p>
-                                <div className="connection-meta">
-                                    <span className="sync-count"><Music size={12} /> 12 Tracks</span>
-                                    <span className="sync-count"><Activity size={12} /> Sleep</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="connections-page">
@@ -225,14 +173,7 @@ export function ConnectionsPage({ onBack }) {
                     <span>Group Rooms</span>
                     <span className="new-badge">New</span>
                 </button>
-                <button
-                    className="feature-card"
-                    onClick={() => setView('playlists')}
-                >
-                    <Music size={24} className="feature-icon" />
-                    <span>Playlists</span>
-                    <span className="new-badge">New</span>
-                </button>
+
             </div>
 
             <button

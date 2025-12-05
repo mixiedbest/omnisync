@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Music, Plus, Play, MoreVertical, Users, Heart, Share2, Trash2, Edit2, Lock } from 'lucide-react';
+import { ArrowLeft, Music, Plus, Play, MoreVertical, Users, Heart, Share2, Trash2, Edit2, Lock, Activity } from 'lucide-react';
 import './PlaylistsPage.css';
 
 export function PlaylistsPage({ onBack, onPlayPlaylist }) {
@@ -9,6 +9,7 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
     const [newPlaylistMood, setNewPlaylistMood] = useState('');
     const [isPublic, setIsPublic] = useState(false);
     const [activePlaylist, setActivePlaylist] = useState(null);
+    const [view, setView] = useState('my'); // 'my', 'shared'
 
     useEffect(() => {
         const savedPlaylists = localStorage.getItem('omnisync_playlists');
@@ -16,6 +17,12 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
             setPlaylists(JSON.parse(savedPlaylists));
         }
     }, []);
+
+    // Also import Activity for mock data if possible or use generic icons
+    // Added Activity to imports above implicitly by context, but ensure it is there.
+    // If not, I should have added it. I'll rely on existing imports or fallback.
+    // Wait, Step 3987 imports: ArrowLeft, Music, Plus, Play, MoreVertical, Users, Heart, Share2, Trash2, Edit2, Lock
+    // Activity is NOT imported. I need to update imports.
 
     const savePlaylists = (updatedPlaylists) => {
         localStorage.setItem('omnisync_playlists', JSON.stringify(updatedPlaylists));
@@ -66,59 +73,143 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
                 <p>Curate your sonic journeys</p>
             </div>
 
-            <div className="playlists-content">
-                {/* Playlist Grid */}
-                <div className="playlists-grid">
-                    <button
-                        className="create-playlist-card"
-                        onClick={() => setShowCreateModal(true)}
-                    >
-                        <div className="create-icon">
-                            <Plus size={32} />
-                        </div>
-                        <span>Create New Playlist</span>
-                    </button>
+            <div className="playlists-tabs" style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
+                <button
+                    className={`tab-btn ${view === 'my' ? 'active' : ''}`}
+                    onClick={() => setView('my')}
+                    style={{
+                        background: view === 'my' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                        border: view === 'my' ? '1px solid var(--accent-teal)' : '1px solid transparent',
+                        padding: '8px 16px', borderRadius: '20px', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px'
+                    }}
+                >
+                    <Music size={16} /> My Playlists
+                </button>
+                <button
+                    className={`tab-btn ${view === 'shared' ? 'active' : ''}`}
+                    onClick={() => setView('shared')}
+                    style={{
+                        background: view === 'shared' ? 'rgba(255,255,255,0.1)' : 'transparent',
+                        border: view === 'shared' ? '1px solid var(--accent-purple)' : '1px solid transparent',
+                        padding: '8px 16px', borderRadius: '20px', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px'
+                    }}
+                >
+                    <Users size={16} /> Shared with Me
+                </button>
+            </div>
 
-                    {playlists.map(playlist => (
-                        <div
-                            key={playlist.id}
-                            className={`playlist-card ${activePlaylist?.id === playlist.id ? 'active' : ''}`}
-                            onClick={() => setActivePlaylist(playlist)}
-                            style={{ '--playlist-color': playlist.color }}
-                        >
-                            <div className="playlist-cover">
-                                <Music size={32} />
-                            </div>
-                            <div className="playlist-info">
-                                <h3>{playlist.name}</h3>
-                                <p className="playlist-meta">
-                                    {playlist.tracks.length} tracks • {playlist.mood || 'No mood set'}
-                                </p>
-                                <div className="playlist-badges">
-                                    {playlist.isPublic && (
-                                        <span className="badge public" title="Public Playlist">
-                                            <Share2 size={10} /> Public
-                                        </span>
-                                    )}
-                                    {playlist.collaborators.length > 0 && (
-                                        <span className="badge collaborators">
-                                            <Users size={10} /> {playlist.collaborators.length}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
+            <div className="playlists-content">
+                {view === 'my' && (
+                    <>
+                        {/* Playlist Grid */}
+                        <div className="playlists-grid">
                             <button
-                                className="playlist-play-btn"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onPlayPlaylist(playlist);
-                                }}
+                                className="create-playlist-card"
+                                onClick={() => setShowCreateModal(true)}
                             >
-                                <Play size={20} fill="currentColor" />
+                                <div className="create-icon">
+                                    <Plus size={32} />
+                                </div>
+                                <span>Create New Playlist</span>
                             </button>
+
+                            {playlists.map(playlist => (
+                                <div
+                                    key={playlist.id}
+                                    className={`playlist-card ${activePlaylist?.id === playlist.id ? 'active' : ''}`}
+                                    onClick={() => setActivePlaylist(playlist)}
+                                    style={{ '--playlist-color': playlist.color }}
+                                >
+                                    <div className="playlist-cover">
+                                        <Music size={32} />
+                                    </div>
+                                    <div className="playlist-info">
+                                        <h3>{playlist.name}</h3>
+                                        <p className="playlist-meta">
+                                            {playlist.tracks.length} tracks • {playlist.mood || 'No mood set'}
+                                        </p>
+                                        <div className="playlist-badges">
+                                            {playlist.isPublic && (
+                                                <span className="badge public" title="Public Playlist">
+                                                    <Share2 size={10} /> Public
+                                                </span>
+                                            )}
+                                            {playlist.collaborators.length > 0 && (
+                                                <span className="badge collaborators">
+                                                    <Users size={10} /> {playlist.collaborators.length}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <button
+                                        className="playlist-play-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onPlayPlaylist(playlist);
+                                        }}
+                                    >
+                                        <Play size={20} fill="currentColor" />
+                                    </button>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    </>
+                )}
+
+                {view === 'shared' && (
+                    <div className="shared-playlists-view">
+                        <div className="playlists-grid">
+                            {/* Mock Shared Data */}
+                            <div
+                                className="playlist-card"
+                                onClick={() => { }}
+                                style={{ '--playlist-color': '#10b981', cursor: 'default' }}
+                            >
+                                <div className="playlist-cover" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                                    <Activity size={32} />
+                                </div>
+                                <div className="playlist-info">
+                                    <h3>Cosmic Vibes</h3>
+                                    <p className="playlist-meta">
+                                        by DivineSoul • 8 tracks
+                                    </p>
+                                    <div className="playlist-badges">
+                                        <span className="badge public" title="Public Playlist" style={{ background: 'rgba(16,185,129,0.2)', color: '#10b981' }}>
+                                            <Share2 size={10} /> Shared
+                                        </span>
+                                    </div>
+                                </div>
+                                <button className="playlist-play-btn">
+                                    <Play size={20} fill="currentColor" />
+                                </button>
+                            </div>
+
+                            <div
+                                className="playlist-card"
+                                onClick={() => { }}
+                                style={{ '--playlist-color': '#8b5cf6', cursor: 'default' }}
+                            >
+                                <div className="playlist-cover" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)' }}>
+                                    <Heart size={32} />
+                                </div>
+                                <div className="playlist-info">
+                                    <h3>Healing Frequency</h3>
+                                    <p className="playlist-meta">
+                                        by StarWalker • 15 tracks
+                                    </p>
+                                    <div className="playlist-badges">
+                                        <span className="badge public" title="Public Playlist" style={{ background: 'rgba(16,185,129,0.2)', color: '#10b981' }}>
+                                            <Share2 size={10} /> Shared
+                                        </span>
+                                    </div>
+                                </div>
+                                <button className="playlist-play-btn">
+                                    <Play size={20} fill="currentColor" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Active Playlist Details */}
                 {activePlaylist && (
