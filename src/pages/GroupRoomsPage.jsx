@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Users, Plus, Lock, Globe, Calendar, Heart, Sparkles, Play, Settings, Eye, EyeOff } from 'lucide-react';
+import { RoomSession } from './RoomSession';
 import './GroupRoomsPage.css';
 
 export function GroupRoomsPage({ onBack }) {
     const [view, setView] = useState('browse'); // 'browse', 'create', 'room'
     const [rooms, setRooms] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [activeRoom, setActiveRoom] = useState(null);
+    const [username, setUsername] = useState('You');
 
     // Create Room Form State
     const [roomName, setRoomName] = useState('');
@@ -85,6 +88,21 @@ export function GroupRoomsPage({ onBack }) {
             default: return <Users size={16} />;
         }
     };
+
+    const handleJoinRoom = (room) => {
+        setActiveRoom(room);
+    };
+
+    // If in a room session, render RoomSession component
+    if (activeRoom) {
+        return (
+            <RoomSession
+                room={activeRoom}
+                onBack={() => setActiveRoom(null)}
+                username={username}
+            />
+        );
+    }
 
     return (
         <div className="group-rooms-page">
@@ -169,7 +187,10 @@ export function GroupRoomsPage({ onBack }) {
                                             Scheduled
                                         </div>
                                     )}
-                                    <button className="join-room-btn">
+                                    <button
+                                        className="join-room-btn"
+                                        onClick={() => handleJoinRoom(room)}
+                                    >
                                         <Play size={16} />
                                         {room.isActive ? 'Join Session' : 'Enter Room'}
                                     </button>
