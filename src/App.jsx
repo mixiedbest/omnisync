@@ -146,6 +146,14 @@ function App() {
         setCurrentTrack(item);
         return;
       }
+
+      // If switching between Color Noises (Update noiseType only)
+      const isColorNoise = (track) => track?.noiseType && !track?.type && (!track?.left || track.left === 0);
+      if (isColorNoise(currentTrack) && isColorNoise(item)) {
+        if (updateNoise) updateNoise(item.noiseType);
+        setCurrentTrack(item);
+        return;
+      }
       stop();
       setCurrentTrack(null);
     } else {
