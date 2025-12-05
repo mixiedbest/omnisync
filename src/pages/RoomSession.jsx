@@ -315,7 +315,7 @@ export function RoomSession({ room, onBack, username }) {
                                     >
                                         <option value="">Select a soundscape...</option>
                                         {soundscapes.map(scape => (
-                                            <option key={scape.id} value={scape.id}>{scape.name}</option>
+                                            <option key={scape.id} value={scape.id}>{scape.title}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -365,6 +365,40 @@ export function RoomSession({ room, onBack, username }) {
                                         <span className="preview-title">{selectedSound.title || selectedSound.name}</span>
                                         <span className="preview-desc">{selectedSound.desc || selectedSound.description || 'Ready to play'}</span>
                                     </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Custom Generator Layer Option (Host) */}
+                    {members[0].isHost && selectedSound && soundSource !== 'custom' && (
+                        <div className="custom-layer-option">
+                            <label className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    checked={showCustomGenerator}
+                                    onChange={(e) => setShowCustomGenerator(e.target.checked)}
+                                />
+                                <span>
+                                    <Sliders size={16} />
+                                    Layer Custom Generator on top
+                                </span>
+                            </label>
+
+                            {showCustomGenerator && (
+                                <div className="custom-generator-embed">
+                                    <p className="custom-note">
+                                        Create additional tones to layer with {selectedSound.title || selectedSound.name}
+                                    </p>
+                                    <button
+                                        className="custom-confirm-btn"
+                                        onClick={() => {
+                                            // Custom generator settings would be saved here
+                                            alert('Custom layer configured!');
+                                        }}
+                                    >
+                                        Configure Custom Layer
+                                    </button>
                                 </div>
                             )}
                         </div>

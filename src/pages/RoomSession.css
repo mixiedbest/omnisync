@@ -686,6 +686,35 @@
     color: var(--text-muted);
 }
 
+/* Custom Layer Option */
+.custom-layer-option {
+    background: rgba(17, 24, 39, 0.4);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 32px;
+}
+
+.custom-layer-option .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.custom-layer-option .checkbox-label span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.custom-layer-option .custom-generator-embed {
+    margin-top: 16px;
+}
+
 /* Post-Session Styles */
 .room-session.post {
     display: flex;
@@ -826,11 +855,23 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 100;
+    margin-bottom: 120px;
+    /* Space above player controls */
 }
 
 .return-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+.post-session-content {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 140px;
+    /* Extra padding at bottom */
 }
 
 @media (max-width: 768px) {
