@@ -9,8 +9,8 @@ export function PlayerControls({
     volume,
     onVolumeChange,
     currentTrack,
-    sleepTimer,
-    onSetSleepTimer
+    sleepTimer = null,
+    onSetSleepTimer = () => { }
 }) {
     const [showPacer, setShowPacer] = useState(false);
 
