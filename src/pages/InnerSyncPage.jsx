@@ -1,16 +1,32 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, User, Sparkles, BookOpen, Activity, Heart, Brain, Zap, Star, Frown, Meh, Smile, Coffee, Battery, BatteryLow, Wind, Cloud, Flame, Moon } from 'lucide-react';
+import { ArrowLeft, User, Sparkles, BookOpen, Activity, Heart, Brain, Zap, Star, Frown, Meh, Smile, Coffee, Battery, BatteryLow, Wind, Cloud, Flame, Moon, Clock, Diamond, Feather, Shield, Palette, Waves, Rocket } from 'lucide-react';
+import { energyProfiles } from '../data/energyProfiles';
 import './InnerSyncPage.css';
+
+const iconMap = {
+    Diamond, Zap, Flame, Heart, Feather, Shield, Palette, Waves, Rocket
+};
 
 export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorites = [], onToggleFavorite }) {
     const [username, setUsername] = useState('');
     const [hasUsername, setHasUsername] = useState(false);
-    const [activeTab, setActiveTab] = useState('aura-scan'); // 'aura-scan', 'favorites', 'journal', 'energy-profile'
+    const [activeTab, setActiveTab] = useState('energy-profiles'); // 'energy-profiles', 'favorites', 'journal', 'insights'
+    const [selectedDuration, setSelectedDuration] = useState('short'); // 'short' or 'long'
 
-    // Aura Scan State
-    const [currentEmotion, setCurrentEmotion] = useState('');
-    const [desiredEmotion, setDesiredEmotion] = useState('');
-    const [physicalSymptoms, setPhysicalSymptoms] = useState([]);
+    // Aura Scan State Removed
+
+    // Handle Energy Profile Play
+    const handlePlayProfile = (profile) => {
+        const config = selectedDuration === 'short' ? profile.short : profile.long;
+        onPlay({
+            id: `energy-${profile.id}-${selectedDuration}`,
+            title: `${profile.title} (${selectedDuration === 'short' ? '3 min' : '30 min'})`,
+            ...config.frequencies,
+            noiseType: config.noiseType,
+            type: config.soundscapeType,
+            desc: profile.description
+        });
+    };
 
     // Journal State
     const [journalEntries, setJournalEntries] = useState([]);
@@ -247,11 +263,11 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
 
             <div className="innersync-tabs">
                 <button
-                    className={`tab-btn ${activeTab === 'aura-scan' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('aura-scan')}
+                    className={`tab-btn ${activeTab === 'energy-profiles' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('energy-profiles')}
                 >
-                    <Sparkles size={18} />
-                    Aura Scan
+                    <Zap size={18} />
+                    Energy Profiles
                 </button>
                 <button
                     className={`tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}
@@ -268,90 +284,83 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
                     Journal
                 </button>
                 <button
-                    className={`tab-btn ${activeTab === 'energy-profile' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('energy-profile')}
+                    className={`tab-btn ${activeTab === 'insights' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('insights')}
                 >
                     <Activity size={18} />
-                    Energy Profile
+                    Insights
                 </button>
             </div>
 
-            {activeTab === 'aura-scan' && (
-                <div className="aura-scan-container">
-                    <div className="scan-section">
-                        <h3 className="section-title">
-                            <Heart size={20} />
-                            How are you feeling right now?
-                        </h3>
-                        <div className="emotion-grid">
-                            {currentEmotions.map(emotion => {
-                                const IconComponent = emotion.icon;
-                                return (
-                                    <button
-                                        key={emotion.value}
-                                        className={`emotion - card ${currentEmotion === emotion.value ? 'selected' : ''} `}
-                                        onClick={() => setCurrentEmotion(emotion.value)}
-                                    >
-                                        <IconComponent size={28} className="emotion-icon" />
-                                        <span className="emotion-label">{emotion.label}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+            {activeTab === 'energy-profiles' && (
+                <div className="energy-profiles-container">
+                    <h3 className="section-title">Daily Energy Tuning</h3>
+                    <p className="page-subtitle">Today I need...</p>
+
+                    {/* Duration Selector */}
+                    <div className="duration-selector" style={{ marginBottom: '24px', display: 'flex', gap: '12px' }}>
+                        <button
+                            className={`duration-btn ${selectedDuration === 'short' ? 'active' : ''}`}
+                            onClick={() => setSelectedDuration('short')}
+                            style={{
+                                flex: 1, padding: '12px', borderRadius: '12px',
+                                border: selectedDuration === 'short' ? '1px solid var(--accent-teal)' : '1px solid rgba(255,255,255,0.1)',
+                                background: selectedDuration === 'short' ? 'rgba(20, 184, 166, 0.2)' : 'rgba(255,255,255,0.05)',
+                                color: selectedDuration === 'short' ? 'var(--accent-teal)' : '#fff',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer'
+                            }}
+                        >
+                            <Clock size={16} />
+                            <span>Quick (3 min)</span>
+                        </button>
+                        <button
+                            className={`duration-btn ${selectedDuration === 'long' ? 'active' : ''}`}
+                            onClick={() => setSelectedDuration('long')}
+                            style={{
+                                flex: 1, padding: '12px', borderRadius: '12px',
+                                border: selectedDuration === 'long' ? '1px solid var(--accent-purple)' : '1px solid rgba(255,255,255,0.1)',
+                                background: selectedDuration === 'long' ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255,255,255,0.05)',
+                                color: selectedDuration === 'long' ? 'var(--accent-purple)' : '#fff',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer'
+                            }}
+                        >
+                            <Zap size={16} />
+                            <span>Deep (30 min)</span>
+                        </button>
                     </div>
 
-                    <div className="scan-section">
-                        <h3 className="section-title">
-                            <Zap size={20} />
-                            How would you like to feel?
-                        </h3>
-                        <div className="emotion-grid">
-                            {desiredEmotions.map(emotion => {
-                                const IconComponent = emotion.icon;
-                                return (
-                                    <button
-                                        key={emotion.value}
-                                        className={`emotion - card ${desiredEmotion === emotion.value ? 'selected' : ''} `}
-                                        onClick={() => setDesiredEmotion(emotion.value)}
-                                    >
-                                        <IconComponent size={28} className="emotion-icon" />
-                                        <span className="emotion-label">{emotion.label}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
+                    <div className="profiles-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '16px' }}>
+                        {energyProfiles.map(profile => {
+                            const isActive = currentTrack?.id === `energy-${profile.id}-${selectedDuration}`;
+                            const Icon = iconMap[profile.icon];
 
-                    <div className="scan-section">
-                        <h3 className="section-title">
-                            <Brain size={20} />
-                            Physical Symptoms (Optional)
-                        </h3>
-                        <div className="symptoms-grid">
-                            {symptoms.map(symptom => {
-                                const IconComponent = symptom.icon;
-                                return (
-                                    <button
-                                        key={symptom.value}
-                                        className={`symptom - card ${physicalSymptoms.includes(symptom.value) ? 'selected' : ''} `}
-                                        onClick={() => toggleSymptom(symptom.value)}
-                                    >
-                                        <IconComponent size={24} className="symptom-icon" />
-                                        <span className="symptom-label">{symptom.label}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
+                            return (
+                                <button
+                                    key={profile.id}
+                                    className={`profile-card ${isActive ? 'active' : ''}`}
+                                    onClick={() => handlePlayProfile(profile)}
+                                    style={{
+                                        position: 'relative', background: 'rgba(255,255,255,0.05)', border: isActive ? '1px solid var(--accent-teal)' : '1px solid rgba(255,255,255,0.1)',
+                                        borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '12px', minHeight: '160px',
+                                        cursor: 'pointer', transition: 'all 0.2s', boxShadow: isActive ? '0 0 20px rgba(20, 184, 166, 0.2)' : 'none'
+                                    }}
+                                >
+                                    <div className={`profile-icon-wrapper`} style={{
+                                        width: '48px', height: '48px', borderRadius: '50%', background: `var(--gradient-${profile.color}, #444)`,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px'
+                                    }}>
+                                        {Icon && <Icon size={24} color="white" />}
+                                    </div>
+                                    <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#fff', margin: 0 }}>{profile.title}</h3>
+                                    <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', margin: 0 }}>{profile.description}</p>
 
-                    <button
-                        className="generate-scan-btn"
-                        onClick={generateAuraScan}
-                        disabled={!currentEmotion || !desiredEmotion}
-                    >
-                        <Sparkles size={20} />
-                        Generate Your Healing Frequency
-                    </button>
+                                    {isActive && isPlaying && (
+                                        <div style={{ position: 'absolute', top: '8px', right: '8px', width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px #22c55e' }}></div>
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             )}
 
@@ -521,10 +530,10 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
                 </div>
             )}
 
-            {activeTab === 'energy-profile' && (
+            {activeTab === 'insights' && (
                 <div className="energy-profile-container">
-                    <h3 className="section-title">Your Energy Profile</h3>
-                    <p className="profile-subtitle">Insights from your sonic healing journey</p>
+                    <h3 className="section-title">Your Insights</h3>
+                    <p className="profile-subtitle">Stats & Session History</p>
 
                     {journalEntries.length === 0 ? (
                         <div className="empty-profile">

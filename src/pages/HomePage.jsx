@@ -1,4 +1,4 @@
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings, List } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
@@ -28,10 +28,10 @@ export function HomePage({ onNavigate }) {
             description: 'Generative ambient environments'
         },
         {
-            id: 'energy-profiles',
-            title: 'Energy Profiles',
-            icon: Sparkles,
-            description: 'Daily tuning rituals (3min/30min)'
+            id: 'playlists',
+            title: 'Playlists',
+            icon: List,
+            description: 'Your saved custom sequences'
         },
         {
             id: 'energy-cleanse',
@@ -105,10 +105,6 @@ export function HomePage({ onNavigate }) {
                 <button className="nav-btn profile-btn" onClick={() => onNavigate('profile')}>
                     <User size={20} />
                     Your Profile
-                </button>
-                <button className="nav-btn profile-btn" onClick={() => onNavigate('playlists')}>
-                    <Music size={20} />
-                    Playlists
                 </button>
                 <button className="nav-btn settings-btn" onClick={() => onNavigate('settings')}>
                     <Settings size={20} />
