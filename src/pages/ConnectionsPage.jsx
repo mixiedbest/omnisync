@@ -3,9 +3,10 @@ import { ArrowLeft, Users, Sparkles, Heart, Zap, Link2, Activity, MessageCircle,
 import './ConnectionsPage.css';
 
 import { GiftsAndMessagesPage } from './GiftsAndMessagesPage';
+import { GroupRoomsPage } from './GroupRoomsPage';
 
 export function ConnectionsPage({ onBack }) {
-    const [view, setView] = useState('list'); // 'list' or 'gifts'
+    const [view, setView] = useState('list'); // 'list', 'gifts', 'playlists', 'rooms'
     const [username, setUsername] = useState('');
     const [connections, setConnections] = useState([]);
     const [showAddConnection, setShowAddConnection] = useState(false);
@@ -106,6 +107,10 @@ export function ConnectionsPage({ onBack }) {
 
     if (view === 'gifts') {
         return <GiftsAndMessagesPage onBack={() => setView('list')} />;
+    }
+
+    if (view === 'rooms') {
+        return <GroupRoomsPage onBack={() => setView('list')} />;
     }
 
     if (view === 'playlists') {
@@ -212,15 +217,13 @@ export function ConnectionsPage({ onBack }) {
                     <span>Gifts & Messages</span>
                     <span className="new-badge">New</span>
                 </button>
-                <button className="feature-card blocked">
-                    <Activity size={24} className="feature-icon" />
-                    <span>Shared Waveform</span>
-                    <span className="coming-soon-badge">Soon</span>
-                </button>
-                <button className="feature-card blocked">
+                <button
+                    className="feature-card"
+                    onClick={() => setView('rooms')}
+                >
                     <Users size={24} className="feature-icon" />
                     <span>Group Rooms</span>
-                    <span className="coming-soon-badge">Soon</span>
+                    <span className="new-badge">New</span>
                 </button>
                 <button
                     className="feature-card"
@@ -229,11 +232,6 @@ export function ConnectionsPage({ onBack }) {
                     <Music size={24} className="feature-icon" />
                     <span>Playlists</span>
                     <span className="new-badge">New</span>
-                </button>
-                <button className="feature-card blocked">
-                    <Heart size={24} className="feature-icon" />
-                    <span>Partner Sync</span>
-                    <span className="coming-soon-badge">Soon</span>
                 </button>
             </div>
 
