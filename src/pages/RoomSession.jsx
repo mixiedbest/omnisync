@@ -8,7 +8,7 @@ import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
-    const { play, stop, isPlaying: audioIsPlaying, enableMicrophone, disableMicrophone, setMicVolume, isMicActive, updateLayers, updateNoise } = useBinauralBeat();
+    const { play, stop, isPlaying: audioIsPlaying, enableMicrophone, disableMicrophone, setMicVolume, isMicActive, updateLayers, updateNoise, updateSoundscape } = useBinauralBeat();
     const [sessionState, setSessionState] = useState('lobby'); // 'lobby', 'active', 'post'
     const [members, setMembers] = useState([
         { id: 1, name: username || 'You', color: '#8b5cf6', isHost: true, mode: 'listen', element: 'air' }
@@ -156,13 +156,14 @@ export function RoomSession({ room, onBack, username }) {
                     updateLayers(params.layers, params.volumes);
                 }
                 if (updateNoise) {
-                    // Use noise volume from params (or default to previous/0.5)
-                    // If custom layer active, use its volume, else use 0.5 (or base volume if tracked, but we default 0.5)
                     updateNoise(params.noiseType, params.volumes?.noise);
+                }
+                if (updateSoundscape) {
+                    updateSoundscape(params.soundscapeType, params.volumes?.soundscape);
                 }
             }
         }
-    }, [customLayer, isCustomLayerActive, userMode, personalToneFreq, personalToneVol, isPlaying, selectedSound, updateLayers, updateNoise]);
+    }, [customLayer, isCustomLayerActive, userMode, personalToneFreq, personalToneVol, isPlaying, selectedSound, updateLayers, updateNoise, updateSoundscape]);
 
     // Helper to construct playback parameters merging Session Sound + Personal Layers + Element
     const getPlaybackParams = (soundOverride = null) => {
@@ -179,6 +180,24 @@ export function RoomSession({ room, onBack, username }) {
             const stage = sound.stages[0];
             left = stage.left;
             right = stage.right;
+        } else if (sound.short?.phases || sound.long?.phases) {
+            // Handle Journeys (default to short phases for now if not specified or just pick one)
+            // Ideally we track which duration User selected, but for now we default to 'short' if available.
+            const phases = sound.short?.phases || sound.long?.phases;
+            if (phases && phases.length > 0) {
+                const stage = phases[0];
+                left = stage.freq;
+                // 'bothEars' in journeys.js refers to the Difference (Beat Frequency) usually?
+                // Or is it Isochronic? Based on names (Alpha 10Hz), it's the beat frequency.
+                // freq=432, bothEars=10 -> Right = 442.
+                right = stage.freq + (stage.bothEars || 0);
+
+                // Stage Overrides
+                if (stage.noiseType !== undefined) noiseType = stage.noiseType;
+                if (stage.soundscapeType !== undefined) soundscapeType = stage.soundscapeType;
+
+                // If stage has specific volumes? Journeys usually balanced.
+            }
         }
 
         // Element Soundscape Mapping

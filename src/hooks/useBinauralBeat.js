@@ -22,6 +22,7 @@ export function useBinauralBeat() {
     const micStreamRef = useRef(null);
     const micSourceRef = useRef(null);
     const micGainRef = useRef(null);
+    const soundscapeGainRef = useRef(null); // Reference for soundscape volume control
     const [isMicActive, setIsMicActive] = useState(false);
 
     const initAudio = useCallback(() => {
@@ -848,8 +849,9 @@ export function useBinauralBeat() {
         }
 
         // Handle Soundscape
-        if (soundscapeType) {
+        if (soundscapeType && soundscapeType !== 'none') {
             const soundscapeGain = ctx.createGain();
+            soundscapeGainRef.current = soundscapeGain; // Store reference
             soundscapeGain.gain.setValueAtTime(0, now);
             soundscapeGain.gain.linearRampToValueAtTime(soundscape, now + rampTime);
             soundscapeGain.connect(masterGainRef.current);
@@ -1140,6 +1142,66 @@ export function useBinauralBeat() {
         }
     }, [isPlaying]);
 
+    // Update Soundscape separately
+    const updateSoundscape = useCallback((type, volume = 0.5) => {
+        if (!audioContextRef.current) return;
+        const ctx = audioContextRef.current;
+        const now = ctx.currentTime;
+        const rampTime = 0.5;
+
+        // If type changed, stop old and start new
+        // Note: Soundscape logic is complex (createSoundscape). 
+        // For volume update ONLY (same type), just update gain.
+
+        if (type && currentFrequencies.soundscapeType === type && soundscapeGainRef.current) {
+            // Just Volume Update
+            const vol = volume * (volume > 0 ? 1 : 0); // Ensure 0 is 0
+            // Volume logic for soundscapes: usually just direct multiplier.
+            soundscapeGainRef.current.gain.linearRampToValueAtTime(vol, now + rampTime);
+            return;
+        }
+
+        // If type changed or restarting:
+        // Stop existing
+        if (soundscapeNodesRef.current.length > 0) {
+            soundscapeNodesRef.current.forEach(node => {
+                if (node instanceof GainNode) {
+                    try { node.gain.linearRampToValueAtTime(0, now + rampTime); } catch (e) { }
+                } else {
+                    try { if (node.stop) node.stop(now + rampTime); } catch (e) { }
+                }
+            });
+            setTimeout(() => {
+                soundscapeNodesRef.current.forEach(node => {
+                    try { if (node.disconnect) node.disconnect(); } catch (e) { }
+                });
+                soundscapeNodesRef.current = [];
+            }, rampTime * 1000 + 100);
+        }
+
+        // Start New
+        if (type && type !== 'none') {
+            const soundscapeGain = ctx.createGain();
+            soundscapeGainRef.current = soundscapeGain;
+            soundscapeGain.gain.setValueAtTime(0, now);
+            soundscapeGain.gain.linearRampToValueAtTime(volume, now + rampTime);
+            soundscapeGain.connect(masterGainRef.current);
+
+            const nodes = createSoundscape(ctx, type, soundscapeGain);
+            nodes.push(soundscapeGain);
+            soundscapeNodesRef.current = nodes;
+
+            if (currentFrequencies.soundscapeType !== type) {
+                setCurrentFrequencies(prev => ({ ...prev, soundscapeType: type }));
+            }
+        } else {
+            // If type is none/null, we just stopped. Update state.
+            if (currentFrequencies.soundscapeType) {
+                setCurrentFrequencies(prev => ({ ...prev, soundscapeType: null }));
+            }
+        }
+    }, [currentFrequencies.soundscapeType, initAudio]); // initAudio needed for createSoundscape? No, just ctx.
+
     const stop = useCallback(() => {
         if (audioContextRef.current && isPlaying) {
             const now = audioContextRef.current.currentTime;
@@ -1270,6 +1332,7 @@ export function useBinauralBeat() {
         setMicVolume,
         isMicActive,
         updateLayers,
-        updateNoise
+        updateNoise,
+        updateSoundscape
     };
 }
