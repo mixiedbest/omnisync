@@ -137,7 +137,11 @@ function App() {
   }, [currentTrack, isPlaying, play]);
 
   const handleSelectFrequency = (item) => {
+    // Helper to detect color noise tracks
+    const isColorNoise = (track) => track?.noiseType && !track?.type && (!track?.left || track.left === 0);
+
     if (currentTrack?.id === item.id && isPlaying) {
+      // Clicking the SAME track - Toggle OFF
       // If Custom Generator, treat re-selection as UPDATE not Stop (Stop is via Pause button)
       if (item.id.includes('custom')) {
         if (updateLayers) updateLayers(item.layers || [], item.volumes);
@@ -147,8 +151,7 @@ function App() {
         return;
       }
 
-      // If switching between Color Noises (Update noiseType only)
-      const isColorNoise = (track) => track?.noiseType && !track?.type && (!track?.left || track.left === 0);
+      // If clicking same Color Noise - toggle off
       if (isColorNoise(currentTrack) && isColorNoise(item)) {
         if (updateNoise) updateNoise(item.noiseType);
         setCurrentTrack(item);
@@ -157,6 +160,15 @@ function App() {
       stop();
       setCurrentTrack(null);
     } else {
+      // Switching to a DIFFERENT track OR starting from stopped state
+
+      // If switching FROM one Color Noise TO another Color Noise - seamless update
+      if (isPlaying && isColorNoise(currentTrack) && isColorNoise(item)) {
+        if (updateNoise) updateNoise(item.noiseType);
+        setCurrentTrack(item);
+        return;
+      }
+
       if (item.id === 'sleep-program-90') {
         setCurrentTrack(item);
         play(0, 0);
