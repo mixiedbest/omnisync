@@ -1098,7 +1098,8 @@ export function useBinauralBeat() {
             newLayers.forEach(layer => {
                 const lFreq = layer.carrierFreq;
                 const rFreq = layer.carrierFreq + (layer.beatFreq || 0);
-                const vol = (layer.volume || 0.5) * (volumes.binaural || 1);
+                const bVol = (volumes.binaural !== undefined) ? volumes.binaural : 1;
+                const vol = (layer.volume !== undefined ? layer.volume : 0.5) * bVol;
 
                 const lOsc = ctx.createOscillator();
                 const rOsc = ctx.createOscillator();

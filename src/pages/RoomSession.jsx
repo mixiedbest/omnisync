@@ -199,21 +199,21 @@ export function RoomSession({ room, onBack, username }) {
 
         // Custom Generator Layering (if active and not source)
         if (isCustomLayerActive && customLayer && soundSource !== 'custom') {
-            // Main Beat from Generator
-            if (customLayer.left && customLayer.right) {
+            // Prefer explicit layers list
+            if (customLayer.layers && customLayer.layers.length > 0) {
+                layers.push(...customLayer.layers);
+            }
+            // Fallback for simple custom sounds (if any)
+            else if (customLayer.left && customLayer.right) {
                 layers.push({
                     id: 'custom-main',
                     carrierFreq: customLayer.left,
                     beatFreq: customLayer.right - customLayer.left,
-                    volume: (customLayer.volumes?.binaural || 0.5)
+                    volume: (customLayer.volumes?.binaural !== undefined ? customLayer.volumes.binaural : 0.5)
                 });
             }
-            // Extra Layers from Generator
-            if (customLayer.layers) {
-                layers.push(...customLayer.layers);
-            }
             // Noise Override (optional, prioritized if present)
-            // If Generator has noise, use it? Or mix? 
+            // If Generator has noise, use it? Or mix?
             // We'll let generator override for 'DJ' feel.
             if (customLayer.noiseType) {
                 // params object is created below, we can capture noiseType there
