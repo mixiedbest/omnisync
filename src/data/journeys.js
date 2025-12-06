@@ -40,7 +40,17 @@ export const journeys = [
                 { name: 'Theta Drift', duration: 240, freq: 432, bothEars: 5, noiseType: 'pink', desc: 'Entering dreamstate' },
                 { name: 'Delta Drop', duration: 300, freq: 285, bothEars: 2, noiseType: 'brown', desc: 'Deep sleep' },
                 { name: 'Subconscious Restore', duration: 120, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Healing mode' },
-                { name: 'Dream Shield', duration: 60, freq: 0, bothEars: 0, noiseType: 'brown', soundscapeType: null, desc: 'Protection' }
+                {
+                    name: 'Dream Shield',
+                    duration: 60,
+                    freq: 0,
+                    bothEars: 0,
+                    noiseType: 'brown',
+                    soundscapeType: null,
+                    desc: 'Protection',
+                    customizable: true,
+                    durationOptions: [60, 180, 300, 600, 1200] // 1, 3, 5, 10, 20 min
+                }
             ]
         },
         long: {
@@ -50,7 +60,17 @@ export const journeys = [
                 { name: 'Theta Drift', duration: 600, freq: 432, bothEars: 5, noiseType: 'pink', desc: 'Entering dreamstate' },
                 { name: 'Delta Drop', duration: 900, freq: 285, bothEars: 2, noiseType: 'brown', desc: 'Deep sleep' },
                 { name: 'Subconscious Restore', duration: 480, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Healing mode' },
-                { name: 'Dream Shield', duration: 180, freq: 0, bothEars: 0, noiseType: 'brown', soundscapeType: null, desc: 'Protection' }
+                {
+                    name: 'Dream Shield',
+                    duration: 180,
+                    freq: 0,
+                    bothEars: 0,
+                    noiseType: 'brown',
+                    soundscapeType: null,
+                    desc: 'Protection',
+                    customizable: true,
+                    durationOptions: [180, 300, 600, 1800, 3600] // 3, 5, 10, 30, 60 min
+                }
             ]
         }
     },
@@ -260,7 +280,7 @@ export const journeys = [
     },
     {
         id: 'sonic-rebirth',
-        title: 'Sonic Rebirth Journey',
+        title: 'Sonic Rebirth',
         icon: 'Waves',
         description: 'Water-element transformation for identity renewal and emotional clarity',
         category: 'transformation',
@@ -287,7 +307,7 @@ export const journeys = [
     },
     {
         id: 'astral-travel-dream',
-        title: 'Astral Travel Dream Journey',
+        title: 'Astral Travel Dream',
         icon: 'Star',
         description: 'Lucid dream induction and astral exploration experience',
         category: 'consciousness',
@@ -319,14 +339,14 @@ export const journeys = [
                 { name: 'Etheric Lift-Off', duration: 300, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift' },
                 {
                     name: 'Stargate Drift',
-                    duration: 600,
+                    duration: 3600,
                     freq: 432,
                     bothEars: 4,
                     noiseType: null,
                     soundscapeType: 'wind',
                     desc: 'Lucid exploration',
                     customizable: true,
-                    durationOptions: [300, 600, 1200, 1800, 3600] // 5, 10, 20, 30, 60 min
+                    durationOptions: [1800, 3600, 7200, 10800, 14400, 21600] // 30m, 1h, 2h, 3h, 4h, 6h
                 },
                 { name: 'Drift Return', duration: 360, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment' }
             ]
