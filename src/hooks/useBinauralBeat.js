@@ -136,7 +136,6 @@ export function useBinauralBeat() {
         return buffer;
     };
 
-    const soundscapeNodesRef = useRef([]);
 
     // Soundscape Generators
     const createSoundscape = (ctx, type, destination) => {
@@ -821,7 +820,7 @@ export function useBinauralBeat() {
         const now = ctx.currentTime;
         const rampTime = 0.5;
 
-        // Cleanup existing extra layers
+        // Cleanup existing extra layers (tones)
         if (layersRef.current.length > 0) {
             layersRef.current.forEach(layer => {
                 try { if (layer.leftOsc) { layer.leftOsc.stop(); layer.leftOsc.disconnect(); } } catch (e) { }
@@ -832,31 +831,9 @@ export function useBinauralBeat() {
             layersRef.current = [];
         }
 
-        // Stop existing soundscape
-        if (soundscapeNodesRef.current.length > 0) {
-            soundscapeNodesRef.current.forEach(node => {
-                if (node.stop) {
-                    try { node.stop(); } catch (e) { }
-                }
-                if (node.disconnect) {
-                    try { node.disconnect(); } catch (e) { }
-                }
-            });
-            soundscapeNodesRef.current = [];
-        }
-
-        // Handle Soundscape
-        if (soundscapeType && soundscapeType !== 'none') {
-            const soundscapeGain = ctx.createGain();
-            soundscapeGainRef.current = soundscapeGain; // Store reference
-            soundscapeGain.gain.setValueAtTime(0, now);
-            soundscapeGain.gain.linearRampToValueAtTime(soundscape, now + rampTime);
-            soundscapeGain.connect(masterGainRef.current);
-
-            const nodes = createSoundscape(ctx, soundscapeType, soundscapeGain);
-            nodes.push(soundscapeGain);
-            soundscapeNodesRef.current = nodes;
-        }
+        // Handle Soundscape (Delegated to updateSoundscape)
+        // This handles single string (Legacy/Simple) or Array (Multi-Layer) passed from RoomSession
+        updateSoundscape(soundscapeType, soundscape);
 
         // Handle Noise
         updateNoise(noiseType, noise);
@@ -1004,7 +981,7 @@ export function useBinauralBeat() {
 
         setIsPlaying(true);
         setCurrentFrequencies({ left: leftFreq, right: rightFreq, bothEars: bothEarsFreq, noiseType, soundscapeType });
-    }, [initAudio, isPlaying, currentFrequencies]);
+    }, [initAudio, isPlaying, currentFrequencies, updateSoundscape, updateNoise]);
 
     // Update Noise separately
     const updateNoise = useCallback((noiseType, volume = 0.5) => {
@@ -1140,75 +1117,78 @@ export function useBinauralBeat() {
     }, [isPlaying]);
 
     // Update Soundscape separately
-    const updateSoundscape = useCallback((type, volume = 0.5) => {
+    // Soundscape Nodes Map: Type -> { nodes: [], gain: GainNode }
+    const soundscapeNodesRef = useRef(new Map());
+
+    // Update Soundscape (Supports Single String [Exclusive] or Array [Multi-Layer])
+    const updateSoundscape = useCallback((input, volume = 0.5) => {
         if (!audioContextRef.current) return;
         const ctx = audioContextRef.current;
         const now = ctx.currentTime;
         const rampTime = 0.5;
 
-        // If type is the same and we have an active soundscape, just update volume
-        if (type && type === currentFrequencies.soundscapeType && soundscapeGainRef.current) {
-            soundscapeGainRef.current.gain.cancelScheduledValues(now);
-            soundscapeGainRef.current.gain.setValueAtTime(soundscapeGainRef.current.gain.value, now);
-            soundscapeGainRef.current.gain.linearRampToValueAtTime(volume, now + rampTime);
-            return;
+        // Determine targets based on input type
+        let targets = [];
+        if (Array.isArray(input)) {
+            targets = input.filter(item => item && item.type && item.type !== 'none');
+        } else if (typeof input === 'string' && input && input !== 'none') {
+            targets = [{ type: input, volume }];
         }
+        // If null/none/empty, targets is empty []
 
-        // If turning off soundscape (type is null/none)
-        if (!type || type === 'none') {
-            if (soundscapeNodesRef.current.length > 0) {
-                soundscapeNodesRef.current.forEach(node => {
-                    if (node instanceof GainNode) {
-                        try { node.gain.linearRampToValueAtTime(0, now + rampTime); } catch (e) { }
-                    } else {
-                        try { if (node.stop) node.stop(now + rampTime); } catch (e) { }
-                    }
-                });
+        const activeMap = soundscapeNodesRef.current;
+
+        // 1. Identify Soundscapes to Stop (Active but not in Targets)
+        const targetTypes = new Set(targets.map(t => t.type));
+        for (const [type, data] of activeMap.entries()) {
+            if (!targetTypes.has(type)) {
+                // Fade out and Stop
+                const { gain, nodes } = data;
+                if (gain) {
+                    try { gain.gain.cancelScheduledValues(now); gain.gain.linearRampToValueAtTime(0, now + rampTime); } catch (e) { }
+                }
+                // Stop nodes after fade
                 setTimeout(() => {
-                    soundscapeNodesRef.current.forEach(node => {
+                    nodes.forEach(node => {
+                        try { if (node.stop) node.stop(); } catch (e) { }
                         try { if (node.disconnect) node.disconnect(); } catch (e) { }
                     });
-                    soundscapeNodesRef.current = [];
-                    soundscapeGainRef.current = null;
+                    if (gain) gain.disconnect();
                 }, rampTime * 1000 + 100);
-
-                setCurrentFrequencies(prev => ({ ...prev, soundscapeType: null }));
+                activeMap.delete(type);
             }
-            return;
         }
 
-        // Type changed - stop old and start new
+        // 2. Identify Soundscapes to Start or Update
+        targets.forEach(target => {
+            const { type, volume: targetVol } = target;
 
-        // Stop existing
-        if (soundscapeNodesRef.current.length > 0) {
-            soundscapeNodesRef.current.forEach(node => {
-                if (node instanceof GainNode) {
-                    try { node.gain.linearRampToValueAtTime(0, now + 0.2); } catch (e) { }
-                } else {
-                    try { if (node.stop) node.stop(now + 0.2); } catch (e) { }
+            if (activeMap.has(type)) {
+                // Update Volume
+                const { gain } = activeMap.get(type);
+                if (gain) {
+                    gain.gain.cancelScheduledValues(now);
+                    gain.gain.setTargetAtTime(targetVol || 0.5, now, 0.2);
                 }
-            });
-            setTimeout(() => {
-                soundscapeNodesRef.current.forEach(node => {
-                    try { if (node.disconnect) node.disconnect(); } catch (e) { }
-                });
-                soundscapeNodesRef.current = [];
-            }, 300);
-        }
+            } else {
+                // Start New
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(targetVol || 0.5, now + 1.0); // Slow fade in
+                gain.connect(masterGainRef.current);
 
-        // Start New
-        const soundscapeGain = ctx.createGain();
-        soundscapeGainRef.current = soundscapeGain;
-        soundscapeGain.gain.setValueAtTime(0, now + 0.25); // Slight delay to avoid overlap
-        soundscapeGain.gain.linearRampToValueAtTime(volume, now + 0.25 + rampTime);
-        soundscapeGain.connect(masterGainRef.current);
+                const nodes = createSoundscape(ctx, type, gain);
+                activeMap.set(type, { nodes, gain });
+            }
+        });
 
-        const nodes = createSoundscape(ctx, type, soundscapeGain);
-        nodes.push(soundscapeGain);
-        soundscapeNodesRef.current = nodes;
+        // Update State for UI (Simplified: just tracks types)
+        // Note: currentFrequencies.soundscapeType expectation might be legacy. 
+        // We set it to the primary (first) target or joined string for debugging.
+        const typesStr = targets.map(t => t.type).join('+');
+        setCurrentFrequencies(prev => ({ ...prev, soundscapeType: typesStr || null }));
 
-        setCurrentFrequencies(prev => ({ ...prev, soundscapeType: type }));
-    }, [currentFrequencies.soundscapeType]);
+    }, []);
 
     const stop = useCallback(() => {
         if (audioContextRef.current && isPlaying) {
@@ -1221,14 +1201,17 @@ export function useBinauralBeat() {
             if (bothEarsGainRef.current) bothEarsGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
             if (noiseGainRef.current) noiseGainRef.current.gain.linearRampToValueAtTime(0, now + rampTime);
 
-            // Stop Soundscapes
-            if (soundscapeNodesRef.current.length > 0) {
-                soundscapeNodesRef.current.forEach(node => {
-                    // If it's a gain node, ramp it down
-                    if (node instanceof GainNode) {
-                        try { node.gain.linearRampToValueAtTime(0, now + rampTime); } catch (e) { }
+            // Stop Soundscapes (Fade Out All)
+            const activeMap = soundscapeNodesRef.current;
+            if (activeMap instanceof Map) {
+                for (const { gain } of activeMap.values()) {
+                    if (gain) {
+                        try { gain.gain.cancelScheduledValues(now); gain.gain.linearRampToValueAtTime(0, now + rampTime); } catch (e) { }
                     }
-                });
+                }
+            } else if (Array.isArray(activeMap) && activeMap.length > 0) {
+                // Fallback for safety if Ref is still array (legacy/transition)
+                activeMap.forEach(n => { if (n instanceof GainNode) n.gain.linearRampToValueAtTime(0, now + rampTime); });
             }
 
             setTimeout(() => {
@@ -1250,11 +1233,18 @@ export function useBinauralBeat() {
                 if (noiseNodeRef.current) { noiseNodeRef.current.stop(); noiseNodeRef.current.disconnect(); noiseNodeRef.current = null; }
 
                 // Stop Soundscape Nodes
-                if (soundscapeNodesRef.current.length > 0) {
-                    soundscapeNodesRef.current.forEach(node => {
-                        if (node.stop) { try { node.stop(); } catch (e) { } }
-                        if (node.disconnect) { try { node.disconnect(); } catch (e) { } }
-                    });
+                if (activeMap instanceof Map) {
+                    for (const { nodes, gain } of activeMap.values()) {
+                        nodes.forEach(node => {
+                            if (node.stop) { try { node.stop(); } catch (e) { } }
+                            if (node.disconnect) { try { node.disconnect(); } catch (e) { } }
+                        });
+                        if (gain) gain.disconnect();
+                    }
+                    activeMap.clear();
+                } else if (Array.isArray(activeMap)) {
+                    // Fallback
+                    activeMap.forEach(node => { if (node.disconnect) node.disconnect(); });
                     soundscapeNodesRef.current = [];
                 }
 

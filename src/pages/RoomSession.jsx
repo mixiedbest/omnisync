@@ -197,7 +197,7 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
         let left = sound.left || 0;
         let right = sound.right || 0;
         let noiseType = sound.noiseType || null;
-        let soundscapeType = sound.type || sound.soundscapeType || null;
+        let baseSoundscapeType = sound.type || sound.soundscapeType || null;
 
         if (sound.frequencies) {
             left = sound.frequencies.left;
@@ -207,36 +207,46 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
             left = stage.left;
             right = stage.right;
         } else if (sound.short?.phases || sound.long?.phases) {
-            // Handle Journeys (default to short phases for now if not specified or just pick one)
-            // Ideally we track which duration User selected, but for now we default to 'short' if available.
+            // Handle Journeys (default to short phases for now)
             const phases = sound.short?.phases || sound.long?.phases;
             if (phases && phases.length > 0) {
                 const stage = phases[0];
                 left = stage.freq;
-                // 'bothEars' in journeys.js refers to the Difference (Beat Frequency) usually?
-                // Or is it Isochronic? Based on names (Alpha 10Hz), it's the beat frequency.
-                // freq=432, bothEars=10 -> Right = 442.
                 right = stage.freq + (stage.bothEars || 0);
 
                 // Stage Overrides
                 if (stage.noiseType !== undefined) noiseType = stage.noiseType;
-                if (stage.soundscapeType !== undefined) soundscapeType = stage.soundscapeType;
-
-                // If stage has specific volumes? Journeys usually balanced.
+                if (stage.soundscapeType !== undefined) baseSoundscapeType = stage.soundscapeType;
             }
         }
 
         // Element Soundscape Mapping
         const elementMap = { fire: 'firewood', water: 'ocean', earth: 'earth', air: 'nature-walk' };
-        // Priority: User Element > Session Soundscape
-        // Priority: User Element > Session Soundscape
         if (userElement && elementMap[userElement]) {
-            soundscapeType = elementMap[userElement];
-        } else if (isCustomLayerActive && (customLayer?.type || customLayer?.soundscapeType)) {
-            soundscapeType = customLayer.type || customLayer.soundscapeType;
+            baseSoundscapeType = elementMap[userElement];
         }
-        // If not set by element or sound, checks above handle it, 
-        // but if Journey set it, it's already in 'soundscapeType' var.
+
+        // Collect Active Soundscapes for Multi-Layering
+        const activeSoundscapes = [];
+
+        // 1. Base Soundscape
+        if (baseSoundscapeType && baseSoundscapeType !== 'none') {
+            activeSoundscapes.push({
+                type: baseSoundscapeType,
+                volume: sound.volumes?.soundscape ?? 0.5
+            });
+        }
+
+        // 2. Custom Generator Overlay Soundscape
+        if (isCustomLayerActive && (customLayer?.type || customLayer?.soundscapeType)) {
+            const customType = customLayer.type || customLayer.soundscapeType;
+            if (customType && customType !== 'none') {
+                activeSoundscapes.push({
+                    type: customType,
+                    volume: customLayer.volumes?.soundscape !== undefined ? customLayer.volumes.soundscape : 0.5
+                });
+            }
+        }
 
         // Layers
         const layers = [...(sound.layers || [])];
@@ -249,13 +259,11 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
             });
         }
 
-        // Custom Generator Layering (if active and not source)
-        if (isCustomLayerActive && customLayer && soundSource !== 'custom') {
-            // Prefer explicit layers list
+        // Custom Generator Layers (Binaural)
+        if (isCustomLayerActive && customLayer) {
             if (customLayer.layers && customLayer.layers.length > 0) {
                 layers.push(...customLayer.layers);
             }
-            // Fallback for simple custom sounds (if any)
             else if (customLayer.left && customLayer.right) {
                 layers.push({
                     id: 'custom-main',
@@ -264,33 +272,24 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                     volume: (customLayer.volumes?.binaural !== undefined ? customLayer.volumes.binaural : 0.5)
                 });
             }
-            // Noise Override (optional, prioritized if present)
-            // If Generator has noise, use it? Or mix?
-            // We'll let generator override for 'DJ' feel.
+            // Noise Override (Overlay replaces base noise for now)
             if (customLayer.noiseType) {
-                // params object is created below, we can capture noiseType there
+                noiseType = customLayer.noiseType;
             }
         }
 
         // Merge volumes (Custom Layer overrides if active)
         const activeVolumes = { ...(sound.volumes || {}) };
         if (isCustomLayerActive && customLayer?.volumes) {
-            // Only override if custom layer defines these aspects, or simply merge all?
-            // Custom Generator UI implies control over the specific elements it generates.
-            // If custom layer has a noise type selected, we definitely want its volume.
-            if (customLayer.noiseType && customLayer.noiseType !== 'none') {
-                activeVolumes.noise = customLayer.volumes.noise;
-            }
-            if ((customLayer.type || customLayer.soundscapeType) && (customLayer.type !== 'none' && customLayer.soundscapeType !== 'none')) {
-                activeVolumes.soundscape = customLayer.volumes.soundscape;
-            }
+            if (customLayer.noiseType) activeVolumes.noise = customLayer.volumes.noise;
         }
 
         return {
             left, right,
             bothEars: sound.bothEars || 0,
-            noiseType: (isCustomLayerActive && customLayer?.noiseType) || sound.noiseType || null,
-            soundscapeType,
+            noiseType,
+            // Pass the Array! The refactored useBinauralBeat expects this or string.
+            soundscapeType: activeSoundscapes,
             volumes: activeVolumes,
             layers
         };
