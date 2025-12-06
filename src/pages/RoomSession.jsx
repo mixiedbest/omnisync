@@ -26,7 +26,7 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
     const [showLiveGenerator, setShowLiveGenerator] = useState(false);
     // Custom Layering State
     const [customLayer, setCustomLayer] = useState(null);
-    const [isCustomLayerActive, setIsCustomLayerActive] = useState(false);
+    const [isCustomLayerActive, setIsCustomLayerActive] = useState(true);
     const [soundSource, setSoundSource] = useState('presets'); // 'presets', 'soundscapes', 'journeys', 'custom'
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [showCustomGenerator, setShowCustomGenerator] = useState(false);
@@ -624,32 +624,22 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                                 </div>
                             )}
 
-                            {/* Custom Overlay (Toggleable Layer) */}
+                            {/* Custom Overlay (Always Available) */}
                             <div className="custom-layer-option">
-                                <label className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={isCustomLayerActive}
-                                        onChange={(e) => setIsCustomLayerActive(e.target.checked)}
-                                    />
-                                    <span>
-                                        <Sliders size={16} />
-                                        Enable Custom Generator Overlay
-                                    </span>
-                                </label>
+                                <div className="overlay-header">
+                                    <Sliders size={16} />
+                                    <span>Custom Generator Overlay</span>
+                                </div>
 
-                                {isCustomLayerActive && (
-                                    <div className="generator-container">
-                                        <CustomGenerator
-                                            onGenerate={(sound) => {
-                                                setCustomLayer(sound);
-                                                // Visual feedback handled by component or observing state
-                                            }}
-                                            actionLabel="Update Overlay"
-                                            isActive={isCustomLayerActive && isPlaying}
-                                        />
-                                    </div>
-                                )}
+                                <div className="generator-container">
+                                    <CustomGenerator
+                                        onGenerate={(sound) => {
+                                            setCustomLayer(sound);
+                                        }}
+                                        actionLabel="Update Overlay"
+                                        isActive={isCustomLayerActive && isPlaying}
+                                    />
+                                </div>
                             </div>
 
                             {selectedSound && (
