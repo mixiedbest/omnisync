@@ -257,5 +257,59 @@ export const journeys = [
                 { name: 'Peak State', duration: 360, freq: 963, bothEars: 40, noiseType: null, desc: 'Gamma brilliance' }
             ]
         }
+    },
+    {
+        id: 'sonic-rebirth',
+        title: 'Sonic Rebirth Journey',
+        icon: 'Waves',
+        description: 'Water-element transformation for identity renewal and emotional clarity',
+        category: 'transformation',
+        short: {
+            duration: 720, // 12 minutes
+            phases: [
+                { name: 'Dissolving the Old', duration: 144, freq: 174, bothEars: 2, noiseType: 'pink', soundscapeType: 'ocean', desc: 'Release past stress and identities' },
+                { name: 'The Void Pool', duration: 144, freq: 432, bothEars: 5.5, noiseType: null, soundscapeType: 'ocean', desc: 'Timeless neutrality' },
+                { name: 'Returning Light', duration: 144, freq: 528, bothEars: 7, noiseType: null, desc: 'Clarity and re-alignment' },
+                { name: 'Rebirth', duration: 144, freq: 639, bothEars: 10, noiseType: null, desc: 'Emergence and awakening' },
+                { name: 'Integration', duration: 144, freq: 396, bothEars: 4, noiseType: 'pink', soundscapeType: 'rain', desc: 'Grounding the new self' }
+            ]
+        },
+        long: {
+            duration: 2100, // 35 minutes
+            phases: [
+                { name: 'Dissolving the Old', duration: 420, freq: 174, bothEars: 2, noiseType: 'pink', soundscapeType: 'ocean', desc: 'Release past stress and identities' },
+                { name: 'The Void Pool', duration: 420, freq: 432, bothEars: 5.5, noiseType: null, soundscapeType: 'ocean', desc: 'Timeless neutrality' },
+                { name: 'Returning Light', duration: 420, freq: 528, bothEars: 7, noiseType: null, desc: 'Clarity and re-alignment' },
+                { name: 'Rebirth', duration: 420, freq: 639, bothEars: 10, noiseType: null, desc: 'Emergence and awakening' },
+                { name: 'Integration', duration: 420, freq: 396, bothEars: 4, noiseType: 'pink', soundscapeType: 'rain', desc: 'Grounding the new self' }
+            ]
+        }
+    },
+    {
+        id: 'astral-travel-dream',
+        title: 'Astral Travel Dream Journey',
+        icon: 'Star',
+        description: 'Lucid dream induction and astral exploration experience',
+        category: 'consciousness',
+        short: {
+            duration: 1080, // 18 minutes
+            phases: [
+                { name: 'Veil Softening', duration: 180, freq: 432, bothEars: 6, noiseType: 'pink', desc: 'Theta induction' },
+                { name: 'Silver Cord Activation', duration: 240, freq: 528, bothEars: 4.5, noiseType: null, desc: 'Inner body expansion' },
+                { name: 'Etheric Lift-Off', duration: 240, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift' },
+                { name: 'Stargate Drift', duration: 300, freq: 432, bothEars: 4, noiseType: null, soundscapeType: 'wind', desc: 'Lucid exploration' },
+                { name: 'Drift Return', duration: 120, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment' }
+            ]
+        },
+        long: {
+            duration: 1920, // 32 minutes
+            phases: [
+                { name: 'Veil Softening', duration: 300, freq: 432, bothEars: 6, noiseType: 'pink', desc: 'Theta induction' },
+                { name: 'Silver Cord Activation', duration: 360, freq: 528, bothEars: 4.5, noiseType: null, desc: 'Inner body expansion' },
+                { name: 'Etheric Lift-Off', duration: 300, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift' },
+                { name: 'Stargate Drift', duration: 600, freq: 432, bothEars: 4, noiseType: null, soundscapeType: 'wind', desc: 'Lucid exploration' },
+                { name: 'Drift Return', duration: 360, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment' }
+            ]
+        }
     }
 ];
