@@ -13,6 +13,8 @@ export function GroupRoomsPage({ onBack }) {
     const [username, setUsername] = useState('You');
     const [connections, setConnections] = useState([]);
     const [roomToDelete, setRoomToDelete] = useState(null);
+    const [roomToJoin, setRoomToJoin] = useState(null);
+    const [joinAnonymously, setJoinAnonymously] = useState(false);
 
     // Create Room Form State
     const [roomName, setRoomName] = useState('');
@@ -117,7 +119,15 @@ export function GroupRoomsPage({ onBack }) {
         if (room.type === 'partner') {
             setShowPartnerSync(true);
         } else {
-            setActiveRoom(room);
+            setRoomToJoin(room);
+            setJoinAnonymously(false);
+        }
+    };
+
+    const confirmJoinRoom = () => {
+        if (roomToJoin) {
+            setActiveRoom(roomToJoin);
+            setRoomToJoin(null);
         }
     };
 
@@ -172,6 +182,7 @@ export function GroupRoomsPage({ onBack }) {
                 room={activeRoom}
                 onBack={() => setActiveRoom(null)}
                 username={username}
+                isAnonymous={joinAnonymously}
             />
         );
     }
@@ -462,6 +473,52 @@ export function GroupRoomsPage({ onBack }) {
                             </button>
                             <button className="delete-confirm-btn" onClick={confirmDeleteRoom}>
                                 Delete Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Join Room Modal */}
+            {roomToJoin && (
+                <div className="modal-overlay" onClick={() => setRoomToJoin(null)}>
+                    <div className="modal-content join-modal" onClick={(e) => e.stopPropagation()}>
+                        <h2>Join {roomToJoin.name}</h2>
+
+                        <div className="room-preview-info">
+                            <div
+                                className="preview-theme-dot"
+                                style={{ backgroundColor: themes.find(t => t.id === roomToJoin.theme)?.color || '#8b5cf6' }}
+                            ></div>
+                            <div className="preview-details">
+                                <p><strong>Host:</strong> {roomToJoin.host}</p>
+                                {roomToJoin.intention && <p><strong>Intention:</strong> {roomToJoin.intention}</p>}
+                            </div>
+                        </div>
+
+                        {/* Anonymity Toggle */}
+                        <div className="join-options">
+                            <label className={`anonymity-toggle ${roomToJoin.host === 'You' ? 'disabled' : ''}`}>
+                                <input
+                                    type="checkbox"
+                                    checked={joinAnonymously}
+                                    onChange={(e) => setJoinAnonymously(e.target.checked)}
+                                    disabled={roomToJoin.host === 'You'}
+                                />
+                                <div className="toggle-content">
+                                    {joinAnonymously ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    <span>Join Anonymously</span>
+                                </div>
+                            </label>
+                            {roomToJoin.host === 'You' && <div className="host-note">Hosts cannot be anonymous</div>}
+                        </div>
+
+                        <div className="modal-actions">
+                            <button className="cancel-btn" onClick={() => setRoomToJoin(null)}>
+                                Cancel
+                            </button>
+                            <button className="modal-btn confirm" onClick={confirmJoinRoom}>
+                                Enter Room
                             </button>
                         </div>
                     </div>

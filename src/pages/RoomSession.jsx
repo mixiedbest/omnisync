@@ -7,7 +7,7 @@ import { useBinauralBeat } from '../hooks/useBinauralBeat';
 import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
-export function RoomSession({ room, onBack, username }) {
+export function RoomSession({ room, onBack, username, isAnonymous = false }) {
     const { play, stop, isPlaying: audioIsPlaying, enableMicrophone, disableMicrophone, setMicVolume, isMicActive, updateLayers, updateNoise, updateSoundscape } = useBinauralBeat();
     const [sessionState, setSessionState] = useState('lobby'); // 'lobby', 'active', 'post'
     const [members, setMembers] = useState([
@@ -35,7 +35,7 @@ export function RoomSession({ room, onBack, username }) {
     const [userIntention, setUserIntention] = useState('');
     const [postSessionMood, setPostSessionMood] = useState('');
     const [postSessionReflection, setPostSessionReflection] = useState('');
-    const [anonymousMode, setAnonymousMode] = useState(false);
+    const [anonymousMode, setAnonymousMode] = useState(isAnonymous);
     const canvasRef = useRef(null);
     const timerRef = useRef(null);
 
@@ -761,13 +761,7 @@ export function RoomSession({ room, onBack, username }) {
                                 <Sliders size={20} />
                             </button>
                         )}
-                        <button
-                            className="control-btn"
-                            onClick={() => setAnonymousMode(!anonymousMode)}
-                            title={anonymousMode ? 'Show Identity' : 'Hide Identity'}
-                        >
-                            {anonymousMode ? <EyeOff size={20} /> : <Eye size={20} />}
-                        </button>
+
                         <button
                             className="control-btn"
                             onClick={() => setShowChat(!showChat)}
