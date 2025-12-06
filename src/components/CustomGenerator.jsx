@@ -99,9 +99,7 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause }) 
     useEffect(() => {
         if (isActive) {
             const timer = setTimeout(() => {
-                const soundObj = getSoundObject();
-                console.log('CustomGenerator updating with volumes:', soundObj.volumes);
-                onGenerate(soundObj);
+                onGenerate(getSoundObject());
             }, 50); // Fast debounce for smooth slider drag
             return () => clearTimeout(timer);
         }

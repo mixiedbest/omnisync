@@ -8,9 +8,6 @@ import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
-    // Debug logging
-    console.log('RoomSession rendering with:', { room, username });
-
     const { play, stop, isPlaying: audioIsPlaying, enableMicrophone, disableMicrophone, setMicVolume, isMicActive, updateLayers, updateNoise, updateSoundscape } = useBinauralBeat();
     const [sessionState, setSessionState] = useState('lobby'); // 'lobby', 'active', 'post'
     const [members, setMembers] = useState([
@@ -164,13 +161,6 @@ export function RoomSession({ room, onBack, username }) {
         if (isPlaying && selectedSound) {
             const params = getPlaybackParams(); // Uses current state (customLayer, isCustomLayerActive, etc)
             if (params) {
-                console.log('RoomSession updating audio with params:', {
-                    noiseType: params.noiseType,
-                    soundscapeType: params.soundscapeType,
-                    volumes: params.volumes,
-                    layersCount: params.layers?.length
-                });
-
                 // Seamlessly update Layers and Noise
                 if (updateLayers) {
                     updateLayers(params.layers, params.volumes);

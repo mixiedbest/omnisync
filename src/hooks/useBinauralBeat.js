@@ -809,8 +809,6 @@ export function useBinauralBeat() {
         // Enable Mobile Audio (Wake Lock + Silent Track)
         enableMobileAudio();
 
-        console.log('useBinauralBeat.play called with:', { leftFreq, rightFreq, bothEarsFreq, noiseType, soundscapeType });
-
         // Default volumes if not provided
         const {
             binaural = 0.7,
@@ -820,7 +818,6 @@ export function useBinauralBeat() {
         } = volumes;
         initAudio();
         const ctx = audioContextRef.current;
-        console.log('AudioContext state:', ctx.state);
         const now = ctx.currentTime;
         const rampTime = 0.5;
 
@@ -1149,11 +1146,8 @@ export function useBinauralBeat() {
         const now = ctx.currentTime;
         const rampTime = 0.5;
 
-        console.log('updateSoundscape called:', { type, volume, currentType: currentFrequencies.soundscapeType });
-
         // If type is the same and we have an active soundscape, just update volume
         if (type && type === currentFrequencies.soundscapeType && soundscapeGainRef.current) {
-            console.log('Updating soundscape volume only');
             soundscapeGainRef.current.gain.cancelScheduledValues(now);
             soundscapeGainRef.current.gain.setValueAtTime(soundscapeGainRef.current.gain.value, now);
             soundscapeGainRef.current.gain.linearRampToValueAtTime(volume, now + rampTime);
@@ -1163,7 +1157,6 @@ export function useBinauralBeat() {
         // If turning off soundscape (type is null/none)
         if (!type || type === 'none') {
             if (soundscapeNodesRef.current.length > 0) {
-                console.log('Stopping soundscape');
                 soundscapeNodesRef.current.forEach(node => {
                     if (node instanceof GainNode) {
                         try { node.gain.linearRampToValueAtTime(0, now + rampTime); } catch (e) { }
@@ -1185,7 +1178,6 @@ export function useBinauralBeat() {
         }
 
         // Type changed - stop old and start new
-        console.log('Changing soundscape type from', currentFrequencies.soundscapeType, 'to', type);
 
         // Stop existing
         if (soundscapeNodesRef.current.length > 0) {
