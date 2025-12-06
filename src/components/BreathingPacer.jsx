@@ -118,11 +118,18 @@ export function BreathingPacer({ onClose }) {
                 )}
 
                 <div className="pacer-content">
+                    {/* Pattern name at top */}
                     <div className="pacer-title">
                         <Wind size={24} />
                         <span>{pattern.name}</span>
                     </div>
 
+                    {/* Description below title */}
+                    <div className="pacer-instruction">
+                        {pattern.description}
+                    </div>
+
+                    {/* Circle in middle - no text inside, just visual */}
                     <div
                         className={`breathing-circle animate-${selectedPattern}`}
                         style={{
@@ -130,16 +137,20 @@ export function BreathingPacer({ onClose }) {
                             '--phase-duration': `${pattern.timings[phaseIndex]}s`
                         }}
                     >
-                        <div className="inner-text">{text}</div>
-                        <div className="phase-timer">
-                            {pattern.timings[phaseIndex]}s
-                        </div>
+                        {/* Empty - just the animated circle */}
                     </div>
 
-                    <div className="pacer-instruction">
-                        {pattern.description}
+                    {/* Current phase text below circle */}
+                    <div className="current-phase-text">
+                        {text}
                     </div>
 
+                    {/* Timer below phase text */}
+                    <div className="phase-timer-display">
+                        {pattern.timings[phaseIndex]}s
+                    </div>
+
+                    {/* Phase indicators at bottom */}
                     <div className="phase-indicators">
                         {pattern.phases.map((phase, idx) => (
                             <div
