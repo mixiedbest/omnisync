@@ -26,7 +26,7 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
     const [showLiveGenerator, setShowLiveGenerator] = useState(false);
     // Custom Layering State
     const [customLayer, setCustomLayer] = useState(null);
-    const [isCustomLayerActive, setIsCustomLayerActive] = useState(true);
+    const [isCustomLayerActive, setIsCustomLayerActive] = useState(false);
     const [soundSource, setSoundSource] = useState('presets'); // 'presets', 'soundscapes', 'journeys', 'custom'
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [showCustomGenerator, setShowCustomGenerator] = useState(false);
@@ -624,23 +624,7 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                                 </div>
                             )}
 
-                            {/* Custom Overlay (Always Available) */}
-                            <div className="custom-layer-option">
-                                <div className="overlay-header">
-                                    <Sliders size={16} />
-                                    <span>Custom Generator Overlay</span>
-                                </div>
 
-                                <div className="generator-container">
-                                    <CustomGenerator
-                                        onGenerate={(sound) => {
-                                            setCustomLayer(sound);
-                                        }}
-                                        actionLabel="Update Overlay"
-                                        isActive={isCustomLayerActive && isPlaying}
-                                    />
-                                </div>
-                            </div>
 
                             {selectedSound && (
                                 <div className="selected-sound-preview">
