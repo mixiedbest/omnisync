@@ -552,13 +552,6 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                                 >
                                     Journeys
                                 </button>
-                                <button
-                                    className={`source-tab ${soundSource === 'custom' ? 'active' : ''}`}
-                                    onClick={() => setSoundSource('custom')}
-                                >
-                                    <Sliders size={16} />
-                                    Custom
-                                </button>
                             </div>
 
                             {/* Presets */}
@@ -632,25 +625,33 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                                 </div>
                             )}
 
-                            {/* Custom Generator */}
-                            {soundSource === 'custom' && (
-                                <div className="sound-options">
-                                    <CustomGenerator
-                                        onGenerate={(sound) => {
-                                            setSelectedSound(sound);
-                                            // Feedback
-                                            const btn = document.querySelector('.generate-btn');
-                                            if (btn) {
-                                                const originalText = btn.innerText;
-                                                btn.innerText = 'Sound Set! ✓';
-                                                setTimeout(() => btn.innerText = originalText, 2000);
-                                            }
-                                        }}
-                                        actionLabel="Set Session Sound"
-                                        isActive={selectedSound?.id === 'custom-combined' && isPlaying}
+                            {/* Custom Overlay (Toggleable Layer) */}
+                            <div className="custom-layer-option">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={isCustomLayerActive}
+                                        onChange={(e) => setIsCustomLayerActive(e.target.checked)}
                                     />
-                                </div>
-                            )}
+                                    <span>
+                                        <Sliders size={16} />
+                                        Enable Custom Generator Overlay
+                                    </span>
+                                </label>
+
+                                {isCustomLayerActive && (
+                                    <div className="generator-container">
+                                        <CustomGenerator
+                                            onGenerate={(sound) => {
+                                                setCustomLayer(sound);
+                                                // Visual feedback handled by component or observing state
+                                            }}
+                                            actionLabel="Update Overlay"
+                                            isActive={isCustomLayerActive && isPlaying}
+                                        />
+                                    </div>
+                                )}
+                            </div>
 
                             {selectedSound && (
                                 <div className="selected-sound-preview">
@@ -732,7 +733,7 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                         </button>
                     )}
                 </div>
-            </div>
+            </div >
         );
     }
 
