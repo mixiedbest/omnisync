@@ -34,6 +34,26 @@
     font-family: 'Courier New', monospace;
 }
 
+.playlist-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 12px;
+    padding: 4px 10px;
+    background: rgba(6, 182, 212, 0.15);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--accent-teal);
+    font-weight: 600;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.track-position {
+    color: var(--accent-teal);
+    font-weight: 600;
+}
+
 .player-actions {
     display: flex;
     align-items: center;
