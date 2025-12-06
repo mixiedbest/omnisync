@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Eye, Waves, Sparkles, Circle, BarChart3 } from 'lucide-react';
 import './Visualizer.css';
 
