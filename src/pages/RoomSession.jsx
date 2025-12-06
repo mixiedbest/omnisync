@@ -164,6 +164,13 @@ export function RoomSession({ room, onBack, username }) {
         if (isPlaying && selectedSound) {
             const params = getPlaybackParams(); // Uses current state (customLayer, isCustomLayerActive, etc)
             if (params) {
+                console.log('RoomSession updating audio with params:', {
+                    noiseType: params.noiseType,
+                    soundscapeType: params.soundscapeType,
+                    volumes: params.volumes,
+                    layersCount: params.layers?.length
+                });
+
                 // Seamlessly update Layers and Noise
                 if (updateLayers) {
                     updateLayers(params.layers, params.volumes);
@@ -176,7 +183,21 @@ export function RoomSession({ room, onBack, username }) {
                 }
             }
         }
-    }, [customLayer, isCustomLayerActive, userMode, personalToneFreq, personalToneVol, isPlaying, selectedSound, updateLayers, updateNoise, updateSoundscape]);
+    }, [
+        customLayer,
+        customLayer?.volumes?.noise,
+        customLayer?.volumes?.soundscape,
+        customLayer?.volumes?.binaural,
+        isCustomLayerActive,
+        userMode,
+        personalToneFreq,
+        personalToneVol,
+        isPlaying,
+        selectedSound,
+        updateLayers,
+        updateNoise,
+        updateSoundscape
+    ]);
 
     // Helper to construct playback parameters merging Session Sound + Personal Layers + Element
     const getPlaybackParams = (soundOverride = null) => {

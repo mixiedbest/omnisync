@@ -99,7 +99,9 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause }) 
     useEffect(() => {
         if (isActive) {
             const timer = setTimeout(() => {
-                onGenerate(getSoundObject());
+                const soundObj = getSoundObject();
+                console.log('CustomGenerator updating with volumes:', soundObj.volumes);
+                onGenerate(soundObj);
             }, 50); // Fast debounce for smooth slider drag
             return () => clearTimeout(timer);
         }
@@ -375,7 +377,7 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause }) 
                     {isActive ? (
                         <>
                             <Pause size={24} />
-                            Pause Session
+                            Pause Layer
                         </>
                     ) : (
                         <>
