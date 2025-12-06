@@ -8,6 +8,9 @@ import { CustomGenerator } from '../components/CustomGenerator';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username }) {
+    // Debug logging
+    console.log('RoomSession rendering with:', { room, username });
+
     const { play, stop, isPlaying: audioIsPlaying, enableMicrophone, disableMicrophone, setMicVolume, isMicActive, updateLayers, updateNoise, updateSoundscape } = useBinauralBeat();
     const [sessionState, setSessionState] = useState('lobby'); // 'lobby', 'active', 'post'
     const [members, setMembers] = useState([
@@ -100,7 +103,17 @@ export function RoomSession({ room, onBack, username }) {
     useEffect(() => {
         if (sessionState === 'active' && canvasRef.current && room) {
             const canvas = canvasRef.current;
+            if (!canvas) {
+                console.warn('Canvas ref is null');
+                return;
+            }
+
             const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.error('Failed to get canvas context');
+                return;
+            }
+
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
 
