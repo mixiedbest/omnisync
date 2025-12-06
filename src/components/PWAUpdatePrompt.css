@@ -1,0 +1,110 @@
+.pwa-toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(139, 92, 246, 0.95));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 90%;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.pwa-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.pwa-icon {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.pwa-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.pwa-button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.pwa-button-primary {
+    background: white;
+    color: #6366f1;
+}
+
+.pwa-button-primary:hover {
+    background: #f1f5f9;
+    transform: scale(1.05);
+}
+
+.pwa-button-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.pwa-button-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 640px) {
+    .pwa-toast {
+        bottom: 70px;
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .pwa-message {
+        font-size: 13px;
+    }
+
+    .pwa-actions {
+        width: 100%;
+    }
+
+    .pwa-button {
+        flex: 1;
+        padding: 10px;
+    }
+}

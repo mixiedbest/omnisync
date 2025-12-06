@@ -17,7 +17,15 @@ export function Visualizer({ isPlaying, currentTrack }) {
         let newColor = 'var(--accent-purple)';
         let mode = 'pulse';
 
-        if (currentTrack.id.includes('energy-')) {
+        // Chakra-specific colors (traditional chakra color mapping)
+        if (currentTrack.id === 'c1') { newColor = '#dc2626'; mode = 'breathe'; } // Root - Red
+        else if (currentTrack.id === 'c2') { newColor = '#ea580c'; mode = 'breathe'; } // Sacral - Orange
+        else if (currentTrack.id === 'c3') { newColor = '#eab308'; mode = 'breathe'; } // Solar Plexus - Yellow
+        else if (currentTrack.id === 'c4') { newColor = '#16a34a'; mode = 'breathe'; } // Heart - Green
+        else if (currentTrack.id === 'c5') { newColor = '#2563eb'; mode = 'breathe'; } // Throat - Blue
+        else if (currentTrack.id === 'c6') { newColor = '#4f46e5'; mode = 'breathe'; } // Third Eye - Indigo
+        else if (currentTrack.id === 'c7') { newColor = '#9333ea'; mode = 'breathe'; } // Crown - Violet
+        else if (currentTrack.id.includes('energy-')) {
             // Use predefined colors for energy profiles
             if (currentTrack.id.includes('clarity')) newColor = '#1e3a8a'; // Blue
             else if (currentTrack.id.includes('strength')) newColor = '#7f1d1d'; // Red

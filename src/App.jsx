@@ -24,6 +24,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { UserProfilePage } from './pages/UserProfilePage';
 import { PlaylistsPage } from './pages/PlaylistsPage';
 import { PlaylistSelectorModal } from './components/PlaylistSelectorModal';
+import { PWAUpdatePrompt } from './components/PWAUpdatePrompt';
 import './App.css';
 
 function App() {
@@ -569,6 +570,8 @@ function App() {
           onSelect={handlePlaylistSelected}
         />
       )}
+
+      <PWAUpdatePrompt />
     </>
   );
 }
