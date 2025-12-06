@@ -468,18 +468,18 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                     </div>
 
                     {/* Mode Selection */}
-                    <div className="mode-selector">
+                    <div className="room-mode-selector">
                         <h3>Your Mode</h3>
-                        <div className="mode-options">
+                        <div className="room-mode-options">
                             <button
-                                className={`mode-option ${userMode === 'listen' ? 'selected' : ''}`}
+                                className={`room-mode-option ${userMode === 'listen' ? 'selected' : ''}`}
                                 onClick={() => setUserMode('listen')}
                             >
                                 <Volume2 size={20} />
                                 <span>Listen Only</span>
                             </button>
                             <button
-                                className={`mode-option ${userMode === 'add-tone' ? 'selected' : ''}`}
+                                className={`room-mode-option ${userMode === 'add-tone' ? 'selected' : ''}`}
                                 onClick={() => setUserMode('add-tone')}
                             >
                                 <Zap size={20} />

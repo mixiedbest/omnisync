@@ -136,7 +136,8 @@
 }
 
 /* Mode Selector */
-.mode-selector {
+/* Mode Selector */
+.room-mode-selector {
     background: rgba(17, 24, 39, 0.4);
     border: 1px solid rgba(139, 92, 246, 0.2);
     border-radius: 16px;
@@ -144,18 +145,18 @@
     margin-bottom: 32px;
 }
 
-.mode-selector h3 {
+.room-mode-selector h3 {
     color: var(--text-primary);
     margin-bottom: 16px;
 }
 
-.mode-options {
+.room-mode-options {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
 }
 
-.mode-option {
+.room-mode-option {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -169,11 +170,11 @@
     transition: all 0.2s ease;
 }
 
-.mode-option:hover {
+.room-mode-option:hover {
     background: rgba(139, 92, 246, 0.1);
 }
 
-.mode-option.selected {
+.room-mode-option.selected {
     background: rgba(139, 92, 246, 0.2);
     border-color: var(--accent-purple);
     color: white;
