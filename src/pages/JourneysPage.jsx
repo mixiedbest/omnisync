@@ -5,22 +5,12 @@ import './JourneysPage.css';
 
 export function JourneysPage({ onBack, onSelectJourney }) {
     const [selectedDuration, setSelectedDuration] = useState('short');
-    const [dreamShieldDuration, setDreamShieldDuration] = useState(60); // in minutes
 
     const handleSelectJourney = (journey) => {
         const config = selectedDuration === 'short' ? journey.short : journey.long;
         let phases = [...config.phases];
 
-        // If this is the Deep Sleep journey, customize the Dream Shield duration
-        if (journey.id === 'deep-sleep-descent') {
-            const dreamShieldPhaseIndex = phases.findIndex(p => p.name === 'Dream Shield');
-            if (dreamShieldPhaseIndex !== -1) {
-                phases[dreamShieldPhaseIndex] = {
-                    ...phases[dreamShieldPhaseIndex],
-                    duration: dreamShieldDuration * 60 // convert minutes to seconds
-                };
-            }
-        }
+
 
         onSelectJourney({
             ...journey,
@@ -85,24 +75,7 @@ export function JourneysPage({ onBack, onSelectJourney }) {
                                 <span className="journey-phases">{config.phases.length} phases</span>
                             </div>
 
-                            {/* Dream Shield Duration Selector (only for Deep Sleep) */}
-                            {journey.id === 'deep-sleep-descent' && (
-                                <div className="dream-shield-selector">
-                                    <label className="dream-shield-label">Dream Shield Duration:</label>
-                                    <select
-                                        className="dream-shield-select"
-                                        value={dreamShieldDuration}
-                                        onChange={(e) => setDreamShieldDuration(Number(e.target.value))}
-                                    >
-                                        <option value={60}>1 hour</option>
-                                        <option value={120}>2 hours</option>
-                                        <option value={180}>3 hours</option>
-                                        <option value={240}>4 hours</option>
-                                        <option value={300}>5 hours</option>
-                                        <option value={360}>6 hours</option>
-                                    </select>
-                                </div>
-                            )}
+
 
                             <button
                                 className="journey-play-btn"

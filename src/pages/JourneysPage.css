@@ -93,44 +93,6 @@
     transform: scale(1.05);
 }
 
-.dream-shield-selector {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
-    background: rgba(139, 92, 246, 0.1);
-    border-radius: 12px;
-    margin-top: 8px;
-}
-
-.dream-shield-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--accent-purple);
-}
-
-.dream-shield-select {
-    padding: 8px 12px;
-    background: rgba(17, 24, 39, 0.6);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    border-radius: 8px;
-    color: var(--text-primary);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.dream-shield-select:hover {
-    border-color: var(--accent-purple);
-}
-
-.dream-shield-select:focus {
-    outline: none;
-    border-color: var(--accent-purple);
-    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-}
 
 @media (max-width: 768px) {
     .journeys-grid {

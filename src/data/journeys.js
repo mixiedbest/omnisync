@@ -49,7 +49,7 @@ export const journeys = [
                     soundscapeType: null,
                     desc: 'Protection',
                     customizable: true,
-                    durationOptions: [60, 180, 300, 600, 1200] // 1, 3, 5, 10, 20 min
+                    durationOptions: [300, 600, 1200, 1800, 3600] // 5, 10, 20, 30, 60 min
                 }
             ]
         },
@@ -69,7 +69,7 @@ export const journeys = [
                     soundscapeType: null,
                     desc: 'Protection',
                     customizable: true,
-                    durationOptions: [180, 300, 600, 1800, 3600] // 3, 5, 10, 30, 60 min
+                    durationOptions: [1800, 3600, 7200, 10800, 14400, 21600] // 30m, 1h, 2h, 3h, 4h, 6h
                 }
             ]
         }
