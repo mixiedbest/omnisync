@@ -10,6 +10,7 @@ export function JourneyPlayer({ journey, onBack }) {
     const [phaseProgress, setPhaseProgress] = useState(0);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [hasStarted, setHasStarted] = useState(false);
+    const [customPhaseDurations, setCustomPhaseDurations] = useState({});
 
     const { play, stop } = useBinauralBeat();
     const phaseTimerRef = useRef(null);
@@ -52,27 +53,27 @@ export function JourneyPlayer({ journey, onBack }) {
         setIsPlaying(true);
         setHasStarted(true);
 
+        // Use custom duration if set, otherwise use default
+        const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
+
         // Progress tracker
         const startTime = Date.now();
         progressTimerRef.current = setInterval(() => {
             const elapsed = (Date.now() - startTime) / 1000;
-            const progress = Math.min((elapsed / phase.duration) * 100, 100);
+            const progress = Math.min((elapsed / phaseDuration) * 100, 100);
             setPhaseProgress(progress);
             setElapsedTime(Math.floor(elapsed));
         }, 100);
 
-        // Auto-advance to next phase (or loop if loopable)
+        // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
-            if (phase.loopable) {
-                // Loop this phase indefinitely
-                startPhase(phaseIndex);
-            } else if (phaseIndex < phases.length - 1) {
+            if (phaseIndex < phases.length - 1) {
                 nextPhase();
             } else {
                 // Journey complete
                 endJourney();
             }
-        }, phase.duration * 1000);
+        }, phaseDuration * 1000);
     };
 
     const nextPhase = () => {
@@ -138,28 +139,50 @@ export function JourneyPlayer({ journey, onBack }) {
 
                 {/* Duration Selector */}
                 {!hasStarted && (
-                    <div className="duration-selector">
-                        <div className="duration-label">
-                            <Clock size={18} />
-                            Choose Duration
+                    <>
+                        <div className="duration-selector">
+                            <div className="duration-label">
+                                <Clock size={18} />
+                                Choose Duration
+                            </div>
+                            <div className="duration-options">
+                                <button
+                                    className={`duration-option ${duration === 'short' ? 'selected' : ''}`}
+                                    onClick={() => handleDurationChange('short')}
+                                >
+                                    <div className="duration-time">{formatTime(journey.short.duration)}</div>
+                                    <div className="duration-desc">Quick Session</div>
+                                </button>
+                                <button
+                                    className={`duration-option ${duration === 'long' ? 'selected' : ''}`}
+                                    onClick={() => handleDurationChange('long')}
+                                >
+                                    <div className="duration-time">{formatTime(journey.long.duration)}</div>
+                                    <div className="duration-desc">Deep Dive</div>
+                                </button>
+                            </div>
                         </div>
-                        <div className="duration-options">
-                            <button
-                                className={`duration-option ${duration === 'short' ? 'selected' : ''}`}
-                                onClick={() => handleDurationChange('short')}
-                            >
-                                <div className="duration-time">{formatTime(journey.short.duration)}</div>
-                                <div className="duration-desc">Quick Session</div>
-                            </button>
-                            <button
-                                className={`duration-option ${duration === 'long' ? 'selected' : ''}`}
-                                onClick={() => handleDurationChange('long')}
-                            >
-                                <div className="duration-time">{formatTime(journey.long.duration)}</div>
-                                <div className="duration-desc">Deep Dive</div>
-                            </button>
-                        </div>
-                    </div>
+
+                        {/* Custom Phase Duration Selectors */}
+                        {phases.map((phase, index) => phase.customizable && (
+                            <div key={index} className="custom-phase-duration">
+                                <div className="custom-phase-label">
+                                    {phase.name} Duration
+                                </div>
+                                <div className="custom-duration-options">
+                                    {phase.durationOptions.map((dur) => (
+                                        <button
+                                            key={dur}
+                                            className={`custom-duration-btn ${(customPhaseDurations[index] || phase.duration) === dur ? 'selected' : ''}`}
+                                            onClick={() => setCustomPhaseDurations({ ...customPhaseDurations, [index]: dur })}
+                                        >
+                                            {formatTime(dur)}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </>
                 )}
 
                 {/* Current Phase Display */}
