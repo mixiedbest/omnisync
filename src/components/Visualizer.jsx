@@ -237,8 +237,8 @@ export function Visualizer({ isPlaying, currentTrack }) {
     ];
 
     return (
-        <div className="visualizer-container">
-            {/* Mode Selector */}
+        <>
+            {/* Mode Selector - Outside container to avoid pointer-events: none */}
             <div className="visual-mode-selector">
                 <button
                     className="mode-toggle-btn"
@@ -267,31 +267,33 @@ export function Visualizer({ isPlaying, currentTrack }) {
                 )}
             </div>
 
-            {/* Canvas for advanced visualizations */}
-            {visualMode !== 'ambient' && (
-                <canvas ref={canvasRef} className="visualizer-canvas" />
-            )}
+            <div className="visualizer-container">
+                {/* Canvas for advanced visualizations */}
+                {visualMode !== 'ambient' && (
+                    <canvas ref={canvasRef} className="visualizer-canvas" />
+                )}
 
-            {/* Ambient mode (original) */}
-            {visualMode === 'ambient' && (
-                <>
-                    <div
-                        className={`visualizer-bg ${animationMode}`}
-                        style={{ '--active-color': color }}
-                    ></div>
+                {/* Ambient mode (original) */}
+                {visualMode === 'ambient' && (
+                    <>
+                        <div
+                            className={`visualizer-bg ${animationMode}`}
+                            style={{ '--active-color': color }}
+                        ></div>
 
-                    {/* Central Breathing Element */}
-                    {isPlaying && (
-                        <div className="breathing-circle-container">
-                            <div className="breathing-circle" style={{ borderColor: color, boxShadow: `0 0 40px ${color}` }}></div>
-                            <div className="breathing-circle-inner" style={{ background: color }}></div>
-                        </div>
-                    )}
+                        {/* Central Breathing Element */}
+                        {isPlaying && (
+                            <div className="breathing-circle-container">
+                                <div className="breathing-circle" style={{ borderColor: color, boxShadow: `0 0 40px ${color}` }}></div>
+                                <div className="breathing-circle-inner" style={{ background: color }}></div>
+                            </div>
+                        )}
 
-                    {/* Particle Overlay (CSS only) */}
-                    {isPlaying && <div className="particles"></div>}
-                </>
-            )}
-        </div>
+                        {/* Particle Overlay (CSS only) */}
+                        {isPlaying && <div className="particles"></div>}
+                    </>
+                )}
+            </div>
+        </>
     );
 }
