@@ -27,6 +27,7 @@ import { PlaylistSelectorModal } from './components/PlaylistSelectorModal';
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt';
 import { TinnitusTherapy } from './components/TinnitusTherapy';
 import './App.css';
+import './polish.css';
 
 function App() {
   const { play, stop, isPlaying, volume, setVolume, updateLayers, updateNoise, updateSoundscape } = useBinauralBeat();
