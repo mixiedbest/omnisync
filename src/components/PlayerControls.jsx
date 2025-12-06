@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Play, Pause, Volume2, Wind, Timer } from 'lucide-react';
+import { Play, Pause, Volume2, Wind, Timer, SkipBack, SkipForward, Shuffle, Repeat, Repeat1, List } from 'lucide-react';
 import { BreathingPacer } from './BreathingPacer';
 import './PlayerControls.css';
 
@@ -10,7 +10,14 @@ export function PlayerControls({
     onVolumeChange,
     currentTrack,
     sleepTimer = null,
-    onSetSleepTimer = () => { }
+    onSetSleepTimer = () => { },
+    // Playlist props
+    currentPlaylist = null,
+    currentTrackIndex = 0,
+    playlistMode = 'normal',
+    onNextTrack = () => { },
+    onPreviousTrack = () => { },
+    onTogglePlaylistMode = () => { }
 }) {
     const [showPacer, setShowPacer] = useState(false);
 
@@ -23,6 +30,15 @@ export function PlayerControls({
         else onSetSleepTimer(null);
     };
 
+    const getModeIcon = () => {
+        switch (playlistMode) {
+            case 'shuffle': return <Shuffle size={18} />;
+            case 'repeat-one': return <Repeat1 size={18} />;
+            case 'repeat-all': return <Repeat size={18} />;
+            default: return <List size={18} />;
+        }
+    };
+
     return (
         <>
             {showPacer && <BreathingPacer onClose={() => setShowPacer(false)} />}
@@ -31,9 +47,22 @@ export function PlayerControls({
                 <div className="player-info">
                     {currentTrack ? (
                         <>
-                            <div className="track-title">{currentTrack.title}</div>
+                            <div className="track-title">
+                                {currentTrack.title}
+                                {currentPlaylist && (
+                                    <span className="playlist-indicator">
+                                        <List size={14} />
+                                        {currentPlaylist.name}
+                                    </span>
+                                )}
+                            </div>
                             <div className="track-details">
                                 {currentTrack.beat} Hz beat • {currentTrack.left}/{currentTrack.right} Hz
+                                {currentPlaylist && (
+                                    <span className="track-position">
+                                        • Track {currentTrackIndex + 1}/{currentPlaylist.tracks?.length || 0}
+                                    </span>
+                                )}
                                 {sleepTimer && <span className="timer-badge"> • 🌙 {sleepTimer}m</span>}
                             </div>
                         </>
@@ -43,6 +72,26 @@ export function PlayerControls({
                 </div>
 
                 <div className="player-actions">
+                    {currentPlaylist && (
+                        <>
+                            <button
+                                className="action-btn"
+                                onClick={onPreviousTrack}
+                                disabled={!isPlaying}
+                                title="Previous Track"
+                            >
+                                <SkipBack size={20} />
+                            </button>
+                            <button
+                                className={`action-btn ${playlistMode !== 'normal' ? 'active' : ''}`}
+                                onClick={onTogglePlaylistMode}
+                                title={`Mode: ${playlistMode}`}
+                            >
+                                {getModeIcon()}
+                            </button>
+                        </>
+                    )}
+
                     <button
                         className={`action-btn ${showPacer ? 'active' : ''}`}
                         onClick={() => setShowPacer(!showPacer)}
@@ -67,6 +116,17 @@ export function PlayerControls({
                     >
                         {isPlaying ? <Pause size={24} /> : <Play size={24} />}
                     </button>
+
+                    {currentPlaylist && (
+                        <button
+                            className="action-btn"
+                            onClick={onNextTrack}
+                            disabled={!isPlaying}
+                            title="Next Track"
+                        >
+                            <SkipForward size={20} />
+                        </button>
+                    )}
 
                     <div className="volume-control">
                         <Volume2 size={20} />

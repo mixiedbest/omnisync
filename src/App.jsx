@@ -41,6 +41,12 @@ function App() {
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const [itemToAdd, setItemToAdd] = useState(null);
 
+  // Playlist playback state
+  const [currentPlaylist, setCurrentPlaylist] = useState(null);
+  const [playlistQueue, setPlaylistQueue] = useState([]);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [playlistMode, setPlaylistMode] = useState('normal'); // 'normal', 'shuffle', 'repeat-one', 'repeat-all'
+
   // Load favorites from localStorage
   useEffect(() => {
     const savedFavorites = localStorage.getItem('omnisync_favorites');
@@ -226,6 +232,76 @@ function App() {
     setCurrentPage('journey-player');
   };
 
+  // Playlist navigation handlers
+  const handleNextTrack = () => {
+    if (!currentPlaylist || !playlistQueue.length) return;
+
+    let nextIndex;
+    if (playlistMode === 'shuffle') {
+      nextIndex = Math.floor(Math.random() * playlistQueue.length);
+    } else if (playlistMode === 'repeat-one') {
+      nextIndex = currentTrackIndex; // Stay on same track
+    } else {
+      nextIndex = currentTrackIndex + 1;
+      if (nextIndex >= playlistQueue.length) {
+        if (playlistMode === 'repeat-all') {
+          nextIndex = 0; // Loop back to start
+        } else {
+          stop(); // End of playlist
+          return;
+        }
+      }
+    }
+
+    setCurrentTrackIndex(nextIndex);
+    handleSelectFrequency(playlistQueue[nextIndex]);
+  };
+
+  const handlePreviousTrack = () => {
+    if (!currentPlaylist || !playlistQueue.length) return;
+
+    let prevIndex;
+    if (playlistMode === 'shuffle') {
+      prevIndex = Math.floor(Math.random() * playlistQueue.length);
+    } else {
+      prevIndex = currentTrackIndex - 1;
+      if (prevIndex < 0) {
+        if (playlistMode === 'repeat-all') {
+          prevIndex = playlistQueue.length - 1; // Loop to end
+        } else {
+          prevIndex = 0; // Stay at first track
+        }
+      }
+    }
+
+    setCurrentTrackIndex(prevIndex);
+    handleSelectFrequency(playlistQueue[prevIndex]);
+  };
+
+  const handleTogglePlaylistMode = () => {
+    const modes = ['normal', 'shuffle', 'repeat-all', 'repeat-one'];
+    const currentModeIndex = modes.indexOf(playlistMode);
+    const nextMode = modes[(currentModeIndex + 1) % modes.length];
+    setPlaylistMode(nextMode);
+  };
+
+  // Common PlayerControls props
+  const playerControlsProps = {
+    isPlaying,
+    onPlayPause: handlePlayPause,
+    volume,
+    onVolumeChange: setVolume,
+    currentTrack: displayTrack,
+    sleepTimer,
+    onSetSleepTimer: setSleepTimer,
+    currentPlaylist,
+    currentTrackIndex,
+    playlistMode,
+    onNextTrack: handleNextTrack,
+    onPreviousTrack: handlePreviousTrack,
+    onTogglePlaylistMode: handleTogglePlaylistMode
+  };
+
   // Render different pages
   if (currentPage === 'home') {
     return (
@@ -233,6 +309,7 @@ function App() {
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <HomePage onNavigate={handleNavigate} />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -249,6 +326,7 @@ function App() {
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <AboutPage onBack={handleBack} />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -271,6 +349,7 @@ function App() {
           <Disclaimer />
         </div>
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -293,6 +372,7 @@ function App() {
           onAddToPlaylist={handleAddToPlaylist}
         />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -316,6 +396,7 @@ function App() {
           onToggleFavorite={toggleFavorite}
         />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -344,6 +425,7 @@ function App() {
           onSelectJourney={handleSelectJourney}
         />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -373,11 +455,16 @@ function App() {
         <PlaylistsPage
           onBack={() => setCurrentPage('home')}
           onPlayPlaylist={(playlist) => {
-            // Logic to play playlist
-            console.log('Playing playlist:', playlist);
+            if (playlist.tracks && playlist.tracks.length > 0) {
+              setCurrentPlaylist(playlist);
+              setPlaylistQueue(playlist.tracks);
+              setCurrentTrackIndex(0);
+              handleSelectFrequency(playlist.tracks[0]);
+            }
           }}
         />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -399,6 +486,7 @@ function App() {
           isPlaying={isPlaying}
         />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -422,6 +510,7 @@ function App() {
           onToggleFavorite={toggleFavorite}
         />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -445,6 +534,7 @@ function App() {
           onToggleFavorite={toggleFavorite}
         />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -461,6 +551,7 @@ function App() {
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <ConnectionsPage onBack={handleBack} />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -477,6 +568,7 @@ function App() {
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <UserProfilePage onBack={handleBack} />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -495,6 +587,7 @@ function App() {
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
         <SettingsPage onBack={handleBack} />
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
@@ -553,6 +646,7 @@ function App() {
         </footer>
 
         <PlayerControls
+          {...playerControlsProps}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           volume={volume}
