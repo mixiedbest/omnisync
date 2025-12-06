@@ -991,13 +991,13 @@ export function useBinauralBeat() {
                 const { gain } = activeMap.get(type);
                 if (gain) {
                     gain.gain.cancelScheduledValues(now);
-                    gain.gain.setTargetAtTime(targetVol || 0.5, now, 0.2);
+                    gain.gain.setTargetAtTime(targetVol ?? 0.5, now, 0.2);
                 }
             } else {
                 // Start New
                 const gain = ctx.createGain();
                 gain.gain.setValueAtTime(0, now);
-                gain.gain.linearRampToValueAtTime(targetVol || 0.5, now + 1.0); // Slow fade in
+                gain.gain.linearRampToValueAtTime(targetVol ?? 0.5, now + 1.0); // Slow fade in
                 gain.connect(masterGainRef.current);
 
                 const nodes = createSoundscape(ctx, type, gain);
