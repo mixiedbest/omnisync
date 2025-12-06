@@ -1,20 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Play, Pause, SkipForward } from 'lucide-react';
+import { ArrowLeft, Play, Pause, SkipForward, Clock } from 'lucide-react';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
 import './JourneyPlayer.css';
 
 export function JourneyPlayer({ journey, onBack }) {
+    const [duration, setDuration] = useState('short'); // 'short' or 'long'
     const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [phaseProgress, setPhaseProgress] = useState(0);
     const [elapsedTime, setElapsedTime] = useState(0);
+    const [hasStarted, setHasStarted] = useState(false);
 
     const { play, stop } = useBinauralBeat();
     const phaseTimerRef = useRef(null);
     const progressTimerRef = useRef(null);
 
-    const currentPhase = journey.phases[currentPhaseIndex];
-    const isLastPhase = currentPhaseIndex === journey.phases.length - 1;
+    const phases = journey[duration].phases;
+    const totalDuration = journey[duration].duration;
+    const currentPhase = phases[currentPhaseIndex];
+    const isLastPhase = currentPhaseIndex === phases.length - 1;
 
     useEffect(() => {
         return () => {
@@ -26,20 +30,27 @@ export function JourneyPlayer({ journey, onBack }) {
     }, [stop]);
 
     const startPhase = (phaseIndex) => {
-        const phase = journey.phases[phaseIndex];
+        const phase = phases[phaseIndex];
 
         // Play the phase audio
         play(
             phase.freq || 0,
-            phase.freq || 0,
+            (phase.freq || 0) + (phase.bothEars || 0),
             phase.bothEars || 0,
             phase.noiseType || null,
-            phase.soundscapeType || null
+            phase.soundscapeType || null,
+            {
+                binaural: 0.7,
+                bothEars: 0.5,
+                noise: 0.3,
+                soundscape: 0.4
+            }
         );
 
         setCurrentPhaseIndex(phaseIndex);
         setPhaseProgress(0);
         setIsPlaying(true);
+        setHasStarted(true);
 
         // Progress tracker
         const startTime = Date.now();
@@ -52,7 +63,7 @@ export function JourneyPlayer({ journey, onBack }) {
 
         // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
-            if (phaseIndex < journey.phases.length - 1) {
+            if (phaseIndex < phases.length - 1) {
                 nextPhase();
             } else {
                 // Journey complete
@@ -65,7 +76,7 @@ export function JourneyPlayer({ journey, onBack }) {
         if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
         if (progressTimerRef.current) clearInterval(progressTimerRef.current);
 
-        if (currentPhaseIndex < journey.phases.length - 1) {
+        if (currentPhaseIndex < phases.length - 1) {
             startPhase(currentPhaseIndex + 1);
         }
     };
@@ -90,6 +101,17 @@ export function JourneyPlayer({ journey, onBack }) {
         }
     };
 
+    const handleDurationChange = (newDuration) => {
+        if (isPlaying) {
+            endJourney();
+        }
+        setDuration(newDuration);
+        setCurrentPhaseIndex(0);
+        setPhaseProgress(0);
+        setElapsedTime(0);
+        setHasStarted(false);
+    };
+
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
@@ -107,14 +129,39 @@ export function JourneyPlayer({ journey, onBack }) {
 
             <div className="player-container">
                 <div className="journey-header">
-                    <div className="journey-emoji-large">{journey.emoji}</div>
                     <h1 className="journey-title-large">{journey.title}</h1>
                     <p className="journey-subtitle">{journey.description}</p>
                 </div>
 
+                {/* Duration Selector */}
+                {!hasStarted && (
+                    <div className="duration-selector">
+                        <div className="duration-label">
+                            <Clock size={18} />
+                            Choose Duration
+                        </div>
+                        <div className="duration-options">
+                            <button
+                                className={`duration-option ${duration === 'short' ? 'selected' : ''}`}
+                                onClick={() => handleDurationChange('short')}
+                            >
+                                <div className="duration-time">{formatTime(journey.short.duration)}</div>
+                                <div className="duration-desc">Quick Session</div>
+                            </button>
+                            <button
+                                className={`duration-option ${duration === 'long' ? 'selected' : ''}`}
+                                onClick={() => handleDurationChange('long')}
+                            >
+                                <div className="duration-time">{formatTime(journey.long.duration)}</div>
+                                <div className="duration-desc">Deep Dive</div>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {/* Current Phase Display */}
                 <div className="current-phase-card">
-                    <div className="phase-number">Phase {currentPhaseIndex + 1} of {journey.phases.length}</div>
+                    <div className="phase-number">Phase {currentPhaseIndex + 1} of {phases.length}</div>
                     <h2 className="phase-name">{currentPhase.name}</h2>
                     <p className="phase-desc">{currentPhase.desc}</p>
 
@@ -151,13 +198,14 @@ export function JourneyPlayer({ journey, onBack }) {
 
                 {/* Phase Timeline */}
                 <div className="phase-timeline">
-                    {journey.phases.map((phase, index) => (
+                    {phases.map((phase, index) => (
                         <div
                             key={index}
                             className={`timeline-item ${index === currentPhaseIndex ? 'active' : ''} ${index < currentPhaseIndex ? 'completed' : ''}`}
                         >
                             <div className="timeline-dot"></div>
                             <div className="timeline-label">{phase.name}</div>
+                            <div className="timeline-duration">{formatTime(phase.duration)}</div>
                         </div>
                     ))}
                 </div>
