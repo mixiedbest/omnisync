@@ -14,7 +14,8 @@
 
 .breathing-overlay-content {
     width: 90%;
-    max-width: 500px;
+    max-width: 600px;
+    min-height: 500px;
     max-height: 90vh;
     background: rgba(17, 24, 39, 0.95);
     backdrop-filter: blur(12px);
