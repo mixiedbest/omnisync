@@ -297,7 +297,7 @@ export const journeys = [
                 { name: 'Veil Softening', duration: 180, freq: 432, bothEars: 6, noiseType: 'pink', desc: 'Theta induction' },
                 { name: 'Silver Cord Activation', duration: 240, freq: 528, bothEars: 4.5, noiseType: null, desc: 'Inner body expansion' },
                 { name: 'Etheric Lift-Off', duration: 240, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift' },
-                { name: 'Stargate Drift', duration: 300, freq: 432, bothEars: 4, noiseType: null, soundscapeType: 'wind', desc: 'Lucid exploration' },
+                { name: 'Stargate Drift', duration: 300, freq: 432, bothEars: 4, noiseType: null, soundscapeType: 'wind', desc: 'Lucid exploration', loopable: true },
                 { name: 'Drift Return', duration: 120, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment' }
             ]
         },
@@ -307,7 +307,7 @@ export const journeys = [
                 { name: 'Veil Softening', duration: 300, freq: 432, bothEars: 6, noiseType: 'pink', desc: 'Theta induction' },
                 { name: 'Silver Cord Activation', duration: 360, freq: 528, bothEars: 4.5, noiseType: null, desc: 'Inner body expansion' },
                 { name: 'Etheric Lift-Off', duration: 300, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift' },
-                { name: 'Stargate Drift', duration: 600, freq: 432, bothEars: 4, noiseType: null, soundscapeType: 'wind', desc: 'Lucid exploration' },
+                { name: 'Stargate Drift', duration: 600, freq: 432, bothEars: 4, noiseType: null, soundscapeType: 'wind', desc: 'Lucid exploration', loopable: true },
                 { name: 'Drift Return', duration: 360, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment' }
             ]
         }

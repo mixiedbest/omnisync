@@ -61,9 +61,12 @@ export function JourneyPlayer({ journey, onBack }) {
             setElapsedTime(Math.floor(elapsed));
         }, 100);
 
-        // Auto-advance to next phase
+        // Auto-advance to next phase (or loop if loopable)
         phaseTimerRef.current = setTimeout(() => {
-            if (phaseIndex < phases.length - 1) {
+            if (phase.loopable) {
+                // Loop this phase indefinitely
+                startPhase(phaseIndex);
+            } else if (phaseIndex < phases.length - 1) {
                 nextPhase();
             } else {
                 // Journey complete
@@ -161,9 +164,15 @@ export function JourneyPlayer({ journey, onBack }) {
 
                 {/* Current Phase Display */}
                 <div className="current-phase-card">
-                    <div className="phase-number">Phase {currentPhaseIndex + 1} of {phases.length}</div>
+                    <div className="phase-number">
+                        Phase {currentPhaseIndex + 1} of {phases.length}
+                        {currentPhase.loopable && <span className="loop-indicator"> ∞ Looping</span>}
+                    </div>
                     <h2 className="phase-name">{currentPhase.name}</h2>
-                    <p className="phase-desc">{currentPhase.desc}</p>
+                    <p className="phase-desc">
+                        {currentPhase.desc}
+                        {currentPhase.loopable && <span className="loop-hint"> (Will repeat until you advance)</span>}
+                    </p>
 
                     {/* Progress Bar */}
                     <div className="phase-progress-bar">
