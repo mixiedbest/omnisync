@@ -672,8 +672,20 @@ function App() {
         <TinnitusTherapy
           onClose={() => setShowTinnitusTherapy(false)}
           onApply={(settings) => {
-            console.log('Tinnitus therapy settings:', settings);
-            // TODO: Apply notch filter with these settings
+            // Create a tinnitus therapy track
+            const therapyTrack = {
+              id: 'tinnitus-therapy',
+              title: `Tinnitus Relief @ ${settings.frequency}Hz`,
+              desc: `Notched white noise therapy (${settings.notchWidth}Hz notch)`,
+              beat: 0,
+              left: settings.frequency,
+              right: settings.frequency,
+              category: 'Tinnitus Relief',
+              tinnitusSettings: settings
+            };
+
+            // Play the therapy
+            handleSelectFrequency(therapyTrack);
             setShowTinnitusTherapy(false);
           }}
         />
