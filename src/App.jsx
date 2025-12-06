@@ -25,6 +25,7 @@ import { UserProfilePage } from './pages/UserProfilePage';
 import { PlaylistsPage } from './pages/PlaylistsPage';
 import { PlaylistSelectorModal } from './components/PlaylistSelectorModal';
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt';
+import { TinnitusTherapy } from './components/TinnitusTherapy';
 import './App.css';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
   const sleepTimerRef = useRef(null);
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const [itemToAdd, setItemToAdd] = useState(null);
+  const [showTinnitusTherapy, setShowTinnitusTherapy] = useState(false);
 
   // Playlist playback state
   const [currentPlaylist, setCurrentPlaylist] = useState(null);
@@ -624,6 +626,7 @@ function App() {
               onGenerate={handleSelectFrequency}
               onPause={() => { stop(); setCurrentTrack(null); }}
               isActive={currentTrack?.id === 'custom-combined' && isPlaying}
+              onOpenTinnitusTherapy={() => setShowTinnitusTherapy(true)}
             />
           )}
 
@@ -662,6 +665,17 @@ function App() {
           item={itemToAdd}
           onClose={() => setShowPlaylistModal(false)}
           onSelect={handlePlaylistSelected}
+        />
+      )}
+
+      {showTinnitusTherapy && (
+        <TinnitusTherapy
+          onClose={() => setShowTinnitusTherapy(false)}
+          onApply={(settings) => {
+            console.log('Tinnitus therapy settings:', settings);
+            // TODO: Apply notch filter with these settings
+            setShowTinnitusTherapy(false);
+          }}
         />
       )}
 

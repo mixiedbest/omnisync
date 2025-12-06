@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Sliders, Volume2, Zap, Wind, Music, Play, Pause, Save, ListPlus, Plus, X, Headphones, Speaker, Palette, Waves } from 'lucide-react';
 import './CustomGenerator.css';
 
-export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause }) {
+export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause, onOpenTinnitusTherapy }) {
     // Frequency Layers (can add multiple)
     const [frequencyLayers, setFrequencyLayers] = useState([
         { id: 1, carrierFreq: 200, beatFreq: 10, volume: 0.7 }
@@ -384,6 +384,17 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause }) 
                         </>
                     )}
                 </button>
+
+                {onOpenTinnitusTherapy && (
+                    <button
+                        className="tinnitus-therapy-btn"
+                        onClick={onOpenTinnitusTherapy}
+                        title="Customize Tinnitus Relief"
+                    >
+                        <Headphones size={20} />
+                        Tinnitus Relief Therapy
+                    </button>
+                )}
             </div>
         </div>
     );
