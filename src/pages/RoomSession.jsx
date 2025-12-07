@@ -36,8 +36,12 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
     const [postSessionMood, setPostSessionMood] = useState('');
     const [postSessionReflection, setPostSessionReflection] = useState('');
     const [anonymousMode, setAnonymousMode] = useState(isAnonymous);
+    // Journey phase tracking
+    const [currentJourneyPhase, setCurrentJourneyPhase] = useState(0);
+    const [journeyDuration, setJourneyDuration] = useState('short');
     const canvasRef = useRef(null);
     const timerRef = useRef(null);
+    const phaseTimerRef = useRef(null);
 
     const reactions = [
         { icon: Heart, label: 'Love', color: '#ec4899' },
@@ -96,7 +100,7 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionState, isPlaying, room?.sessionDuration]);
 
-    // Mandala visualization
+    // Mandala visualization (Dynamic based on frequency)
     useEffect(() => {
         if (sessionState === 'active' && canvasRef.current && room) {
             const canvas = canvasRef.current;
@@ -114,22 +118,88 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
 
+            // Get current frequency for dynamic visualization
+            const getCurrentFrequency = () => {
+                const params = getPlaybackParams();
+                if (!params) return 10; // Default to 10Hz
+                const avgFreq = (params.left + params.right) / 2;
+                const beatFreq = Math.abs(params.right - params.left);
+                return beatFreq || avgFreq || 10;
+            };
+
             const drawMandala = () => {
+                const freq = getCurrentFrequency();
+
+                // Map frequency to visual parameters
+                // Lower frequencies (1-8 Hz): Slower, larger, warmer colors
+                // Mid frequencies (8-15 Hz): Medium speed, balanced
+                // Higher frequencies (15+ Hz): Faster, smaller, cooler colors
+                const speedMultiplier = Math.max(0.3, Math.min(2, freq / 10));
+                const sizeMultiplier = Math.max(0.7, Math.min(1.5, 15 / freq));
+                const complexityLevel = Math.floor(Math.min(12, Math.max(4, freq / 2)));
+
+                // Color based on frequency
+                let primaryColor, secondaryColor;
+                if (freq < 8) {
+                    // Delta/Theta - Deep purples and blues
+                    primaryColor = '#6366f1';
+                    secondaryColor = '#8b5cf6';
+                } else if (freq < 15) {
+                    // Alpha - Teals and greens
+                    primaryColor = '#14b8a6';
+                    secondaryColor = '#10b981';
+                } else if (freq < 30) {
+                    // Beta - Yellows and oranges
+                    primaryColor = '#f59e0b';
+                    secondaryColor = '#ef4444';
+                } else {
+                    // Gamma - Bright whites and cyans
+                    primaryColor = '#06b6d4';
+                    secondaryColor = '#f0f9ff';
+                }
+
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // Background glow
-                const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 200);
-                gradient.addColorStop(0, `${room.theme === 'cosmic' ? '#8b5cf6' : '#14b8a6'}33`);
+                // Background glow (pulsing with frequency)
+                const glowIntensity = 0.2 + Math.sin(sessionTime * speedMultiplier * 0.05) * 0.1;
+                const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 200 * sizeMultiplier);
+                gradient.addColorStop(0, `${primaryColor}${Math.floor(glowIntensity * 255).toString(16).padStart(2, '0')}`);
                 gradient.addColorStop(1, 'transparent');
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Draw member circles
+                // Draw geometric patterns (complexity based on frequency)
+                for (let layer = 0; layer < 3; layer++) {
+                    const layerRadius = (60 + layer * 40) * sizeMultiplier;
+                    const points = complexityLevel + layer * 2;
+
+                    ctx.beginPath();
+                    for (let i = 0; i <= points; i++) {
+                        const angle = (i * 2 * Math.PI / points) + (sessionTime * speedMultiplier * 0.01 * (layer % 2 === 0 ? 1 : -1));
+                        const r = layerRadius + Math.sin(sessionTime * speedMultiplier * 0.03 + layer) * 10;
+                        const x = centerX + r * Math.cos(angle);
+                        const y = centerY + r * Math.sin(angle);
+
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                    ctx.closePath();
+                    ctx.strokeStyle = layer % 2 === 0 ? primaryColor : secondaryColor;
+                    ctx.lineWidth = 2;
+                    ctx.globalAlpha = 0.6 - layer * 0.15;
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 1;
+
+                // Draw member circles (orbiting speed based on frequency)
                 const numMembers = members.length;
-                const radius = 80 + (numMembers * 10);
+                const radius = (80 + (numMembers * 10)) * sizeMultiplier;
 
                 members.forEach((member, i) => {
-                    const angle = (i * 2 * Math.PI) / numMembers + (sessionTime * 0.01);
+                    const angle = (i * 2 * Math.PI) / numMembers + (sessionTime * speedMultiplier * 0.01);
                     const x = centerX + radius * Math.cos(angle);
                     const y = centerY + radius * Math.sin(angle);
 
@@ -142,11 +212,14 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                     ctx.stroke();
                 });
 
-                // Center pulse
-                const pulseRadius = 30 + Math.sin(sessionTime * 0.05) * 10;
+                // Center pulse (frequency-responsive)
+                const pulseRadius = (30 + Math.sin(sessionTime * speedMultiplier * 0.05) * 10) * sizeMultiplier;
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, pulseRadius, 0, 2 * Math.PI);
-                ctx.fillStyle = room.theme === 'cosmic' ? '#8b5cf644' : '#14b8a644';
+                const pulseGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, pulseRadius);
+                pulseGradient.addColorStop(0, `${primaryColor}88`);
+                pulseGradient.addColorStop(1, `${secondaryColor}44`);
+                ctx.fillStyle = pulseGradient;
                 ctx.fill();
 
                 requestAnimationFrame(drawMandala);
@@ -154,7 +227,7 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
 
             drawMandala();
         }
-    }, [sessionState, members, sessionTime, room.theme]);
+    }, [sessionState, members, sessionTime, room.theme, selectedSound, currentJourneyPhase]);
 
     // Sync Layers seamlessly when Custom Layer/State changes (without restarting Base)
     useEffect(() => {
@@ -189,6 +262,42 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
         updateSoundscape
     ]);
 
+    // Journey Phase Auto-Transition
+    useEffect(() => {
+        if (isPlaying && selectedSound && (selectedSound.short?.phases || selectedSound.long?.phases)) {
+            const phases = selectedSound[journeyDuration]?.phases || selectedSound.short?.phases || selectedSound.long?.phases;
+            if (!phases || phases.length === 0) return;
+
+            const currentPhase = phases[currentJourneyPhase];
+            if (!currentPhase) return;
+
+            const phaseDuration = currentPhase.duration * 1000; // Convert to ms
+
+            // Set timer for next phase
+            phaseTimerRef.current = setTimeout(() => {
+                if (currentJourneyPhase < phases.length - 1) {
+                    setCurrentJourneyPhase(prev => prev + 1);
+                    // Audio will update via the sync effect above
+                }
+            }, phaseDuration);
+
+            return () => {
+                if (phaseTimerRef.current) {
+                    clearTimeout(phaseTimerRef.current);
+                }
+            };
+        }
+    }, [isPlaying, selectedSound, currentJourneyPhase, journeyDuration]);
+
+    // Reset journey phase when sound changes
+    useEffect(() => {
+        setCurrentJourneyPhase(0);
+        if (phaseTimerRef.current) {
+            clearTimeout(phaseTimerRef.current);
+        }
+    }, [selectedSound]);
+
+
     // Helper to construct playback parameters merging Session Sound + Personal Layers + Element
     const getPlaybackParams = (soundOverride = null) => {
         const sound = soundOverride || selectedSound;
@@ -207,10 +316,11 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
             left = stage.left;
             right = stage.right;
         } else if (sound.short?.phases || sound.long?.phases) {
-            // Handle Journeys (default to short phases for now)
-            const phases = sound.short?.phases || sound.long?.phases;
+            // Handle Journeys - use current phase for auto-transitions
+            const phases = sound[journeyDuration]?.phases || sound.short?.phases || sound.long?.phases;
             if (phases && phases.length > 0) {
-                const stage = phases[0];
+                const phaseIndex = Math.min(currentJourneyPhase, phases.length - 1);
+                const stage = phases[phaseIndex];
                 left = stage.freq;
                 right = stage.freq + (stage.bothEars || 0);
 
