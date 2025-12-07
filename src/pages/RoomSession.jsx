@@ -42,6 +42,7 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
     const canvasRef = useRef(null);
     const timerRef = useRef(null);
     const phaseTimerRef = useRef(null);
+    const activePhaseRef = useRef(-1); // Track which phase has an active timer
 
     const reactions = [
         { icon: Heart, label: 'Love', color: '#ec4899' },
@@ -292,31 +293,50 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
             const currentPhase = phases[currentJourneyPhase];
             if (!currentPhase) return;
 
-            const phaseDuration = currentPhase.duration * 1000; // Convert to ms
-
-            // Set timer for next phase
-            phaseTimerRef.current = setTimeout(() => {
-                if (currentJourneyPhase < phases.length - 1) {
-                    setCurrentJourneyPhase(prev => prev + 1);
-                    // Audio will update via the sync effect above
-                }
-            }, phaseDuration);
-
-            return () => {
+            // Only set a timer if we haven't already set one for this phase
+            if (activePhaseRef.current !== currentJourneyPhase) {
+                // Clear any existing timer
                 if (phaseTimerRef.current) {
                     clearTimeout(phaseTimerRef.current);
                 }
+
+                activePhaseRef.current = currentJourneyPhase;
+                const phaseDuration = currentPhase.duration * 1000; // Convert to ms
+
+                // Set timer for next phase
+                phaseTimerRef.current = setTimeout(() => {
+                    if (currentJourneyPhase < phases.length - 1) {
+                        setCurrentJourneyPhase(prev => prev + 1);
+                    }
+                }, phaseDuration);
+            }
+
+            return () => {
+                // Don't clear on unmount if we're mid-journey
             };
         }
-    }, [isPlaying, selectedSound, currentJourneyPhase, journeyDuration]);
+    }, [isPlaying, selectedSound, journeyDuration, currentJourneyPhase]);
 
-    // Reset journey phase when sound changes
+    // Reset journey phase when sound changes or stops
     useEffect(() => {
         setCurrentJourneyPhase(0);
+        activePhaseRef.current = -1;
         if (phaseTimerRef.current) {
             clearTimeout(phaseTimerRef.current);
+            phaseTimerRef.current = null;
         }
     }, [selectedSound]);
+
+    // Clear timer when stopping
+    useEffect(() => {
+        if (!isPlaying) {
+            if (phaseTimerRef.current) {
+                clearTimeout(phaseTimerRef.current);
+                phaseTimerRef.current = null;
+            }
+            activePhaseRef.current = -1;
+        }
+    }, [isPlaying]);
 
 
     // Helper to construct playback parameters merging Session Sound + Personal Layers + Element
