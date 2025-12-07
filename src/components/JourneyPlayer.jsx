@@ -54,19 +54,19 @@ export function JourneyPlayer({ journey, onBack }) {
         setIsPlaying(true);
         setHasStarted(true);
 
-        // Reset progress if starting fresh (not resuming)
-        if (resumeFrom === 0) {
-            setPhaseProgress(0);
-            setElapsedTime(0);
-        }
-
         // Use custom duration if set, otherwise use default
         const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
         const remainingDuration = phaseDuration - resumeFrom;
 
         console.log(`[Journey] Phase duration: ${phaseDuration}s, remaining: ${remainingDuration}s`);
 
-        // Progress tracker
+        // IMPORTANT: Reset progress BEFORE creating interval to avoid stale state
+        if (resumeFrom === 0) {
+            setPhaseProgress(0);
+            setElapsedTime(0);
+        }
+
+        // Progress tracker - create AFTER state reset
         const startTime = Date.now() - (resumeFrom * 1000);
         let intervalCount = 0;
 
@@ -85,8 +85,9 @@ export function JourneyPlayer({ journey, onBack }) {
                     console.log(`[Journey] Interval tick ${intervalCount}: elapsed=${elapsed.toFixed(1)}s, progress=${progress.toFixed(1)}%`);
                 }
 
-                setPhaseProgress(progress);
-                setElapsedTime(Math.floor(elapsed));
+                // Use functional updates to avoid stale state
+                setPhaseProgress(() => progress);
+                setElapsedTime(() => Math.floor(elapsed));
             }, 100);
             console.log(`[Journey] setInterval created, ref ID: ${progressTimerRef.current}`);
         } catch (error) {
