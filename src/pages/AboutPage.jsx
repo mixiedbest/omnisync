@@ -204,7 +204,102 @@ export function AboutPage({ onBack }) {
                     )}
                 </div>
 
-                {/* Section 2: About the Creators */}
+                {/* Section 2: Breathing Techniques */}
+                <div className="expandable-section">
+                    <button
+                        className={`section-header ${expandedSection === 'breathing' ? 'active' : ''}`}
+                        onClick={() => toggleSection('breathing')}
+                    >
+                        <h2>Breathing Techniques</h2>
+                        {expandedSection === 'breathing' ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                    </button>
+
+                    {expandedSection === 'breathing' && (
+                        <div className="section-content fade-in">
+                            <p className="about-intro">
+                                Breathing is the one system in the body that works automatically and can be consciously controlled:
+                                a bridge between the unconscious mind and intentional awareness. When you learn how to breathe well,
+                                you gain direct access to your nervous system, your emotional state, and even your energy levels.
+                            </p>
+
+                            <section className="brainwave-section">
+                                <div className="brainwave-card">
+                                    <h4>4–7–8 Breathing (The Nervous System Reset)</h4>
+                                    <p>
+                                        The 4–7–8 breath is designed to gently slow the body and calm the mind. You inhale for 4 seconds,
+                                        hold for 7, and exhale for 8. This long exhale activates the parasympathetic nervous system:
+                                        the body's natural "rest & restore" mode, helping reduce stress, soften anxiety, and make it
+                                        easier to fall asleep. Think of it as a built-in reset for your internal rhythm.
+                                    </p>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>Box Breathing (The Stabilizer)</h4>
+                                    <p>
+                                        Box Breathing follows a simple pattern: inhale 4, hold 4, exhale 4, hold 4. Athletes, performers,
+                                        and the military use this to sharpen focus under pressure. This technique balances the breath,
+                                        steadies the heart rate, and clears mental clutter. It's perfect for grounding, centering, and
+                                        bringing the mind back into alignment with the present moment.
+                                    </p>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>Wim Hof Breathing (The Energizer)</h4>
+                                    <p>
+                                        This technique uses repeated rounds of powerful, fast inhalations and relaxed exhalations,
+                                        followed by breath retention. It increases circulation, boosts energy, and can create a warm,
+                                        tingling, almost electric sensation throughout the body. Wim Hof breathing helps you tap into
+                                        deeper layers of resilience, immune strength, and mental clarity: a powerful practice for those
+                                        wanting to push boundaries safely.
+                                    </p>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>Coherent Breathing (5–5) (The Harmony Breath)</h4>
+                                    <p>
+                                        Coherent breathing means breathing in for 5 seconds and out for 5: a smooth, balanced rhythm
+                                        that naturally synchronizes heart and mind. This steady pace increases heart-rate variability (HRV),
+                                        which is linked to emotional regulation, deep calm, and improved mood. It's one of the simplest
+                                        ways to regulate your whole system and return to inner equilibrium.
+                                    </p>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>Energizing Breath (3–3–6) (The Activation Breath)</h4>
+                                    <p>
+                                        This breath uses a shorter inhale (3), short hold (3), and a longer exhale (6). The extended
+                                        release clears carbon dioxide efficiently and brings fresh oxygen into muscles and brain. It wakes
+                                        up your system without creating jitteriness: offering clean, grounded energy ideal for morning
+                                        routines, creativity sessions, or moments when you need a natural lift.
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section className="technology-section">
+                                <h3>Why Learning to Breathe Is Important</h3>
+                                <div className="tech-card">
+                                    <p>
+                                        Most people spend their lives breathing shallowly without realizing it. Relearning how to breathe
+                                        is like rediscovering a built-in healing system your body has had all along.
+                                    </p>
+                                    <h5>Intentional breathing can:</h5>
+                                    <ul>
+                                        <li>Reduce stress and anxiety by calming the vagus nerve</li>
+                                        <li>Improve sleep and rest quality</li>
+                                        <li>Increase focus and mental clarity</li>
+                                        <li>Support digestion and the immune system</li>
+                                        <li>Balance emotions and reduce reactivity</li>
+                                        <li>Enhance meditation, creativity, and intuitive awareness</li>
+                                        <li>Regulate heart rate and blood pressure</li>
+                                        <li>Deepen the effects of healing sound, frequencies, and relaxation practices</li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    )}
+                </div>
+
+                {/* Section 3: About the Creators */}
                 <div className="expandable-section">
                     <button
                         className={`section-header ${expandedSection === 'creators' ? 'active' : ''}`}
