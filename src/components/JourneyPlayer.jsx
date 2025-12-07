@@ -33,7 +33,6 @@ export function JourneyPlayer({ journey, onBack }) {
 
     const startPhase = (phaseIndex, resumeFrom = 0) => {
         const phase = phases[phaseIndex];
-        addLog(`Starting phase ${phaseIndex}: ${phase.name}`);
 
         // Play the phase audio
         play(
