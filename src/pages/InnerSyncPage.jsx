@@ -34,6 +34,11 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
     const [gratitudeEntries, setGratitudeEntries] = useState([]);
     const [todayGratitude, setTodayGratitude] = useState('');
     const [additionalGratitude, setAdditionalGratitude] = useState(['', '', '']);
+    // Dream Journal State
+    const [dreamEntries, setDreamEntries] = useState([]);
+    const [currentDream, setCurrentDream] = useState('');
+    const [dreamMood, setDreamMood] = useState('');
+    const [dreamSymbols, setDreamSymbols] = useState('');
 
     useEffect(() => {
         // Load username from localStorage
@@ -53,6 +58,12 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
         const savedGratitude = localStorage.getItem('omnisync_gratitude');
         if (savedGratitude) {
             setGratitudeEntries(JSON.parse(savedGratitude));
+        }
+
+        // Load dream entries
+        const savedDreams = localStorage.getItem('omnisync_dreams');
+        if (savedDreams) {
+            setDreamEntries(JSON.parse(savedDreams));
         }
     }, []);
 
@@ -116,6 +127,41 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
 
         setTodayGratitude('');
         setAdditionalGratitude(['', '', '']);
+    };
+
+    const handleSaveDream = () => {
+        if (!currentDream.trim()) return;
+
+        const newDream = {
+            id: Date.now(),
+            date: new Date().toLocaleDateString(),
+            timestamp: new Date().toISOString(),
+            content: currentDream,
+            mood: dreamMood,
+            symbols: dreamSymbols.split(',').map(s => s.trim()).filter(s => s)
+        };
+
+        const updatedDreams = [newDream, ...dreamEntries];
+        setDreamEntries(updatedDreams);
+        localStorage.setItem('omnisync_dreams', JSON.stringify(updatedDreams));
+
+        setCurrentDream('');
+        setDreamMood('');
+        setDreamSymbols('');
+    };
+
+    const playThetaPreset = () => {
+        // Theta waves (4-8 Hz) for dream recall and maintaining hypnagogic state
+        onPlay({
+            id: 'theta-dream-recall',
+            title: 'Dream Recall (Theta)',
+            desc: 'Maintain theta state for dream journaling',
+            left: 200,
+            right: 206, // 6 Hz theta
+            beat: 6,
+            noiseType: null,
+            type: null
+        });
     };
 
     const currentEmotions = [
@@ -521,6 +567,120 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
                                                 <span>→</span>
                                                 <span>After: {entry.moodAfter}</span>
                                             </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Dream Journaling Section */}
+                    <div className="dream-journal-section" style={{ marginTop: '32px' }}>
+                        <div className="gratitude-card">
+                            <div className="gratitude-header">
+                                <Moon size={20} className="gratitude-icon" />
+                                <h4>Dream Journal</h4>
+                            </div>
+                            <p className="gratitude-prompt">Capture your dreams upon waking</p>
+
+                            {/* Theta Preset Button */}
+                            <button
+                                className="theta-preset-btn"
+                                onClick={playThetaPreset}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px',
+                                    marginBottom: '16px',
+                                    background: 'rgba(139, 92, 246, 0.2)',
+                                    border: '1px solid rgba(139, 92, 246, 0.4)',
+                                    borderRadius: '8px',
+                                    color: 'var(--accent-purple)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '8px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '500'
+                                }}
+                            >
+                                <Brain size={16} />
+                                Play Theta Preset (6 Hz) - Maintain Dream State
+                            </button>
+
+                            <div className="gratitude-input-group">
+                                <textarea
+                                    className="gratitude-input"
+                                    placeholder="Describe your dream..."
+                                    value={currentDream}
+                                    onChange={(e) => setCurrentDream(e.target.value)}
+                                    rows={4}
+                                    style={{ resize: 'vertical', fontFamily: 'inherit' }}
+                                />
+
+                                <input
+                                    type="text"
+                                    className="gratitude-input extra"
+                                    placeholder="Dream mood/feeling (e.g., peaceful, vivid, lucid)"
+                                    value={dreamMood}
+                                    onChange={(e) => setDreamMood(e.target.value)}
+                                />
+
+                                <input
+                                    type="text"
+                                    className="gratitude-input extra"
+                                    placeholder="Key symbols (comma-separated)"
+                                    value={dreamSymbols}
+                                    onChange={(e) => setDreamSymbols(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="gratitude-actions">
+                                <button
+                                    className="add-gratitude-btn"
+                                    onClick={handleSaveDream}
+                                    disabled={!currentDream.trim()}
+                                >
+                                    Log Dream
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Dream History */}
+                        <div className="history-column" style={{ marginTop: '24px' }}>
+                            <h4 className="history-title">Dream Log</h4>
+                            {dreamEntries.length === 0 ? (
+                                <p className="empty-text">No dream entries yet.</p>
+                            ) : (
+                                <div className="gratitude-list">
+                                    {dreamEntries.map(entry => (
+                                        <div key={entry.id} className="gratitude-entry-card" style={{ borderLeft: '3px solid var(--accent-purple)' }}>
+                                            <span className="entry-date-sm">{entry.date}</span>
+                                            <p className="gratitude-main">{entry.content}</p>
+                                            {entry.mood && (
+                                                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginTop: '8px' }}>
+                                                    Mood: {entry.mood}
+                                                </p>
+                                            )}
+                                            {entry.symbols && entry.symbols.length > 0 && (
+                                                <div style={{ marginTop: '8px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                    {entry.symbols.map((symbol, i) => (
+                                                        <span
+                                                            key={i}
+                                                            style={{
+                                                                fontSize: '11px',
+                                                                padding: '4px 8px',
+                                                                background: 'rgba(139, 92, 246, 0.2)',
+                                                                border: '1px solid rgba(139, 92, 246, 0.3)',
+                                                                borderRadius: '12px',
+                                                                color: 'var(--accent-purple)'
+                                                            }}
+                                                        >
+                                                            {symbol}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
