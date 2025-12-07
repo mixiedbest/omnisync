@@ -227,6 +227,22 @@ export function JourneyPlayer({ journey, onBack }) {
                     <div className="phase-time">
                         {formatTime(elapsedTime)} / {formatTime(currentPhase.duration)}
                     </div>
+
+                    {/* Debug Info */}
+                    <div style={{
+                        marginTop: '8px',
+                        padding: '8px',
+                        background: 'rgba(255,255,255,0.1)',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        fontFamily: 'monospace'
+                    }}>
+                        <div>Progress: {phaseProgress.toFixed(1)}%</div>
+                        <div>Elapsed: {elapsedTime}s</div>
+                        <div>Phase Index: {currentPhaseIndex}</div>
+                        <div>Timer Active: {progressTimerRef.current ? 'YES' : 'NO'}</div>
+                        <div>Playing: {isPlaying ? 'YES' : 'NO'}</div>
+                    </div>
                 </div>
 
                 {/* Controls */}
