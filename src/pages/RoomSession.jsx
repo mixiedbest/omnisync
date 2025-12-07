@@ -621,67 +621,65 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                         </div>
                     </div>
 
-                    {/* Mode Selection (Host Only) */}
-                    {members[0].isHost && (
-                        <div className="room-mode-selector">
-                            <h3>Your Mode</h3>
-                            <div className="room-mode-options">
-                                <button
-                                    className={`room-mode-option ${userMode === 'listen' ? 'selected' : ''}`}
-                                    onClick={() => setUserMode('listen')}
-                                >
-                                    <Volume2 size={20} />
-                                    <span>Listen Only</span>
-                                </button>
-                                <button
-                                    className={`room-mode-option ${userMode === 'add-tone' ? 'selected' : ''}`}
-                                    onClick={() => setUserMode('add-tone')}
-                                >
-                                    <Zap size={20} />
-                                    <span>Add Personal Tone</span>
-                                </button>
-                            </div>
+                    {/* Mode Selection */}
+                    <div className="room-mode-selector">
+                        <h3>Your Mode</h3>
+                        <div className="room-mode-options">
+                            <button
+                                className={`room-mode-option ${userMode === 'listen' ? 'selected' : ''}`}
+                                onClick={() => setUserMode('listen')}
+                            >
+                                <Volume2 size={20} />
+                                <span>Listen Only</span>
+                            </button>
+                            <button
+                                className={`room-mode-option ${userMode === 'add-tone' ? 'selected' : ''}`}
+                                onClick={() => setUserMode('add-tone')}
+                            >
+                                <Zap size={20} />
+                                <span>Add Personal Tone</span>
+                            </button>
+                        </div>
 
-                            {/* Personal Tone Configuration */}
-                            {userMode === 'add-tone' && (
-                                <div className="personal-tone-config" style={{
-                                    marginTop: '16px',
-                                    background: 'rgba(255, 255, 255, 0.05)',
-                                    padding: '16px',
-                                    borderRadius: '12px',
-                                    border: '1px solid rgba(139, 92, 246, 0.2)'
-                                }}>
-                                    <h4 style={{ marginBottom: '12px', color: 'var(--text-primary)', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <Sliders size={14} /> Configure Tone
-                                    </h4>
-                                    <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                                        <div style={{ flex: 1, minWidth: '120px' }}>
-                                            <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
-                                                Frequency: {personalToneFreq} Hz
-                                            </label>
-                                            <input
-                                                type="range" min="50" max="800" step="1"
-                                                value={personalToneFreq}
-                                                onChange={(e) => setPersonalToneFreq(Number(e.target.value))}
-                                                style={{ width: '100%', accentColor: '#8b5cf6' }}
-                                            />
-                                        </div>
-                                        <div style={{ flex: 1, minWidth: '120px' }}>
-                                            <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
-                                                Volume: {Math.round(personalToneVol * 100)}%
-                                            </label>
-                                            <input
-                                                type="range" min="0" max="1" step="0.05"
-                                                value={personalToneVol}
-                                                onChange={(e) => setPersonalToneVol(Number(e.target.value))}
-                                                style={{ width: '100%', accentColor: '#8b5cf6' }}
-                                            />
-                                        </div>
+                        {/* Personal Tone Configuration */}
+                        {userMode === 'add-tone' && (
+                            <div className="personal-tone-config" style={{
+                                marginTop: '16px',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                padding: '16px',
+                                borderRadius: '12px',
+                                border: '1px solid rgba(139, 92, 246, 0.2)'
+                            }}>
+                                <h4 style={{ marginBottom: '12px', color: 'var(--text-primary)', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <Sliders size={14} /> Configure Tone
+                                </h4>
+                                <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                                    <div style={{ flex: 1, minWidth: '120px' }}>
+                                        <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
+                                            Frequency: {personalToneFreq} Hz
+                                        </label>
+                                        <input
+                                            type="range" min="50" max="800" step="1"
+                                            value={personalToneFreq}
+                                            onChange={(e) => setPersonalToneFreq(Number(e.target.value))}
+                                            style={{ width: '100%', accentColor: '#8b5cf6' }}
+                                        />
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: '120px' }}>
+                                        <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
+                                            Volume: {Math.round(personalToneVol * 100)}%
+                                        </label>
+                                        <input
+                                            type="range" min="0" max="1" step="0.05"
+                                            value={personalToneVol}
+                                            onChange={(e) => setPersonalToneVol(Number(e.target.value))}
+                                            style={{ width: '100%', accentColor: '#8b5cf6' }}
+                                        />
                                     </div>
                                 </div>
-                            )}
-                        </div>
-                    )}
+                            </div>
+                        )}
+                    </div>
 
                     {/* Sound Selection (Host) */}
                     {members[0].isHost && (
