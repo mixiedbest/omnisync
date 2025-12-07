@@ -105,9 +105,7 @@ export function JourneyPlayer({ journey, onBack }) {
     }, [isPlaying, hasStarted, currentPhaseIndex, customPhaseDurations, phases, pausedAt]);
 
     const nextPhase = () => {
-        console.log(`[Journey] nextPhase called, current: ${currentPhaseIndex}, next: ${currentPhaseIndex + 1}`);
         if (phaseTimerRef.current) {
-            console.log(`[Journey] Clearing phase timer ${phaseTimerRef.current}`);
             clearTimeout(phaseTimerRef.current);
         }
 
@@ -117,9 +115,7 @@ export function JourneyPlayer({ journey, onBack }) {
     };
 
     const endJourney = () => {
-        console.log('[Journey] endJourney called');
         if (phaseTimerRef.current) {
-            console.log(`[Journey] Clearing phase timer ${phaseTimerRef.current} in endJourney`);
             clearTimeout(phaseTimerRef.current);
         }
         if (progressTimerRef.current) clearInterval(progressTimerRef.current);
@@ -129,10 +125,8 @@ export function JourneyPlayer({ journey, onBack }) {
     };
 
     const handlePlayPause = () => {
-        console.log(`[Journey] handlePlayPause called, isPlaying: ${isPlaying}`);
         if (isPlaying) {
             // Pause
-            console.log('[Journey] Pausing...');
             if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
             if (progressTimerRef.current) clearInterval(progressTimerRef.current);
             stop();
@@ -140,7 +134,6 @@ export function JourneyPlayer({ journey, onBack }) {
             setPausedAt(elapsedTime); // Save current elapsed time
         } else {
             // Resume or start
-            console.log(`[Journey] Starting/Resuming... hasStarted: ${hasStarted}, pausedAt: ${pausedAt}`);
             if (hasStarted) {
                 // Resume from where we paused
                 startPhase(currentPhaseIndex, pausedAt);
