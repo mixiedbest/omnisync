@@ -5,6 +5,7 @@ import { journeys } from '../data/journeys';
 import { soundscapes } from '../data/soundscapes';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
 import { CustomGenerator } from '../components/CustomGenerator';
+import { BreathingPacer } from '../components/BreathingPacer';
 import './RoomSession.css';
 
 export function RoomSession({ room, onBack, username, isAnonymous = false }) {
@@ -967,6 +968,32 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                         </div>
                     </div>
                 </div>
+
+                {/* Breathing Pacer for Journey Mode */}
+                {isPlaying && selectedSound?.short?.phases && (() => {
+                    const phases = selectedSound[journeyDuration]?.phases || selectedSound.short?.phases;
+                    const phaseIndex = Math.min(currentJourneyPhase, phases.length - 1);
+                    const currentPhase = phases[phaseIndex];
+                    const breathingPattern = currentPhase?.breathingPattern || 'box';
+
+                    return (
+                        <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            zIndex: 100,
+                            pointerEvents: 'none'
+                        }}>
+                            <div style={{ pointerEvents: 'auto' }}>
+                                <BreathingPacer
+                                    pattern={breathingPattern}
+                                    onClose={() => { }}
+                                />
+                            </div>
+                        </div>
+                    );
+                })()}
 
                 {/* Reactions Bar */}
                 <div className="reactions-bar">

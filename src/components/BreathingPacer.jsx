@@ -40,8 +40,8 @@ const BREATHING_PATTERNS = {
     }
 };
 
-export function BreathingPacer({ onClose }) {
-    const [selectedPattern, setSelectedPattern] = useState('box');
+export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
+    const [selectedPattern, setSelectedPattern] = useState(initialPattern);
     const [text, setText] = useState('Inhale');
     const [phaseIndex, setPhaseIndex] = useState(0);
     const [showSettings, setShowSettings] = useState(false);
