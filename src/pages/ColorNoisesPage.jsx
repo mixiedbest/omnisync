@@ -2,7 +2,7 @@ import { ArrowLeft, Play, Pause } from 'lucide-react';
 import { colorNoises } from '../data/colorNoises';
 import './ColorNoisesPage.css';
 
-export function ColorNoisesPage({ onBack, onPlay, currentTrack, isPlaying }) {
+export function ColorNoisesPage({ onBack, onPlay, onPlayPause, currentTrack, isPlaying }) {
     return (
         <div className="color-noises-page">
             <div className="page-header">
@@ -29,7 +29,13 @@ export function ColorNoisesPage({ onBack, onPlay, currentTrack, isPlaying }) {
                                 <h2 className="noise-title">{noise.title}</h2>
                                 <button
                                     className={`play-button ${isActive && isPlaying ? 'playing' : ''}`}
-                                    onClick={() => onPlay(noise)}
+                                    onClick={() => {
+                                        if (isActive && isPlaying) {
+                                            onPlayPause();
+                                        } else {
+                                            onPlay(noise);
+                                        }
+                                    }}
                                 >
                                     {isActive && isPlaying ? <Pause size={24} /> : <Play size={24} />}
                                 </button>

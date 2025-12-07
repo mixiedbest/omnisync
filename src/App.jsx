@@ -507,6 +507,7 @@ function App() {
         <ColorNoisesPage
           onBack={handleBack}
           onPlay={handleSelectFrequency}
+          onPlayPause={handlePlayPause}
           currentTrack={currentTrack}
           isPlaying={isPlaying}
           favorites={favorites}
