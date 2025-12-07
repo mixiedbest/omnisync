@@ -68,9 +68,16 @@ export function JourneyPlayer({ journey, onBack }) {
 
         // Progress tracker
         const startTime = Date.now() - (resumeFrom * 1000);
+        let intervalCount = 0;
         progressTimerRef.current = setInterval(() => {
             const elapsed = (Date.now() - startTime) / 1000;
             const progress = Math.min((elapsed / phaseDuration) * 100, 100);
+            intervalCount++;
+
+            if (intervalCount % 10 === 0) { // Log every second
+                console.log(`[Journey] Interval tick ${intervalCount}: elapsed=${elapsed.toFixed(1)}s, progress=${progress.toFixed(1)}%`);
+            }
+
             setPhaseProgress(progress);
             setElapsedTime(Math.floor(elapsed));
         }, 100);
@@ -108,8 +115,10 @@ export function JourneyPlayer({ journey, onBack }) {
     };
 
     const handlePlayPause = () => {
+        console.log(`[Journey] handlePlayPause called, isPlaying: ${isPlaying}`);
         if (isPlaying) {
             // Pause
+            console.log('[Journey] Pausing...');
             if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
             if (progressTimerRef.current) clearInterval(progressTimerRef.current);
             stop();
@@ -117,6 +126,7 @@ export function JourneyPlayer({ journey, onBack }) {
             setPausedAt(elapsedTime); // Save current elapsed time
         } else {
             // Resume or start
+            console.log(`[Journey] Starting/Resuming... hasStarted: ${hasStarted}, pausedAt: ${pausedAt}`);
             if (hasStarted) {
                 // Resume from where we paused
                 startPhase(currentPhaseIndex, pausedAt);
