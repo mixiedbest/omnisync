@@ -78,7 +78,7 @@ export function HomePage({ onNavigate }) {
             id: 'about',
             title: 'About',
             icon: Info,
-            description: 'Learn about brainwaves & sound healing'
+            description: 'Brainwaves, breathing techniques & creators'
         },
         {
             id: 'disclaimer',
