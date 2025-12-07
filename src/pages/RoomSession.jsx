@@ -305,8 +305,11 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
 
                 // Set timer for next phase
                 phaseTimerRef.current = setTimeout(() => {
-                    if (currentJourneyPhase < phases.length - 1) {
-                        setCurrentJourneyPhase(prev => prev + 1);
+                    const nextPhase = currentJourneyPhase + 1;
+                    if (nextPhase < phases.length) {
+                        // Update ref BEFORE setting state to prevent race condition
+                        activePhaseRef.current = nextPhase;
+                        setCurrentJourneyPhase(nextPhase);
                     }
                 }, phaseDuration);
             }
