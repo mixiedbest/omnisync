@@ -89,7 +89,19 @@ export function JourneyPlayer({ journey, onBack }) {
             }
         }, remainingDuration * 1000);
 
-        addLog(`Timer ID: ${phaseTimerRef.current}`);
+        const timerId = phaseTimerRef.current;
+        addLog(`Timer ID: ${timerId}`);
+
+        // Watchdog: Check every 10 seconds if timer still exists
+        const watchdogInterval = setInterval(() => {
+            if (phaseTimerRef.current !== timerId) {
+                addLog(`⚠️ Timer ${timerId} was cleared!`);
+                clearInterval(watchdogInterval);
+            }
+        }, 10000);
+
+        // Clear watchdog after phase duration + 5s
+        setTimeout(() => clearInterval(watchdogInterval), (remainingDuration + 5) * 1000);
     };
 
     // Progress tracking via useEffect (runs every 100ms when playing)
