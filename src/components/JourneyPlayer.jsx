@@ -11,6 +11,7 @@ export function JourneyPlayer({ journey, onBack }) {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [hasStarted, setHasStarted] = useState(false);
     const [customPhaseDurations, setCustomPhaseDurations] = useState({});
+    const [pausedAt, setPausedAt] = useState(0); // Track elapsed time when paused
 
     const { play, stop } = useBinauralBeat();
     const phaseTimerRef = useRef(null);
@@ -30,7 +31,7 @@ export function JourneyPlayer({ journey, onBack }) {
         };
     }, [stop]);
 
-    const startPhase = (phaseIndex) => {
+    const startPhase = (phaseIndex, resumeFrom = 0) => {
         const phase = phases[phaseIndex];
 
         // Play the phase audio
@@ -49,15 +50,15 @@ export function JourneyPlayer({ journey, onBack }) {
         );
 
         setCurrentPhaseIndex(phaseIndex);
-        setPhaseProgress(0);
         setIsPlaying(true);
         setHasStarted(true);
 
         // Use custom duration if set, otherwise use default
         const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
+        const remainingDuration = phaseDuration - resumeFrom;
 
         // Progress tracker
-        const startTime = Date.now();
+        const startTime = Date.now() - (resumeFrom * 1000);
         progressTimerRef.current = setInterval(() => {
             const elapsed = (Date.now() - startTime) / 1000;
             const progress = Math.min((elapsed / phaseDuration) * 100, 100);
@@ -68,12 +69,13 @@ export function JourneyPlayer({ journey, onBack }) {
         // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
             if (phaseIndex < phases.length - 1) {
+                setPausedAt(0); // Reset pause tracker
                 nextPhase();
             } else {
                 // Journey complete
                 endJourney();
             }
-        }, phaseDuration * 1000);
+        }, remainingDuration * 1000);
     };
 
     const nextPhase = () => {
@@ -90,6 +92,7 @@ export function JourneyPlayer({ journey, onBack }) {
         if (progressTimerRef.current) clearInterval(progressTimerRef.current);
         stop();
         setIsPlaying(false);
+        setPausedAt(0);
     };
 
     const handlePlayPause = () => {
@@ -99,9 +102,16 @@ export function JourneyPlayer({ journey, onBack }) {
             if (progressTimerRef.current) clearInterval(progressTimerRef.current);
             stop();
             setIsPlaying(false);
+            setPausedAt(elapsedTime); // Save current elapsed time
         } else {
             // Resume or start
-            startPhase(currentPhaseIndex);
+            if (hasStarted) {
+                // Resume from where we paused
+                startPhase(currentPhaseIndex, pausedAt);
+            } else {
+                // Start fresh
+                startPhase(currentPhaseIndex);
+            }
         }
     };
 
