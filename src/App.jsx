@@ -524,7 +524,7 @@ function App() {
     );
   }
 
-  if (currentPage === 'innersync') {
+  if (currentPage === 'innersync' || currentPage === 'innersync-dream') {
     return (
       <>
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
@@ -535,6 +535,7 @@ function App() {
           isPlaying={isPlaying}
           favorites={favorites}
           onToggleFavorite={toggleFavorite}
+          initialTab={currentPage === 'innersync-dream' ? 'journal' : 'energy-profiles'}
         />
         <PlayerControls
           {...playerControlsProps}

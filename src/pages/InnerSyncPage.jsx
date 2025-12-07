@@ -7,10 +7,10 @@ const iconMap = {
     Diamond, Zap, Flame, Heart, Feather, Shield, Palette, Waves, Rocket
 };
 
-export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorites = [], onToggleFavorite }) {
+export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorites = [], onToggleFavorite, initialTab = 'energy-profiles' }) {
     const [username, setUsername] = useState('');
     const [hasUsername, setHasUsername] = useState(false);
-    const [activeTab, setActiveTab] = useState('energy-profiles'); // 'energy-profiles', 'favorites', 'journal', 'insights'
+    const [activeTab, setActiveTab] = useState(initialTab); // 'energy-profiles', 'favorites', 'journal', 'insights'
     const [selectedDuration, setSelectedDuration] = useState('short'); // 'short' or 'long'
 
     // Aura Scan State Removed

@@ -59,6 +59,21 @@ export function SettingsPage({ onBack }) {
                             }
                         </button>
                     </div>
+                    <div className="setting-item">
+                        <div className="setting-info">
+                            <span className="setting-label">Dream Journal Quick Access</span>
+                            <span className="setting-desc">Show quick access button on home page for dream journaling</span>
+                        </div>
+                        <button
+                            className="toggle-btn"
+                            onClick={() => toggleSetting('dreamJournalQuickAccess')}
+                        >
+                            {settings.dreamJournalQuickAccess ?
+                                <ToggleRight size={40} className="toggle-on" /> :
+                                <ToggleLeft size={40} className="toggle-off" />
+                            }
+                        </button>
+                    </div>
                 </div>
 
                 {/* Privacy Settings */}

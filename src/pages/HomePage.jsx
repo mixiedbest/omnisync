@@ -1,7 +1,18 @@
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings, List } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings, List, Moon } from 'lucide-react';
 import './HomePage.css';
 
 export function HomePage({ onNavigate }) {
+    const [showDreamJournalButton, setShowDreamJournalButton] = useState(false);
+
+    useEffect(() => {
+        const savedSettings = localStorage.getItem('omnisync_settings');
+        if (savedSettings) {
+            const settings = JSON.parse(savedSettings);
+            setShowDreamJournalButton(settings.dreamJournalQuickAccess || false);
+        }
+    }, []);
+
     const navItems = [
         {
             id: 'presets',
@@ -83,6 +94,46 @@ export function HomePage({ onNavigate }) {
                 <img src="/omnisync-logo.png" alt="OMNISYNC" className="home-logo" />
                 <p className="home-subtitle">Please put on headphones and enjoy 🎧</p>
             </div>
+
+            {showDreamJournalButton && (
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: '24px',
+                    marginTop: '-12px'
+                }}>
+                    <button
+                        className="dream-journal-quick-btn"
+                        onClick={() => onNavigate('innersync-dream')}
+                        style={{
+                            padding: '16px 32px',
+                            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.3))',
+                            border: '1px solid rgba(139, 92, 246, 0.5)',
+                            borderRadius: '16px',
+                            color: '#fff',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.transform = 'translateY(-2px)';
+                            e.target.style.boxShadow = '0 6px 16px rgba(139, 92, 246, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.transform = 'translateY(0)';
+                            e.target.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.2)';
+                        }}
+                    >
+                        <Moon size={24} />
+                        Dream Journal
+                    </button>
+                </div>
+            )}
 
             <div className="nav-grid">
                 {navItems.map(item => {
