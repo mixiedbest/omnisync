@@ -48,6 +48,11 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
 
     const pattern = BREATHING_PATTERNS[selectedPattern];
 
+    // Update pattern when prop changes (for journey phase transitions)
+    useEffect(() => {
+        setSelectedPattern(initialPattern);
+    }, [initialPattern]);
+
     useEffect(() => {
         const phases = pattern.phases;
         const timings = pattern.timings;
