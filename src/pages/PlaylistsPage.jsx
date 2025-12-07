@@ -226,15 +226,17 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
                                 <button
                                     className="action-btn"
                                     title="Add Collaborator"
+                                    style={{ fontSize: '20px', fontWeight: 'bold' }}
                                 >
-                                    <UserPlus size={20} strokeWidth={2} color="currentColor" />
+                                    +
                                 </button>
                                 <button
                                     className="action-btn delete"
                                     onClick={() => handleDeletePlaylist(activePlaylist.id)}
                                     title="Delete Playlist"
+                                    style={{ fontSize: '20px', fontWeight: 'bold' }}
                                 >
-                                    <X size={20} strokeWidth={2} color="currentColor" />
+                                    ×
                                 </button>
                             </div>
                         </div>
