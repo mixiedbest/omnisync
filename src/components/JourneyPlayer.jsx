@@ -33,7 +33,7 @@ export function JourneyPlayer({ journey, onBack }) {
 
     const startPhase = (phaseIndex, resumeFrom = 0) => {
         const phase = phases[phaseIndex];
-        console.log(`[Journey] Starting phase ${phaseIndex}: ${phase.name}, resumeFrom: ${resumeFrom}s, duration: ${phase.duration}s`);
+        console.log(`[Journey] Starting phase ${phaseIndex}: ${phase.name}, resumeFrom: ${resumeFrom}s`);
 
         // Play the phase audio
         play(
@@ -51,67 +51,54 @@ export function JourneyPlayer({ journey, onBack }) {
         );
 
         setCurrentPhaseIndex(phaseIndex);
+        setPhaseProgress(resumeFrom > 0 ? (resumeFrom / (customPhaseDurations[phaseIndex] || phase.duration)) * 100 : 0);
+        setElapsedTime(resumeFrom);
         setIsPlaying(true);
         setHasStarted(true);
+        setPausedAt(0);
 
         // Use custom duration if set, otherwise use default
         const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
         const remainingDuration = phaseDuration - resumeFrom;
 
-        console.log(`[Journey] Phase duration: ${phaseDuration}s, remaining: ${remainingDuration}s`);
-
-        // IMPORTANT: Reset progress BEFORE creating interval to avoid stale state
-        if (resumeFrom === 0) {
-            setPhaseProgress(0);
-            setElapsedTime(0);
-        }
-
-        // Progress tracker - create AFTER state reset
-        const startTime = Date.now() - (resumeFrom * 1000);
-        let intervalCount = 0;
-
-        console.log('[Journey] About to create setInterval...');
-        try {
-            progressTimerRef.current = setInterval(() => {
-                const elapsed = (Date.now() - startTime) / 1000;
-                const progress = Math.min((elapsed / phaseDuration) * 100, 100);
-                intervalCount++;
-
-                if (intervalCount === 1) {
-                    console.log('[Journey] ✓ Interval fired for the first time!');
-                }
-
-                if (intervalCount % 10 === 0) { // Log every second
-                    console.log(`[Journey] Interval tick ${intervalCount}: elapsed=${elapsed.toFixed(1)}s, progress=${progress.toFixed(1)}%`);
-                }
-
-                // Use functional updates to avoid stale state
-                setPhaseProgress(() => progress);
-                setElapsedTime(() => Math.floor(elapsed));
-            }, 100);
-            console.log(`[Journey] setInterval created, ref ID: ${progressTimerRef.current}`);
-        } catch (error) {
-            console.error('[Journey] ERROR creating interval:', error);
-        }
-
         // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
             console.log(`[Journey] Phase ${phaseIndex} complete, advancing...`);
             if (phaseIndex < phases.length - 1) {
-                setPausedAt(0); // Reset pause tracker
                 nextPhase();
             } else {
-                // Journey complete
                 console.log('[Journey] All phases complete');
                 endJourney();
             }
         }, remainingDuration * 1000);
     };
 
+    // Progress tracking via useEffect (runs every 100ms when playing)
+    useEffect(() => {
+        if (!isPlaying || !hasStarted) return;
+
+        const phase = phases[currentPhaseIndex];
+        const phaseDuration = customPhaseDurations[currentPhaseIndex] || phase.duration;
+        const startTime = Date.now() - (pausedAt * 1000);
+
+        progressTimerRef.current = setInterval(() => {
+            const elapsed = (Date.now() - startTime) / 1000;
+            const progress = Math.min((elapsed / phaseDuration) * 100, 100);
+
+            setPhaseProgress(progress);
+            setElapsedTime(Math.floor(elapsed));
+        }, 100);
+
+        return () => {
+            if (progressTimerRef.current) {
+                clearInterval(progressTimerRef.current);
+            }
+        };
+    }, [isPlaying, hasStarted, currentPhaseIndex, customPhaseDurations, phases, pausedAt]);
+
     const nextPhase = () => {
         console.log(`[Journey] nextPhase called, current: ${currentPhaseIndex}, next: ${currentPhaseIndex + 1}`);
         if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
-        if (progressTimerRef.current) clearInterval(progressTimerRef.current);
 
         if (currentPhaseIndex < phases.length - 1) {
             startPhase(currentPhaseIndex + 1);
