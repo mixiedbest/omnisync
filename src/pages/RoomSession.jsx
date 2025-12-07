@@ -120,11 +120,32 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
 
             // Get current frequency for dynamic visualization
             const getCurrentFrequency = () => {
-                const params = getPlaybackParams();
-                if (!params) return 10; // Default to 10Hz
-                const avgFreq = (params.left + params.right) / 2;
-                const beatFreq = Math.abs(params.right - params.left);
-                return beatFreq || avgFreq || 10;
+                if (!selectedSound) return 10;
+
+                let freq = 10; // Default
+
+                // Handle different sound types
+                if (selectedSound.left && selectedSound.right) {
+                    // Preset/Custom with explicit left/right
+                    freq = Math.abs(selectedSound.right - selectedSound.left);
+                } else if (selectedSound.frequencies) {
+                    // Preset with frequencies object
+                    freq = Math.abs(selectedSound.frequencies.right - selectedSound.frequencies.left);
+                } else if (selectedSound.stages) {
+                    // Multi-stage preset
+                    const stage = selectedSound.stages[0];
+                    freq = Math.abs(stage.right - stage.left);
+                } else if (selectedSound.short?.phases || selectedSound.long?.phases) {
+                    // Journey - use current phase
+                    const phases = selectedSound[journeyDuration]?.phases || selectedSound.short?.phases || selectedSound.long?.phases;
+                    if (phases && phases.length > 0) {
+                        const phaseIndex = Math.min(currentJourneyPhase, phases.length - 1);
+                        const phase = phases[phaseIndex];
+                        freq = phase.bothEars || 10;
+                    }
+                }
+
+                return freq || 10;
             };
 
             const drawMandala = () => {
