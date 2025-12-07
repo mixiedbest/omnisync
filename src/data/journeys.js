@@ -85,21 +85,21 @@ export const journeys = [
         short: {
             duration: 600, // 10 minutes
             phases: [
-                { name: 'Unravel', duration: 120, freq: 417, bothEars: 10, noiseType: null, desc: 'Removing old patterns' },
-                { name: 'Clear', duration: 120, freq: 741, bothEars: 10, noiseType: 'violet', desc: 'Detox' },
-                { name: 'Rebalance', duration: 180, freq: 528, bothEars: 0, noiseType: 'green', desc: 'Harmony' },
-                { name: 'Blessing Tone', duration: 120, freq: 111, bothEars: 0, noiseType: null, desc: 'Angel frequency' },
-                { name: 'Rebuild', duration: 60, freq: 528, bothEars: 0, noiseType: null, desc: 'Repair' }
+                { name: 'Unravel', duration: 120, freq: 417, bothEars: 10, noiseType: null, desc: 'Removing old patterns', breathingPattern: 'box' },
+                { name: 'Clear', duration: 120, freq: 741, bothEars: 10, noiseType: 'violet', desc: 'Detox', breathingPattern: 'box' },
+                { name: 'Rebalance', duration: 180, freq: 528, bothEars: 0, noiseType: 'green', desc: 'Harmony', breathingPattern: 'box' },
+                { name: 'Blessing Tone', duration: 120, freq: 111, bothEars: 0, noiseType: null, desc: 'Angel frequency', breathingPattern: 'box' },
+                { name: 'Rebuild', duration: 60, freq: 528, bothEars: 0, noiseType: null, desc: 'Repair', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 1800, // 30 minutes
             phases: [
-                { name: 'Unravel', duration: 360, freq: 417, bothEars: 10, noiseType: null, desc: 'Removing old patterns' },
-                { name: 'Clear', duration: 360, freq: 741, bothEars: 10, noiseType: 'violet', desc: 'Detox' },
-                { name: 'Rebalance', duration: 540, freq: 528, bothEars: 0, noiseType: 'green', desc: 'Harmony' },
-                { name: 'Blessing Tone', duration: 360, freq: 111, bothEars: 0, noiseType: null, desc: 'Angel frequency' },
-                { name: 'Rebuild', duration: 180, freq: 528, bothEars: 0, noiseType: null, desc: 'Repair' }
+                { name: 'Unravel', duration: 360, freq: 417, bothEars: 10, noiseType: null, desc: 'Removing old patterns', breathingPattern: 'box' },
+                { name: 'Clear', duration: 360, freq: 741, bothEars: 10, noiseType: 'violet', desc: 'Detox', breathingPattern: 'box' },
+                { name: 'Rebalance', duration: 540, freq: 528, bothEars: 0, noiseType: 'green', desc: 'Harmony', breathingPattern: 'box' },
+                { name: 'Blessing Tone', duration: 360, freq: 111, bothEars: 0, noiseType: null, desc: 'Angel frequency', breathingPattern: 'box' },
+                { name: 'Rebuild', duration: 180, freq: 528, bothEars: 0, noiseType: null, desc: 'Repair', breathingPattern: 'box' }
             ]
         }
     },
@@ -112,19 +112,19 @@ export const journeys = [
         short: {
             duration: 600, // 10 minutes
             phases: [
-                { name: 'Earth Pulse', duration: 180, freq: 7.83, bothEars: 7.83, noiseType: null, soundscapeType: 'earth', desc: 'Schumann resonance' },
-                { name: 'Body Gravity', duration: 180, freq: 0, bothEars: 0, noiseType: 'brown', desc: 'Deep grounding' },
-                { name: 'Root Chakra Tone', duration: 120, freq: 396, bothEars: 0, noiseType: null, desc: 'Stability' },
-                { name: 'Return to Self', duration: 120, freq: 111, bothEars: 0, noiseType: null, desc: 'Centered presence' }
+                { name: 'Earth Pulse', duration: 180, freq: 7.83, bothEars: 7.83, noiseType: null, soundscapeType: 'earth', desc: 'Schumann resonance', breathingPattern: 'box' },
+                { name: 'Body Gravity', duration: 180, freq: 0, bothEars: 0, noiseType: 'brown', desc: 'Deep grounding', breathingPattern: 'box' },
+                { name: 'Root Chakra Tone', duration: 120, freq: 396, bothEars: 0, noiseType: null, desc: 'Stability', breathingPattern: 'box' },
+                { name: 'Return to Self', duration: 120, freq: 111, bothEars: 0, noiseType: null, desc: 'Centered presence', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 1800, // 30 minutes
             phases: [
-                { name: 'Earth Pulse', duration: 540, freq: 7.83, bothEars: 7.83, noiseType: null, soundscapeType: 'earth', desc: 'Schumann resonance' },
-                { name: 'Body Gravity', duration: 540, freq: 0, bothEars: 0, noiseType: 'brown', desc: 'Deep grounding' },
-                { name: 'Root Chakra Tone', duration: 360, freq: 396, bothEars: 0, noiseType: null, desc: 'Stability' },
-                { name: 'Return to Self', duration: 360, freq: 111, bothEars: 0, noiseType: null, desc: 'Centered presence' }
+                { name: 'Earth Pulse', duration: 540, freq: 7.83, bothEars: 7.83, noiseType: null, soundscapeType: 'earth', desc: 'Schumann resonance', breathingPattern: 'box' },
+                { name: 'Body Gravity', duration: 540, freq: 0, bothEars: 0, noiseType: 'brown', desc: 'Deep grounding', breathingPattern: 'box' },
+                { name: 'Root Chakra Tone', duration: 360, freq: 396, bothEars: 0, noiseType: null, desc: 'Stability', breathingPattern: 'box' },
+                { name: 'Return to Self', duration: 360, freq: 111, bothEars: 0, noiseType: null, desc: 'Centered presence', breathingPattern: 'box' }
             ]
         }
     },
@@ -137,21 +137,21 @@ export const journeys = [
         short: {
             duration: 600, // 10 minutes
             phases: [
-                { name: 'Hold', duration: 120, freq: 174, bothEars: 6, noiseType: 'pink', desc: 'Pain soothing' },
-                { name: 'Loosen', duration: 120, freq: 417, bothEars: 8, noiseType: null, desc: 'Releasing blocks' },
-                { name: 'Break Open', duration: 180, freq: 639, bothEars: 8, noiseType: null, soundscapeType: 'rain', desc: 'Heart opening' },
-                { name: 'Let Go', duration: 120, freq: 741, bothEars: 10, noiseType: null, desc: 'Purification' },
-                { name: 'Peace', duration: 60, freq: 963, bothEars: 0, noiseType: null, desc: 'Crown clarity' }
+                { name: 'Hold', duration: 120, freq: 174, bothEars: 6, noiseType: 'pink', desc: 'Pain soothing', breathingPattern: 'box' },
+                { name: 'Loosen', duration: 120, freq: 417, bothEars: 8, noiseType: null, desc: 'Releasing blocks', breathingPattern: 'box' },
+                { name: 'Break Open', duration: 180, freq: 639, bothEars: 8, noiseType: null, soundscapeType: 'rain', desc: 'Heart opening', breathingPattern: 'box' },
+                { name: 'Let Go', duration: 120, freq: 741, bothEars: 10, noiseType: null, desc: 'Purification', breathingPattern: 'box' },
+                { name: 'Peace', duration: 60, freq: 963, bothEars: 0, noiseType: null, desc: 'Crown clarity', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 1800, // 30 minutes
             phases: [
-                { name: 'Hold', duration: 360, freq: 174, bothEars: 6, noiseType: 'pink', desc: 'Pain soothing' },
-                { name: 'Loosen', duration: 360, freq: 417, bothEars: 8, noiseType: null, desc: 'Releasing blocks' },
-                { name: 'Break Open', duration: 540, freq: 639, bothEars: 8, noiseType: null, soundscapeType: 'rain', desc: 'Heart opening' },
-                { name: 'Let Go', duration: 360, freq: 741, bothEars: 10, noiseType: null, desc: 'Purification' },
-                { name: 'Peace', duration: 180, freq: 963, bothEars: 0, noiseType: null, desc: 'Crown clarity' }
+                { name: 'Hold', duration: 360, freq: 174, bothEars: 6, noiseType: 'pink', desc: 'Pain soothing', breathingPattern: 'box' },
+                { name: 'Loosen', duration: 360, freq: 417, bothEars: 8, noiseType: null, desc: 'Releasing blocks', breathingPattern: 'box' },
+                { name: 'Break Open', duration: 540, freq: 639, bothEars: 8, noiseType: null, soundscapeType: 'rain', desc: 'Heart opening', breathingPattern: 'box' },
+                { name: 'Let Go', duration: 360, freq: 741, bothEars: 10, noiseType: null, desc: 'Purification', breathingPattern: 'box' },
+                { name: 'Peace', duration: 180, freq: 963, bothEars: 0, noiseType: null, desc: 'Crown clarity', breathingPattern: 'box' }
             ]
         }
     },
@@ -164,19 +164,19 @@ export const journeys = [
         short: {
             duration: 600, // 10 minutes
             phases: [
-                { name: 'Reset', duration: 120, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Alpha state' },
-                { name: 'Engage', duration: 180, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta activation' },
-                { name: 'Flow State', duration: 180, freq: 528, bothEars: 18, noiseType: 'pink', desc: 'Peak focus' },
-                { name: 'Laser Mode', duration: 120, freq: 528, bothEars: 40, noiseType: null, desc: 'Gamma clarity' }
+                { name: 'Reset', duration: 120, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Alpha state', breathingPattern: 'box' },
+                { name: 'Engage', duration: 180, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta activation', breathingPattern: 'box' },
+                { name: 'Flow State', duration: 180, freq: 528, bothEars: 18, noiseType: 'pink', desc: 'Peak focus', breathingPattern: 'box' },
+                { name: 'Laser Mode', duration: 120, freq: 528, bothEars: 40, noiseType: null, desc: 'Gamma clarity', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 1800, // 30 minutes
             phases: [
-                { name: 'Reset', duration: 360, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Alpha state' },
-                { name: 'Engage', duration: 540, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta activation' },
-                { name: 'Flow State', duration: 540, freq: 528, bothEars: 18, noiseType: 'pink', desc: 'Peak focus' },
-                { name: 'Laser Mode', duration: 360, freq: 528, bothEars: 40, noiseType: null, desc: 'Gamma clarity' }
+                { name: 'Reset', duration: 360, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Alpha state', breathingPattern: 'box' },
+                { name: 'Engage', duration: 540, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta activation', breathingPattern: 'box' },
+                { name: 'Flow State', duration: 540, freq: 528, bothEars: 18, noiseType: 'pink', desc: 'Peak focus', breathingPattern: 'box' },
+                { name: 'Laser Mode', duration: 360, freq: 528, bothEars: 40, noiseType: null, desc: 'Gamma clarity', breathingPattern: 'box' }
             ]
         }
     },
@@ -189,19 +189,19 @@ export const journeys = [
         short: {
             duration: 600, // 10 minutes
             phases: [
-                { name: 'Humming Vibration', duration: 180, freq: 111, bothEars: 4, noiseType: 'brown', desc: 'Stimulating the vagus nerve' },
-                { name: 'Parasympathetic Activation', duration: 240, freq: 7.83, bothEars: 0, noiseType: 'pink', desc: 'Deep relaxation response' },
-                { name: 'Heart Coherence', duration: 120, freq: 639, bothEars: 0, noiseType: null, desc: 'Balancing heart rate' },
-                { name: 'Rest & Digest', duration: 60, freq: 432, bothEars: 0, noiseType: null, desc: 'Settling into calm' }
+                { name: 'Humming Vibration', duration: 180, freq: 111, bothEars: 4, noiseType: 'brown', desc: 'Stimulating the vagus nerve', breathingPattern: 'box' },
+                { name: 'Parasympathetic Activation', duration: 240, freq: 7.83, bothEars: 0, noiseType: 'pink', desc: 'Deep relaxation response', breathingPattern: 'box' },
+                { name: 'Heart Coherence', duration: 120, freq: 639, bothEars: 0, noiseType: null, desc: 'Balancing heart rate', breathingPattern: 'box' },
+                { name: 'Rest & Digest', duration: 60, freq: 432, bothEars: 0, noiseType: null, desc: 'Settling into calm', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 1800, // 30 minutes
             phases: [
-                { name: 'Humming Vibration', duration: 540, freq: 111, bothEars: 4, noiseType: 'brown', desc: 'Stimulating the vagus nerve' },
-                { name: 'Parasympathetic Activation', duration: 720, freq: 7.83, bothEars: 0, noiseType: 'pink', desc: 'Deep relaxation response' },
-                { name: 'Heart Coherence', duration: 360, freq: 639, bothEars: 0, noiseType: null, desc: 'Balancing heart rate' },
-                { name: 'Rest & Digest', duration: 180, freq: 432, bothEars: 0, noiseType: null, desc: 'Settling into calm' }
+                { name: 'Humming Vibration', duration: 540, freq: 111, bothEars: 4, noiseType: 'brown', desc: 'Stimulating the vagus nerve', breathingPattern: 'box' },
+                { name: 'Parasympathetic Activation', duration: 720, freq: 7.83, bothEars: 0, noiseType: 'pink', desc: 'Deep relaxation response', breathingPattern: 'box' },
+                { name: 'Heart Coherence', duration: 360, freq: 639, bothEars: 0, noiseType: null, desc: 'Balancing heart rate', breathingPattern: 'box' },
+                { name: 'Rest & Digest', duration: 180, freq: 432, bothEars: 0, noiseType: null, desc: 'Settling into calm', breathingPattern: 'box' }
             ]
         }
     },
@@ -214,19 +214,19 @@ export const journeys = [
         short: {
             duration: 600, // 10 minutes
             phases: [
-                { name: 'Alpha Relax', duration: 180, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Clearing the mind' },
-                { name: 'Theta Dream', duration: 180, freq: 528, bothEars: 6, noiseType: 'pink', desc: 'Accessing subconscious' },
-                { name: 'Gamma Spark', duration: 180, freq: 528, bothEars: 40, noiseType: null, desc: 'Insight flash' },
-                { name: 'Flow Integration', duration: 60, freq: 432, bothEars: 14, noiseType: null, desc: 'Grounding the idea' }
+                { name: 'Alpha Relax', duration: 180, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Clearing the mind', breathingPattern: 'box' },
+                { name: 'Theta Dream', duration: 180, freq: 528, bothEars: 6, noiseType: 'pink', desc: 'Accessing subconscious', breathingPattern: 'box' },
+                { name: 'Gamma Spark', duration: 180, freq: 528, bothEars: 40, noiseType: null, desc: 'Insight flash', breathingPattern: 'box' },
+                { name: 'Flow Integration', duration: 60, freq: 432, bothEars: 14, noiseType: null, desc: 'Grounding the idea', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 1800, // 30 minutes
             phases: [
-                { name: 'Alpha Relax', duration: 540, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Clearing the mind' },
-                { name: 'Theta Dream', duration: 540, freq: 528, bothEars: 6, noiseType: 'pink', desc: 'Accessing subconscious' },
-                { name: 'Gamma Spark', duration: 540, freq: 528, bothEars: 40, noiseType: null, desc: 'Insight flash' },
-                { name: 'Flow Integration', duration: 180, freq: 432, bothEars: 14, noiseType: null, desc: 'Grounding the idea' }
+                { name: 'Alpha Relax', duration: 540, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Clearing the mind', breathingPattern: 'box' },
+                { name: 'Theta Dream', duration: 540, freq: 528, bothEars: 6, noiseType: 'pink', desc: 'Accessing subconscious', breathingPattern: 'box' },
+                { name: 'Gamma Spark', duration: 540, freq: 528, bothEars: 40, noiseType: null, desc: 'Insight flash', breathingPattern: 'box' },
+                { name: 'Flow Integration', duration: 180, freq: 432, bothEars: 14, noiseType: null, desc: 'Grounding the idea', breathingPattern: 'box' }
             ]
         }
     },
@@ -239,19 +239,19 @@ export const journeys = [
         short: {
             duration: 900, // 15 minutes
             phases: [
-                { name: 'Signal Dampening', duration: 300, freq: 174, bothEars: 4, noiseType: 'pink', desc: 'Reducing pain perception' },
-                { name: 'Deep Release', duration: 300, freq: 111, bothEars: 2, noiseType: 'brown', desc: 'Cellular relaxation' },
-                { name: 'Delta Recovery', duration: 240, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Tissue repair mode' },
-                { name: 'Gentle Return', duration: 60, freq: 174, bothEars: 0, noiseType: null, desc: 'Waking up softly' }
+                { name: 'Signal Dampening', duration: 300, freq: 174, bothEars: 4, noiseType: 'pink', desc: 'Reducing pain perception', breathingPattern: 'box' },
+                { name: 'Deep Release', duration: 300, freq: 111, bothEars: 2, noiseType: 'brown', desc: 'Cellular relaxation', breathingPattern: 'box' },
+                { name: 'Delta Recovery', duration: 240, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Tissue repair mode', breathingPattern: 'box' },
+                { name: 'Gentle Return', duration: 60, freq: 174, bothEars: 0, noiseType: null, desc: 'Waking up softly', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 2700, // 45 minutes
             phases: [
-                { name: 'Signal Dampening', duration: 900, freq: 174, bothEars: 4, noiseType: 'pink', desc: 'Reducing pain perception' },
-                { name: 'Deep Release', duration: 900, freq: 111, bothEars: 2, noiseType: 'brown', desc: 'Cellular relaxation' },
-                { name: 'Delta Recovery', duration: 600, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Tissue repair mode' },
-                { name: 'Gentle Return', duration: 300, freq: 174, bothEars: 0, noiseType: null, desc: 'Waking up softly' }
+                { name: 'Signal Dampening', duration: 900, freq: 174, bothEars: 4, noiseType: 'pink', desc: 'Reducing pain perception', breathingPattern: 'box' },
+                { name: 'Deep Release', duration: 900, freq: 111, bothEars: 2, noiseType: 'brown', desc: 'Cellular relaxation', breathingPattern: 'box' },
+                { name: 'Delta Recovery', duration: 600, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Tissue repair mode', breathingPattern: 'box' },
+                { name: 'Gentle Return', duration: 300, freq: 174, bothEars: 0, noiseType: null, desc: 'Waking up softly', breathingPattern: 'box' }
             ]
         }
     },
@@ -264,19 +264,19 @@ export const journeys = [
         short: {
             duration: 600, // 10 minutes
             phases: [
-                { name: 'Gentle Awakening', duration: 120, freq: 432, bothEars: 10, noiseType: 'pink', desc: 'Alpha transition' },
-                { name: 'Mental Clarity', duration: 180, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta focus' },
-                { name: 'Energy Boost', duration: 180, freq: 528, bothEars: 20, noiseType: null, desc: 'High Beta power' },
-                { name: 'Peak State', duration: 120, freq: 963, bothEars: 40, noiseType: null, desc: 'Gamma brilliance' }
+                { name: 'Gentle Awakening', duration: 120, freq: 432, bothEars: 10, noiseType: 'pink', desc: 'Alpha transition', breathingPattern: 'box' },
+                { name: 'Mental Clarity', duration: 180, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta focus', breathingPattern: 'box' },
+                { name: 'Energy Boost', duration: 180, freq: 528, bothEars: 20, noiseType: null, desc: 'High Beta power', breathingPattern: 'box' },
+                { name: 'Peak State', duration: 120, freq: 963, bothEars: 40, noiseType: null, desc: 'Gamma brilliance', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 1800, // 30 minutes
             phases: [
-                { name: 'Gentle Awakening', duration: 360, freq: 432, bothEars: 10, noiseType: 'pink', desc: 'Alpha transition' },
-                { name: 'Mental Clarity', duration: 540, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta focus' },
-                { name: 'Energy Boost', duration: 540, freq: 528, bothEars: 20, noiseType: null, desc: 'High Beta power' },
-                { name: 'Peak State', duration: 360, freq: 963, bothEars: 40, noiseType: null, desc: 'Gamma brilliance' }
+                { name: 'Gentle Awakening', duration: 360, freq: 432, bothEars: 10, noiseType: 'pink', desc: 'Alpha transition', breathingPattern: 'box' },
+                { name: 'Mental Clarity', duration: 540, freq: 528, bothEars: 14, noiseType: null, desc: 'Beta focus', breathingPattern: 'box' },
+                { name: 'Energy Boost', duration: 540, freq: 528, bothEars: 20, noiseType: null, desc: 'High Beta power', breathingPattern: 'box' },
+                { name: 'Peak State', duration: 360, freq: 963, bothEars: 40, noiseType: null, desc: 'Gamma brilliance', breathingPattern: 'box' }
             ]
         }
     },
@@ -289,21 +289,21 @@ export const journeys = [
         short: {
             duration: 720, // 12 minutes
             phases: [
-                { name: 'Dissolving the Old', duration: 144, freq: 174, bothEars: 2, noiseType: 'pink', soundscapeType: 'ocean', desc: 'Release past stress and identities' },
-                { name: 'The Void Pool', duration: 144, freq: 432, bothEars: 5.5, noiseType: null, soundscapeType: 'ocean', desc: 'Timeless neutrality' },
-                { name: 'Returning Light', duration: 144, freq: 528, bothEars: 7, noiseType: null, desc: 'Clarity and re-alignment' },
-                { name: 'Rebirth', duration: 144, freq: 639, bothEars: 10, noiseType: null, desc: 'Emergence and awakening' },
-                { name: 'Integration', duration: 144, freq: 396, bothEars: 4, noiseType: 'pink', soundscapeType: 'rain', desc: 'Grounding the new self' }
+                { name: 'Dissolving the Old', duration: 144, freq: 174, bothEars: 2, noiseType: 'pink', soundscapeType: 'ocean', desc: 'Release past stress and identities', breathingPattern: 'box' },
+                { name: 'The Void Pool', duration: 144, freq: 432, bothEars: 5.5, noiseType: null, soundscapeType: 'ocean', desc: 'Timeless neutrality', breathingPattern: 'box' },
+                { name: 'Returning Light', duration: 144, freq: 528, bothEars: 7, noiseType: null, desc: 'Clarity and re-alignment', breathingPattern: 'box' },
+                { name: 'Rebirth', duration: 144, freq: 639, bothEars: 10, noiseType: null, desc: 'Emergence and awakening', breathingPattern: 'box' },
+                { name: 'Integration', duration: 144, freq: 396, bothEars: 4, noiseType: 'pink', soundscapeType: 'rain', desc: 'Grounding the new self', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 2100, // 35 minutes
             phases: [
-                { name: 'Dissolving the Old', duration: 420, freq: 174, bothEars: 2, noiseType: 'pink', soundscapeType: 'ocean', desc: 'Release past stress and identities' },
-                { name: 'The Void Pool', duration: 420, freq: 432, bothEars: 5.5, noiseType: null, soundscapeType: 'ocean', desc: 'Timeless neutrality' },
-                { name: 'Returning Light', duration: 420, freq: 528, bothEars: 7, noiseType: null, desc: 'Clarity and re-alignment' },
-                { name: 'Rebirth', duration: 420, freq: 639, bothEars: 10, noiseType: null, desc: 'Emergence and awakening' },
-                { name: 'Integration', duration: 420, freq: 396, bothEars: 4, noiseType: 'pink', soundscapeType: 'rain', desc: 'Grounding the new self' }
+                { name: 'Dissolving the Old', duration: 420, freq: 174, bothEars: 2, noiseType: 'pink', soundscapeType: 'ocean', desc: 'Release past stress and identities', breathingPattern: 'box' },
+                { name: 'The Void Pool', duration: 420, freq: 432, bothEars: 5.5, noiseType: null, soundscapeType: 'ocean', desc: 'Timeless neutrality', breathingPattern: 'box' },
+                { name: 'Returning Light', duration: 420, freq: 528, bothEars: 7, noiseType: null, desc: 'Clarity and re-alignment', breathingPattern: 'box' },
+                { name: 'Rebirth', duration: 420, freq: 639, bothEars: 10, noiseType: null, desc: 'Emergence and awakening', breathingPattern: 'box' },
+                { name: 'Integration', duration: 420, freq: 396, bothEars: 4, noiseType: 'pink', soundscapeType: 'rain', desc: 'Grounding the new self', breathingPattern: 'box' }
             ]
         }
     },
@@ -316,9 +316,9 @@ export const journeys = [
         short: {
             duration: 1080, // 18 minutes
             phases: [
-                { name: 'Veil Softening', duration: 180, freq: 432, bothEars: 6, noiseType: 'pink', desc: 'Theta induction' },
-                { name: 'Silver Cord Activation', duration: 240, freq: 528, bothEars: 4.5, noiseType: null, desc: 'Inner body expansion' },
-                { name: 'Etheric Lift-Off', duration: 240, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift' },
+                { name: 'Veil Softening', duration: 180, freq: 432, bothEars: 6, noiseType: 'pink', desc: 'Theta induction', breathingPattern: 'box' },
+                { name: 'Silver Cord Activation', duration: 240, freq: 528, bothEars: 4.5, noiseType: null, desc: 'Inner body expansion', breathingPattern: 'box' },
+                { name: 'Etheric Lift-Off', duration: 240, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift', breathingPattern: 'box' },
                 {
                     name: 'Stargate Drift',
                     duration: 300,
@@ -330,15 +330,15 @@ export const journeys = [
                     customizable: true,
                     durationOptions: [300, 600, 1200, 1800, 3600] // 5, 10, 20, 30, 60 min
                 },
-                { name: 'Drift Return', duration: 120, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment' }
+                { name: 'Drift Return', duration: 120, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment', breathingPattern: 'box' }
             ]
         },
         long: {
             duration: 1920, // 32 minutes
             phases: [
-                { name: 'Veil Softening', duration: 300, freq: 432, bothEars: 6, noiseType: 'pink', desc: 'Theta induction' },
-                { name: 'Silver Cord Activation', duration: 360, freq: 528, bothEars: 4.5, noiseType: null, desc: 'Inner body expansion' },
-                { name: 'Etheric Lift-Off', duration: 300, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift' },
+                { name: 'Veil Softening', duration: 300, freq: 432, bothEars: 6, noiseType: 'pink', desc: 'Theta induction', breathingPattern: 'box' },
+                { name: 'Silver Cord Activation', duration: 360, freq: 528, bothEars: 4.5, noiseType: null, desc: 'Inner body expansion', breathingPattern: 'box' },
+                { name: 'Etheric Lift-Off', duration: 300, freq: 963, bothEars: 2.5, noiseType: null, desc: 'Separation shift', breathingPattern: 'box' },
                 {
                     name: 'Stargate Drift',
                     duration: 3600,
@@ -350,7 +350,7 @@ export const journeys = [
                     customizable: true,
                     durationOptions: [1800, 3600, 7200, 10800, 14400, 21600] // 30m, 1h, 2h, 3h, 4h, 6h
                 },
-                { name: 'Drift Return', duration: 360, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment' }
+                { name: 'Drift Return', duration: 360, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment', breathingPattern: 'box' }
             ]
         }
     }
