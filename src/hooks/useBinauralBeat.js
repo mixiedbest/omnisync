@@ -630,7 +630,7 @@ export function useBinauralBeat() {
             pinkFilter.frequency.value = 200;
 
             const pinkGain = ctx.createGain();
-            pinkGain.gain.value = 0.2;
+            pinkGain.gain.value = 0.3;
 
             pinkSource.connect(pinkFilter);
             pinkFilter.connect(pinkGain);
@@ -645,7 +645,7 @@ export function useBinauralBeat() {
 
                 const gain = ctx.createGain();
                 gain.gain.setValueAtTime(0, t);
-                gain.gain.linearRampToValueAtTime(0.4, t + 0.05);
+                gain.gain.linearRampToValueAtTime(0.55, t + 0.05);
                 gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
 
                 osc.connect(gain);
@@ -789,7 +789,7 @@ export function useBinauralBeat() {
 
                 const gain = ctx.createGain();
                 gain.gain.setValueAtTime(0, t);
-                gain.gain.linearRampToValueAtTime(0.5, t + 0.05);
+                gain.gain.linearRampToValueAtTime(0.7, t + 0.05);
                 gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
 
                 osc.connect(gain);
