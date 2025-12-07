@@ -12,6 +12,7 @@ export function JourneyPlayer({ journey, onBack }) {
     const [hasStarted, setHasStarted] = useState(false);
     const [customPhaseDurations, setCustomPhaseDurations] = useState({});
     const [pausedAt, setPausedAt] = useState(0); // Track elapsed time when paused
+    const [debugLog, setDebugLog] = useState([]); // Visible debug log
 
     const { play, stop } = useBinauralBeat();
     const phaseTimerRef = useRef(null);
@@ -21,6 +22,13 @@ export function JourneyPlayer({ journey, onBack }) {
     const totalDuration = journey[duration].duration;
     const currentPhase = phases[currentPhaseIndex];
     const isLastPhase = currentPhaseIndex === phases.length - 1;
+
+    // Helper to add visible log
+    const addLog = (message) => {
+        const timestamp = new Date().toLocaleTimeString();
+        setDebugLog(prev => [...prev.slice(-4), `${timestamp}: ${message}`]); // Keep last 5 logs
+        console.log(message);
+    };
 
     useEffect(() => {
         return () => {
@@ -33,7 +41,7 @@ export function JourneyPlayer({ journey, onBack }) {
 
     const startPhase = (phaseIndex, resumeFrom = 0) => {
         const phase = phases[phaseIndex];
-        console.log(`[Journey] Starting phase ${phaseIndex}: ${phase.name}, resumeFrom: ${resumeFrom}s`);
+        addLog(`Starting phase ${phaseIndex}: ${phase.name}`);
 
         // Play the phase audio
         play(
@@ -61,11 +69,11 @@ export function JourneyPlayer({ journey, onBack }) {
         const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
         const remainingDuration = phaseDuration - resumeFrom;
 
-        console.log(`[Journey] Setting timeout for ${remainingDuration}s (${remainingDuration * 1000}ms)`);
+        addLog(`Timeout set for ${remainingDuration}s`);
 
         // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
-            console.log(`[Journey] ⏰ TIMEOUT FIRED! Phase ${phaseIndex} complete, advancing...`);
+            addLog(`⏰ TIMEOUT FIRED! Advancing from phase ${phaseIndex}`);
             // Clear the interval before advancing
             if (progressTimerRef.current) {
                 clearInterval(progressTimerRef.current);
@@ -74,15 +82,14 @@ export function JourneyPlayer({ journey, onBack }) {
 
             if (phaseIndex < phases.length - 1) {
                 // Directly start next phase
-                console.log(`[Journey] Starting phase ${phaseIndex + 1}`);
                 startPhase(phaseIndex + 1);
             } else {
-                console.log('[Journey] All phases complete');
+                addLog('Journey complete!');
                 endJourney();
             }
         }, remainingDuration * 1000);
 
-        console.log(`[Journey] Timeout created with ID: ${phaseTimerRef.current}, will fire in ${remainingDuration}s`);
+        addLog(`Timer ID: ${phaseTimerRef.current}`);
     };
 
     // Progress tracking via useEffect (runs every 100ms when playing)
@@ -271,6 +278,34 @@ export function JourneyPlayer({ journey, onBack }) {
                         <div>Timer Active: {progressTimerRef.current ? 'YES' : 'NO'}</div>
                         <div>Playing: {isPlaying ? 'YES' : 'NO'}</div>
                     </div>
+
+                    {/* Visible Event Log */}
+                    {debugLog.length > 0 && (
+                        <div style={{
+                            marginTop: '12px',
+                            padding: '12px',
+                            background: 'rgba(139, 92, 246, 0.2)',
+                            border: '1px solid rgba(139, 92, 246, 0.4)',
+                            borderRadius: '8px',
+                            fontSize: '11px',
+                            fontFamily: 'monospace',
+                            maxHeight: '120px',
+                            overflowY: 'auto'
+                        }}>
+                            <div style={{ fontWeight: 'bold', marginBottom: '8px', color: 'var(--accent-purple)' }}>
+                                Event Log:
+                            </div>
+                            {debugLog.map((log, i) => (
+                                <div key={i} style={{
+                                    padding: '4px 0',
+                                    borderBottom: i < debugLog.length - 1 ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                    color: log.includes('⏰') ? '#22c55e' : '#fff'
+                                }}>
+                                    {log}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Controls */}
