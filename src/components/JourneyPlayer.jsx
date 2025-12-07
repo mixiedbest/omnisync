@@ -61,9 +61,11 @@ export function JourneyPlayer({ journey, onBack }) {
         const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
         const remainingDuration = phaseDuration - resumeFrom;
 
+        console.log(`[Journey] Setting timeout for ${remainingDuration}s (${remainingDuration * 1000}ms)`);
+
         // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
-            console.log(`[Journey] Phase ${phaseIndex} complete, advancing...`);
+            console.log(`[Journey] ⏰ TIMEOUT FIRED! Phase ${phaseIndex} complete, advancing...`);
             // Clear the interval before advancing
             if (progressTimerRef.current) {
                 clearInterval(progressTimerRef.current);
@@ -72,12 +74,15 @@ export function JourneyPlayer({ journey, onBack }) {
 
             if (phaseIndex < phases.length - 1) {
                 // Directly start next phase
+                console.log(`[Journey] Starting phase ${phaseIndex + 1}`);
                 startPhase(phaseIndex + 1);
             } else {
                 console.log('[Journey] All phases complete');
                 endJourney();
             }
         }, remainingDuration * 1000);
+
+        console.log(`[Journey] Timeout created with ID: ${phaseTimerRef.current}, will fire in ${remainingDuration}s`);
     };
 
     // Progress tracking via useEffect (runs every 100ms when playing)
@@ -105,7 +110,10 @@ export function JourneyPlayer({ journey, onBack }) {
 
     const nextPhase = () => {
         console.log(`[Journey] nextPhase called, current: ${currentPhaseIndex}, next: ${currentPhaseIndex + 1}`);
-        if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
+        if (phaseTimerRef.current) {
+            console.log(`[Journey] Clearing phase timer ${phaseTimerRef.current}`);
+            clearTimeout(phaseTimerRef.current);
+        }
 
         if (currentPhaseIndex < phases.length - 1) {
             startPhase(currentPhaseIndex + 1);
@@ -113,7 +121,11 @@ export function JourneyPlayer({ journey, onBack }) {
     };
 
     const endJourney = () => {
-        if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
+        console.log('[Journey] endJourney called');
+        if (phaseTimerRef.current) {
+            console.log(`[Journey] Clearing phase timer ${phaseTimerRef.current} in endJourney`);
+            clearTimeout(phaseTimerRef.current);
+        }
         if (progressTimerRef.current) clearInterval(progressTimerRef.current);
         stop();
         setIsPlaying(false);
