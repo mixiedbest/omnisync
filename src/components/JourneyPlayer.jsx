@@ -53,6 +53,12 @@ export function JourneyPlayer({ journey, onBack }) {
         setIsPlaying(true);
         setHasStarted(true);
 
+        // Reset progress if starting fresh (not resuming)
+        if (resumeFrom === 0) {
+            setPhaseProgress(0);
+            setElapsedTime(0);
+        }
+
         // Use custom duration if set, otherwise use default
         const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
         const remainingDuration = phaseDuration - resumeFrom;
