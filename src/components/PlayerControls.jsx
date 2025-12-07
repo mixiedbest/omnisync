@@ -96,17 +96,21 @@ export function PlayerControls({
                         className={`action-btn ${showPacer ? 'active' : ''}`}
                         onClick={() => setShowPacer(!showPacer)}
                         title="Breathing Pacer"
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: '60px' }}
                     >
                         <Wind size={20} />
+                        <span style={{ fontSize: '10px', opacity: 0.8 }}>Breathe</span>
                     </button>
 
                     <button
                         className={`action-btn ${sleepTimer ? 'active' : ''}`}
                         onClick={toggleSleepTimer}
                         title={`Sleep Timer: ${sleepTimer ? sleepTimer + 'm' : 'Off'}`}
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: '60px' }}
                     >
                         <Timer size={20} />
                         {sleepTimer && <span className="timer-value">{sleepTimer}</span>}
+                        <span style={{ fontSize: '10px', opacity: 0.8 }}>Timer</span>
                     </button>
 
                     <button
@@ -123,8 +127,10 @@ export function PlayerControls({
                             onClick={onNextTrack}
                             disabled={!isPlaying}
                             title="Next Track"
+                            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: '60px' }}
                         >
                             <SkipForward size={20} />
+                            <span style={{ fontSize: '10px', opacity: 0.8 }}>Next</span>
                         </button>
                     )}
 
