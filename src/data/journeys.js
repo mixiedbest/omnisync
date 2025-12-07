@@ -9,21 +9,21 @@ export const journeys = [
         short: {
             duration: 600, // 10 minutes
             phases: [
-                { name: 'Heart Opening', duration: 120, freq: 639, bothEars: 8, noiseType: 'pink', desc: 'Emotional alignment and calm' },
-                { name: 'Drop into Alpha', duration: 120, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Relaxed, receptive mind' },
-                { name: 'Solar Activation', duration: 180, freq: 528, bothEars: 10, noiseType: null, soundscapeType: 'tibetan', desc: 'Transformation + miracle tone' },
-                { name: 'Gamma Expansion', duration: 120, freq: 528, bothEars: 40, noiseType: null, desc: 'Peak coherence, visioning' },
-                { name: 'Integration', duration: 60, freq: 432, bothEars: 0, noiseType: null, soundscapeType: 'ocean', desc: 'Grounding the manifestation' }
+                { name: 'Heart Opening', duration: 120, freq: 639, bothEars: 8, noiseType: 'pink', desc: 'Emotional alignment and calm', breathingPattern: 'coherent' },
+                { name: 'Drop into Alpha', duration: 120, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Relaxed, receptive mind', breathingPattern: '478' },
+                { name: 'Solar Activation', duration: 180, freq: 528, bothEars: 10, noiseType: null, soundscapeType: 'tibetan', desc: 'Transformation + miracle tone', breathingPattern: 'box' },
+                { name: 'Gamma Expansion', duration: 120, freq: 528, bothEars: 40, noiseType: null, desc: 'Peak coherence, visioning', breathingPattern: 'energizing' },
+                { name: 'Integration', duration: 60, freq: 432, bothEars: 0, noiseType: null, soundscapeType: 'ocean', desc: 'Grounding the manifestation', breathingPattern: 'coherent' }
             ]
         },
         long: {
             duration: 1800, // 30 minutes
             phases: [
-                { name: 'Heart Opening', duration: 360, freq: 639, bothEars: 8, noiseType: 'pink', desc: 'Emotional alignment and calm' },
-                { name: 'Drop into Alpha', duration: 360, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Relaxed, receptive mind' },
-                { name: 'Solar Activation', duration: 480, freq: 528, bothEars: 10, noiseType: null, soundscapeType: 'tibetan', desc: 'Transformation + miracle tone' },
-                { name: 'Gamma Expansion', duration: 360, freq: 528, bothEars: 40, noiseType: null, desc: 'Peak coherence, visioning' },
-                { name: 'Integration', duration: 240, freq: 432, bothEars: 0, noiseType: null, soundscapeType: 'ocean', desc: 'Grounding the manifestation' }
+                { name: 'Heart Opening', duration: 360, freq: 639, bothEars: 8, noiseType: 'pink', desc: 'Emotional alignment and calm', breathingPattern: 'coherent' },
+                { name: 'Drop into Alpha', duration: 360, freq: 432, bothEars: 10, noiseType: 'green', desc: 'Relaxed, receptive mind', breathingPattern: '478' },
+                { name: 'Solar Activation', duration: 480, freq: 528, bothEars: 10, noiseType: null, soundscapeType: 'tibetan', desc: 'Transformation + miracle tone', breathingPattern: 'box' },
+                { name: 'Gamma Expansion', duration: 360, freq: 528, bothEars: 40, noiseType: null, desc: 'Peak coherence, visioning', breathingPattern: 'energizing' },
+                { name: 'Integration', duration: 240, freq: 432, bothEars: 0, noiseType: null, soundscapeType: 'ocean', desc: 'Grounding the manifestation', breathingPattern: 'coherent' }
             ]
         }
     },
@@ -36,10 +36,10 @@ export const journeys = [
         short: {
             duration: 900, // 15 minutes
             phases: [
-                { name: 'Release', duration: 180, freq: 174, bothEars: 8, noiseType: 'pink', desc: 'Pain & tension reduction' },
-                { name: 'Theta Drift', duration: 240, freq: 432, bothEars: 5, noiseType: 'pink', desc: 'Entering dreamstate' },
-                { name: 'Delta Drop', duration: 300, freq: 285, bothEars: 2, noiseType: 'brown', desc: 'Deep sleep' },
-                { name: 'Subconscious Restore', duration: 120, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Healing mode' },
+                { name: 'Release', duration: 180, freq: 174, bothEars: 8, noiseType: 'pink', desc: 'Pain & tension reduction', breathingPattern: '478' },
+                { name: 'Theta Drift', duration: 240, freq: 432, bothEars: 5, noiseType: 'pink', desc: 'Entering dreamstate', breathingPattern: '478' },
+                { name: 'Delta Drop', duration: 300, freq: 285, bothEars: 2, noiseType: 'brown', desc: 'Deep sleep', breathingPattern: '478' },
+                { name: 'Subconscious Restore', duration: 120, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Healing mode', breathingPattern: 'coherent' },
                 {
                     name: 'Dream Shield',
                     duration: 60,
@@ -48,6 +48,7 @@ export const journeys = [
                     noiseType: 'brown',
                     soundscapeType: null,
                     desc: 'Protection',
+                    breathingPattern: 'coherent',
                     customizable: true,
                     durationOptions: [300, 600, 1200, 1800, 3600] // 5, 10, 20, 30, 60 min
                 }
@@ -56,10 +57,10 @@ export const journeys = [
         long: {
             duration: 2700, // 45 minutes
             phases: [
-                { name: 'Release', duration: 540, freq: 174, bothEars: 8, noiseType: 'pink', desc: 'Pain & tension reduction' },
-                { name: 'Theta Drift', duration: 600, freq: 432, bothEars: 5, noiseType: 'pink', desc: 'Entering dreamstate' },
-                { name: 'Delta Drop', duration: 900, freq: 285, bothEars: 2, noiseType: 'brown', desc: 'Deep sleep' },
-                { name: 'Subconscious Restore', duration: 480, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Healing mode' },
+                { name: 'Release', duration: 540, freq: 174, bothEars: 8, noiseType: 'pink', desc: 'Pain & tension reduction', breathingPattern: '478' },
+                { name: 'Theta Drift', duration: 600, freq: 432, bothEars: 5, noiseType: 'pink', desc: 'Entering dreamstate', breathingPattern: '478' },
+                { name: 'Delta Drop', duration: 900, freq: 285, bothEars: 2, noiseType: 'brown', desc: 'Deep sleep', breathingPattern: '478' },
+                { name: 'Subconscious Restore', duration: 480, freq: 285, bothEars: 1, noiseType: 'brown', desc: 'Healing mode', breathingPattern: 'coherent' },
                 {
                     name: 'Dream Shield',
                     duration: 180,
@@ -68,6 +69,7 @@ export const journeys = [
                     noiseType: 'brown',
                     soundscapeType: null,
                     desc: 'Protection',
+                    breathingPattern: 'coherent',
                     customizable: true,
                     durationOptions: [1800, 3600, 7200, 10800, 14400, 21600] // 30m, 1h, 2h, 3h, 4h, 6h
                 }
