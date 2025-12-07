@@ -69,18 +69,29 @@ export function JourneyPlayer({ journey, onBack }) {
         // Progress tracker
         const startTime = Date.now() - (resumeFrom * 1000);
         let intervalCount = 0;
-        progressTimerRef.current = setInterval(() => {
-            const elapsed = (Date.now() - startTime) / 1000;
-            const progress = Math.min((elapsed / phaseDuration) * 100, 100);
-            intervalCount++;
 
-            if (intervalCount % 10 === 0) { // Log every second
-                console.log(`[Journey] Interval tick ${intervalCount}: elapsed=${elapsed.toFixed(1)}s, progress=${progress.toFixed(1)}%`);
-            }
+        console.log('[Journey] About to create setInterval...');
+        try {
+            progressTimerRef.current = setInterval(() => {
+                const elapsed = (Date.now() - startTime) / 1000;
+                const progress = Math.min((elapsed / phaseDuration) * 100, 100);
+                intervalCount++;
 
-            setPhaseProgress(progress);
-            setElapsedTime(Math.floor(elapsed));
-        }, 100);
+                if (intervalCount === 1) {
+                    console.log('[Journey] ✓ Interval fired for the first time!');
+                }
+
+                if (intervalCount % 10 === 0) { // Log every second
+                    console.log(`[Journey] Interval tick ${intervalCount}: elapsed=${elapsed.toFixed(1)}s, progress=${progress.toFixed(1)}%`);
+                }
+
+                setPhaseProgress(progress);
+                setElapsedTime(Math.floor(elapsed));
+            }, 100);
+            console.log(`[Journey] setInterval created, ref ID: ${progressTimerRef.current}`);
+        } catch (error) {
+            console.error('[Journey] ERROR creating interval:', error);
+        }
 
         // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
