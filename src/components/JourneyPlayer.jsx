@@ -65,44 +65,35 @@ export function JourneyPlayer({ journey, onBack }) {
         setHasStarted(true);
         setPausedAt(0);
 
-        // Use custom duration if set, otherwise use default
-        const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
-        const remainingDuration = phaseDuration - resumeFrom;
+        addLog(`Phase ${phaseIndex} started`);
+    };
 
-        addLog(`Timeout set for ${remainingDuration}s`);
+    // Auto-advance when elapsed time reaches phase duration
+    useEffect(() => {
+        if (!isPlaying || !hasStarted) return;
 
-        // Auto-advance to next phase
-        phaseTimerRef.current = setTimeout(() => {
-            addLog(`⏰ TIMEOUT FIRED! Advancing from phase ${phaseIndex}`);
-            // Clear the interval before advancing
+        const phase = phases[currentPhaseIndex];
+        const phaseDuration = customPhaseDurations[currentPhaseIndex] || phase.duration;
+
+        // Check if we've reached the phase duration
+        if (elapsedTime >= phaseDuration) {
+            addLog(`⏰ Phase ${currentPhaseIndex} complete (${elapsedTime}s >= ${phaseDuration}s)`);
+
+            // Clear progress interval
             if (progressTimerRef.current) {
                 clearInterval(progressTimerRef.current);
                 progressTimerRef.current = null;
             }
 
-            if (phaseIndex < phases.length - 1) {
-                // Directly start next phase
-                startPhase(phaseIndex + 1);
+            if (currentPhaseIndex < phases.length - 1) {
+                addLog(`Advancing to phase ${currentPhaseIndex + 1}`);
+                startPhase(currentPhaseIndex + 1);
             } else {
                 addLog('Journey complete!');
                 endJourney();
             }
-        }, remainingDuration * 1000);
-
-        const timerId = phaseTimerRef.current;
-        addLog(`Timer ID: ${timerId}`);
-
-        // Watchdog: Check every 10 seconds if timer still exists
-        const watchdogInterval = setInterval(() => {
-            if (phaseTimerRef.current !== timerId) {
-                addLog(`⚠️ Timer ${timerId} was cleared!`);
-                clearInterval(watchdogInterval);
-            }
-        }, 10000);
-
-        // Clear watchdog after phase duration + 5s
-        setTimeout(() => clearInterval(watchdogInterval), (remainingDuration + 5) * 1000);
-    };
+        }
+    }, [elapsedTime, isPlaying, hasStarted, currentPhaseIndex, phases, customPhaseDurations]);
 
     // Progress tracking via useEffect (runs every 100ms when playing)
     useEffect(() => {
