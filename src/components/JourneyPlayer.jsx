@@ -33,6 +33,7 @@ export function JourneyPlayer({ journey, onBack }) {
 
     const startPhase = (phaseIndex, resumeFrom = 0) => {
         const phase = phases[phaseIndex];
+        console.log(`[Journey] Starting phase ${phaseIndex}: ${phase.name}, resumeFrom: ${resumeFrom}s, duration: ${phase.duration}s`);
 
         // Play the phase audio
         play(
@@ -63,6 +64,8 @@ export function JourneyPlayer({ journey, onBack }) {
         const phaseDuration = customPhaseDurations[phaseIndex] || phase.duration;
         const remainingDuration = phaseDuration - resumeFrom;
 
+        console.log(`[Journey] Phase duration: ${phaseDuration}s, remaining: ${remainingDuration}s`);
+
         // Progress tracker
         const startTime = Date.now() - (resumeFrom * 1000);
         progressTimerRef.current = setInterval(() => {
@@ -74,17 +77,20 @@ export function JourneyPlayer({ journey, onBack }) {
 
         // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
+            console.log(`[Journey] Phase ${phaseIndex} complete, advancing...`);
             if (phaseIndex < phases.length - 1) {
                 setPausedAt(0); // Reset pause tracker
                 nextPhase();
             } else {
                 // Journey complete
+                console.log('[Journey] All phases complete');
                 endJourney();
             }
         }, remainingDuration * 1000);
     };
 
     const nextPhase = () => {
+        console.log(`[Journey] nextPhase called, current: ${currentPhaseIndex}, next: ${currentPhaseIndex + 1}`);
         if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
         if (progressTimerRef.current) clearInterval(progressTimerRef.current);
 
