@@ -223,13 +223,18 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
                                 </div>
                             </div>
                             <div className="panel-actions">
-                                <button className="action-btn" title="Add Collaborator">
+                                <button
+                                    className="action-btn"
+                                    title="Add Collaborator"
+                                    style={{ color: 'var(--text-secondary)' }}
+                                >
                                     <Users size={18} />
                                 </button>
                                 <button
                                     className="action-btn delete"
                                     onClick={() => handleDeletePlaylist(activePlaylist.id)}
                                     title="Delete Playlist"
+                                    style={{ color: 'var(--text-secondary)' }}
                                 >
                                     <Trash2 size={18} />
                                 </button>

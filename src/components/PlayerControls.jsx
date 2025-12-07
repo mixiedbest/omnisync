@@ -22,7 +22,10 @@ export function PlayerControls({
     const [showPacer, setShowPacer] = useState(false);
 
     const toggleSleepTimer = () => {
-        if (!sleepTimer) onSetSleepTimer(15);
+        if (!sleepTimer) onSetSleepTimer(3);
+        else if (sleepTimer === 3) onSetSleepTimer(6);
+        else if (sleepTimer === 6) onSetSleepTimer(9);
+        else if (sleepTimer === 9) onSetSleepTimer(15);
         else if (sleepTimer === 15) onSetSleepTimer(30);
         else if (sleepTimer === 30) onSetSleepTimer(60);
         else if (sleepTimer === 60) onSetSleepTimer(90);
