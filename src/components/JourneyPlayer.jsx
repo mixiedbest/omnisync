@@ -64,8 +64,15 @@ export function JourneyPlayer({ journey, onBack }) {
         // Auto-advance to next phase
         phaseTimerRef.current = setTimeout(() => {
             console.log(`[Journey] Phase ${phaseIndex} complete, advancing...`);
+            // Clear the interval before advancing
+            if (progressTimerRef.current) {
+                clearInterval(progressTimerRef.current);
+                progressTimerRef.current = null;
+            }
+
             if (phaseIndex < phases.length - 1) {
-                nextPhase();
+                // Directly start next phase
+                startPhase(phaseIndex + 1);
             } else {
                 console.log('[Journey] All phases complete');
                 endJourney();
