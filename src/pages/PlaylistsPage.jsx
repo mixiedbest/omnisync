@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Music, Plus, Play, MoreVertical, Users, Heart, Share2, Trash2, Edit2, Lock, Activity } from 'lucide-react';
+import { ArrowLeft, Music, Plus, Play, MoreVertical, Users, Heart, Share2, Trash2, Edit2, Lock, Activity, X, UserPlus } from 'lucide-react';
 import './PlaylistsPage.css';
 
 export function PlaylistsPage({ onBack, onPlayPlaylist }) {
@@ -226,17 +226,15 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
                                 <button
                                     className="action-btn"
                                     title="Add Collaborator"
-                                    style={{ color: 'var(--text-secondary)' }}
                                 >
-                                    <Users size={18} />
+                                    <UserPlus size={20} strokeWidth={2} color="currentColor" />
                                 </button>
                                 <button
                                     className="action-btn delete"
                                     onClick={() => handleDeletePlaylist(activePlaylist.id)}
                                     title="Delete Playlist"
-                                    style={{ color: 'var(--text-secondary)' }}
                                 >
-                                    <Trash2 size={18} />
+                                    <X size={20} strokeWidth={2} color="currentColor" />
                                 </button>
                             </div>
                         </div>
