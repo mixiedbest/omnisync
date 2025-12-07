@@ -79,15 +79,21 @@ export function PlayerControls({
                                 onClick={onPreviousTrack}
                                 disabled={!isPlaying}
                                 title="Previous Track"
+                                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: '60px' }}
                             >
                                 <SkipBack size={20} />
+                                <span style={{ fontSize: '10px', opacity: 0.8 }}>Previous</span>
                             </button>
                             <button
                                 className={`action-btn ${playlistMode !== 'normal' ? 'active' : ''}`}
                                 onClick={onTogglePlaylistMode}
                                 title={`Mode: ${playlistMode}`}
+                                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: '60px' }}
                             >
                                 {getModeIcon()}
+                                <span style={{ fontSize: '10px', opacity: 0.8 }}>
+                                    {playlistMode === 'shuffle' ? 'Shuffle' : playlistMode === 'repeat' ? 'Repeat' : 'Normal'}
+                                </span>
                             </button>
                         </>
                     )}

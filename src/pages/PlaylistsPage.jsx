@@ -223,18 +223,15 @@ export function PlaylistsPage({ onBack, onPlayPlaylist }) {
                                 </div>
                             </div>
                             <div className="panel-actions">
-                                <button className="action-btn" title="Add Collaborator" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <button className="action-btn" title="Add Collaborator">
                                     <Users size={18} />
-                                    <span style={{ fontSize: '13px' }}>Collaborate</span>
                                 </button>
                                 <button
                                     className="action-btn delete"
                                     onClick={() => handleDeletePlaylist(activePlaylist.id)}
                                     title="Delete Playlist"
-                                    style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                                 >
                                     <Trash2 size={18} />
-                                    <span style={{ fontSize: '13px' }}>Delete</span>
                                 </button>
                             </div>
                         </div>
