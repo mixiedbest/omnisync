@@ -150,37 +150,51 @@
 /* Contact Button */
 .contact-button {
   position: fixed;
-  bottom: 120px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
+  bottom: 140px;
+  right: 28px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-purple), var(--accent-teal));
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 6px 24px rgba(139, 92, 246, 0.5);
   transition: all 0.3s ease;
-  z-index: 2500;
+  z-index: 9999;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 6px 24px rgba(139, 92, 246, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.8);
+  }
 }
 
 .contact-button:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.6);
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.7);
+  animation: none;
 }
 
 .contact-button:active {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px) scale(1.05);
 }
 
 @media (max-width: 768px) {
   .contact-button {
-    bottom: 110px;
-    right: 20px;
-    width: 52px;
-    height: 52px;
+    bottom: 120px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
   }
 }
