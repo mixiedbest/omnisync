@@ -13,15 +13,21 @@ export function SwipeableNav({ items, onNavigate }) {
     // Allow scrolling to show the last item - need to go beyond items.length - cardsPerView
     const maxIndex = items.length - 1;
 
+
     const scrollToIndex = (index) => {
         if (containerRef.current) {
             const container = containerRef.current;
-            const cardWidth = container.scrollWidth / items.length;
-            const scrollPosition = index * cardWidth;
-            container.scrollTo({
-                left: scrollPosition,
-                behavior: 'smooth'
-            });
+            // Get the first card to measure its actual width
+            const firstCard = container.querySelector('.swipeable-card');
+            if (firstCard) {
+                const cardWidth = firstCard.offsetWidth;
+                const gap = 20; // gap from CSS
+                const scrollPosition = index * (cardWidth + gap);
+                container.scrollTo({
+                    left: scrollPosition,
+                    behavior: 'smooth'
+                });
+            }
             setCurrentIndex(index);
         }
     };
@@ -45,9 +51,13 @@ export function SwipeableNav({ items, onNavigate }) {
         setIsDragging(false);
         if (containerRef.current) {
             const container = containerRef.current;
-            const cardWidth = container.scrollWidth / items.length;
-            const newIndex = Math.round(container.scrollLeft / cardWidth);
-            scrollToIndex(Math.min(Math.max(0, newIndex), maxIndex));
+            const firstCard = container.querySelector('.swipeable-card');
+            if (firstCard) {
+                const cardWidth = firstCard.offsetWidth;
+                const gap = 20;
+                const newIndex = Math.round(container.scrollLeft / (cardWidth + gap));
+                scrollToIndex(Math.min(Math.max(0, newIndex), maxIndex));
+            }
         }
     };
 
@@ -70,9 +80,13 @@ export function SwipeableNav({ items, onNavigate }) {
         setIsDragging(false);
         if (containerRef.current) {
             const container = containerRef.current;
-            const cardWidth = container.scrollWidth / items.length;
-            const newIndex = Math.round(container.scrollLeft / cardWidth);
-            scrollToIndex(Math.min(Math.max(0, newIndex), maxIndex));
+            const firstCard = container.querySelector('.swipeable-card');
+            if (firstCard) {
+                const cardWidth = firstCard.offsetWidth;
+                const gap = 20;
+                const newIndex = Math.round(container.scrollLeft / (cardWidth + gap));
+                scrollToIndex(Math.min(Math.max(0, newIndex), maxIndex));
+            }
         }
     };
 
