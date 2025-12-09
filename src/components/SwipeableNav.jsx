@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './SwipeableNav.css';
 
 export function SwipeableNav({ items, onNavigate }) {
@@ -7,6 +8,9 @@ export function SwipeableNav({ items, onNavigate }) {
     const [startX, setStartX] = useState(0);
     const [translateX, setTranslateX] = useState(0);
     const containerRef = useRef(null);
+
+    const cardsPerView = 3;
+    const maxIndex = Math.max(0, items.length - cardsPerView);
 
     const handleTouchStart = (e) => {
         setIsDragging(true);
@@ -27,7 +31,7 @@ export function SwipeableNav({ items, onNavigate }) {
         if (Math.abs(translateX) > 100) {
             if (translateX > 0 && currentIndex > 0) {
                 setCurrentIndex(currentIndex - 1);
-            } else if (translateX < 0 && currentIndex < items.length - 1) {
+            } else if (translateX < 0 && currentIndex < maxIndex) {
                 setCurrentIndex(currentIndex + 1);
             }
         }
@@ -53,12 +57,24 @@ export function SwipeableNav({ items, onNavigate }) {
         if (Math.abs(translateX) > 100) {
             if (translateX > 0 && currentIndex > 0) {
                 setCurrentIndex(currentIndex - 1);
-            } else if (translateX < 0 && currentIndex < items.length - 1) {
+            } else if (translateX < 0 && currentIndex < maxIndex) {
                 setCurrentIndex(currentIndex + 1);
             }
         }
 
         setTranslateX(0);
+    };
+
+    const goToPrevious = () => {
+        if (currentIndex > 0) {
+            setCurrentIndex(currentIndex - 1);
+        }
+    };
+
+    const goToNext = () => {
+        if (currentIndex < maxIndex) {
+            setCurrentIndex(currentIndex + 1);
+        }
     };
 
     useEffect(() => {
@@ -78,6 +94,16 @@ export function SwipeableNav({ items, onNavigate }) {
 
     return (
         <div className="swipeable-nav">
+            {/* Left Arrow */}
+            <button
+                className="swipe-arrow swipe-arrow-left"
+                onClick={goToPrevious}
+                disabled={currentIndex === 0}
+                style={{ opacity: currentIndex === 0 ? 0.3 : 1 }}
+            >
+                <ChevronLeft size={32} />
+            </button>
+
             <div
                 className="swipeable-container"
                 ref={containerRef}
@@ -86,7 +112,7 @@ export function SwipeableNav({ items, onNavigate }) {
                 onTouchEnd={handleTouchEnd}
                 onMouseDown={handleMouseDown}
                 style={{
-                    transform: `translateX(calc(-${currentIndex * 100}% + ${translateX}px))`,
+                    transform: `translateX(calc(-${currentIndex * (100 / cardsPerView)}% + ${translateX}px))`,
                     transition: isDragging ? 'none' : 'transform 0.3s ease'
                 }}
             >
@@ -99,7 +125,7 @@ export function SwipeableNav({ items, onNavigate }) {
                             onClick={() => !isDragging && onNavigate(item.id)}
                         >
                             <div className="swipeable-icon">
-                                <Icon size={48} />
+                                <Icon size={40} />
                             </div>
                             <h3 className="swipeable-title">{item.title}</h3>
                             <p className="swipeable-description">{item.description}</p>
@@ -108,9 +134,19 @@ export function SwipeableNav({ items, onNavigate }) {
                 })}
             </div>
 
+            {/* Right Arrow */}
+            <button
+                className="swipe-arrow swipe-arrow-right"
+                onClick={goToNext}
+                disabled={currentIndex === maxIndex}
+                style={{ opacity: currentIndex === maxIndex ? 0.3 : 1 }}
+            >
+                <ChevronRight size={32} />
+            </button>
+
             {/* Pagination Dots */}
             <div className="swipeable-dots">
-                {items.map((_, index) => (
+                {Array.from({ length: maxIndex + 1 }).map((_, index) => (
                     <button
                         key={index}
                         className={`dot ${index === currentIndex ? 'active' : ''}`}
