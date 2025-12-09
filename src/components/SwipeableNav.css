@@ -1,0 +1,117 @@
+.swipeable-nav {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    padding: 20px 0;
+}
+
+.swipeable-container {
+    display: flex;
+    width: 100%;
+    cursor: grab;
+    user-select: none;
+}
+
+.swipeable-container:active {
+    cursor: grabbing;
+}
+
+.swipeable-card {
+    min-width: 100%;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 24px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.swipeable-card:hover {
+    transform: scale(1.02);
+    border-color: var(--accent-purple);
+    box-shadow: 0 12px 48px rgba(139, 92, 246, 0.3);
+}
+
+.swipeable-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-teal));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+.swipeable-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.swipeable-description {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.swipeable-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--glass-border);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.dot.active {
+    background: var(--accent-purple);
+    transform: scale(1.3);
+    box-shadow: 0 0 12px var(--accent-purple);
+}
+
+.dot:hover {
+    background: var(--accent-teal);
+}
+
+@media (max-width: 768px) {
+    .swipeable-card {
+        padding: 48px 32px;
+    }
+
+    .swipeable-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .swipeable-title {
+        font-size: 28px;
+    }
+
+    .swipeable-description {
+        font-size: 14px;
+    }
+}

@@ -1,10 +1,17 @@
-```javascript
 import { useState, useEffect } from 'react';
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings, List, Moon, Sun } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings, List, Moon, Sun, Grid, Columns } from 'lucide-react';
+import { SwipeableNav } from '../components/SwipeableNav';
 import './HomePage.css';
 
 export function HomePage({ onNavigate, theme, onToggleTheme }) {
     const [showDreamJournalButton, setShowDreamJournalButton] = useState(false);
+    const [layout, setLayout] = useState(() => {
+        return localStorage.getItem('omnisync_layout') || 'grid';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('omnisync_layout', layout);
+    }, [layout]);
 
     useEffect(() => {
         const savedSettings = localStorage.getItem('omnisync_settings');
@@ -98,13 +105,22 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
     return (
         <div className="home-page">
             <div className="home-header">
-                <button
-                    className="theme-toggle-btn"
-                    onClick={onToggleTheme}
-                    title={`Switch to ${ theme === 'dark' ? 'light' : 'dark' } mode`}
-                >
-                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                </button>
+                <div className="header-controls">
+                    <button
+                        className="theme-toggle-btn"
+                        onClick={onToggleTheme}
+                        title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                    >
+                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                    </button>
+                    <button
+                        className="layout-toggle-btn"
+                        onClick={() => setLayout(layout === 'grid' ? 'swipe' : 'grid')}
+                        title={`Switch to ${layout === 'grid' ? 'swipe' : 'grid'} layout`}
+                    >
+                        {layout === 'grid' ? <Columns size={20} /> : <Grid size={20} />}
+                    </button>
+                </div>
                 <img src="/omnisync-logo.png" alt="OMNISYNC" className="home-logo" />
                 <p className="home-subtitle">Please put on headphones and enjoy 🎧</p>
             </div>
@@ -149,22 +165,26 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
                 </div>
             )}
 
-            <div className="nav-grid">
-                {navItems.map(item => {
-                    const Icon = item.icon;
-                    return (
-                        <button
-                            key={item.id}
-                            className="nav-card glass-card"
-                            onClick={() => onNavigate(item.id)}
-                        >
-                            <Icon size={48} className="nav-icon" />
-                            <h2 className="nav-title">{item.title}</h2>
-                            <p className="nav-description">{item.description}</p>
-                        </button>
-                    );
-                })}
-            </div>
+            {layout === 'grid' ? (
+                <div className="nav-grid">
+                    {navItems.map(item => {
+                        const Icon = item.icon;
+                        return (
+                            <button
+                                key={item.id}
+                                className="nav-card glass-card"
+                                onClick={() => onNavigate(item.id)}
+                            >
+                                <Icon size={48} className="nav-icon" />
+                                <h2 className="nav-title">{item.title}</h2>
+                                <p className="nav-description">{item.description}</p>
+                            </button>
+                        );
+                    })}
+                </div>
+            ) : (
+                <SwipeableNav items={navItems} onNavigate={onNavigate} />
+            )}
 
             <div className="settings-link-container">
                 <button className="nav-btn profile-btn" onClick={() => onNavigate('profile')}>

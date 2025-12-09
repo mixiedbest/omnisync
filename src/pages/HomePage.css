@@ -13,10 +13,16 @@
     position: relative;
 }
 
-.theme-toggle-btn {
+.header-controls {
     position: absolute;
     top: 0;
     right: 0;
+    display: flex;
+    gap: 12px;
+}
+
+.theme-toggle-btn,
+.layout-toggle-btn {
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -32,7 +38,8 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.theme-toggle-btn:hover {
+.theme-toggle-btn:hover,
+.layout-toggle-btn:hover {
     transform: scale(1.1) rotate(15deg);
     box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
     border-color: var(--accent-purple);
