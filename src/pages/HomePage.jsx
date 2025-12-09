@@ -1,8 +1,9 @@
+```javascript
 import { useState, useEffect } from 'react';
-import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings, List, Moon } from 'lucide-react';
+import { Home, Info, Sliders, Music, FileText, CloudRain, Mountain, Sparkles, Zap, Compass, Star, User, Users, Settings, List, Moon, Sun } from 'lucide-react';
 import './HomePage.css';
 
-export function HomePage({ onNavigate }) {
+export function HomePage({ onNavigate, theme, onToggleTheme }) {
     const [showDreamJournalButton, setShowDreamJournalButton] = useState(false);
 
     useEffect(() => {
@@ -51,7 +52,7 @@ export function HomePage({ onNavigate }) {
             description: 'Frequency sweep to clear your field'
         },
         {
-            id: 'colors',
+            id: 'color-noises',
             title: 'Color Noises',
             icon: CloudRain,
             description: 'Full spectrum of healing noise colors'
@@ -75,6 +76,12 @@ export function HomePage({ onNavigate }) {
             description: 'Your sonic circle & synced sessions'
         },
         {
+            id: 'settings',
+            title: 'Settings',
+            icon: Settings,
+            description: 'Customize your experience'
+        },
+        {
             id: 'about',
             title: 'About',
             icon: Info,
@@ -91,6 +98,13 @@ export function HomePage({ onNavigate }) {
     return (
         <div className="home-page">
             <div className="home-header">
+                <button
+                    className="theme-toggle-btn"
+                    onClick={onToggleTheme}
+                    title={`Switch to ${ theme === 'dark' ? 'light' : 'dark' } mode`}
+                >
+                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                </button>
                 <img src="/omnisync-logo.png" alt="OMNISYNC" className="home-logo" />
                 <p className="home-subtitle">Please put on headphones and enjoy 🎧</p>
             </div>

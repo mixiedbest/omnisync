@@ -1,31 +1,53 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Deep, calming color palette */
+  /* Dark Mode (Default) */
   --bg-primary: #0a0e1a;
   --bg-secondary: #111827;
   --bg-tertiary: #1a1f35;
-  
+
   --accent-purple: #8b5cf6;
   --accent-blue: #3b82f6;
   --accent-teal: #14b8a6;
   --accent-pink: #ec4899;
-  
+
   --text-primary: #f9fafb;
   --text-secondary: #d1d5db;
   --text-muted: #9ca3af;
-  
+
   --glass-bg: rgba(17, 24, 39, 0.7);
   --glass-border: rgba(139, 92, 246, 0.2);
-  
+
   --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
-  
+
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light Mode */
+:root[data-theme="light"] {
+  --bg-primary: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 50%, #b19cd9 100%);
+  --bg-secondary: rgba(255, 255, 255, 0.3);
+  --bg-tertiary: rgba(255, 255, 255, 0.5);
+
+  --accent-purple: #9b7ec8;
+  --accent-blue: #6eb5d9;
+  --accent-teal: #7dd3c0;
+  --accent-pink: #f5a9d0;
+
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.4);
+
+  --shadow-glow: 0 0 40px rgba(168, 230, 207, 0.3);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -41,6 +63,11 @@ body {
   overflow-x: hidden;
 }
 
+:root[data-theme="light"] body {
+  background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 50%, #b19cd9 100%);
+  background-attachment: fixed;
+}
+
 #root {
   min-height: 100vh;
 }
@@ -53,19 +80,26 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: linear-gradient(135deg, 
-    #0a0e1a 0%, 
-    #1a1035 25%, 
-    #0f1729 50%, 
-    #1a1035 75%, 
-    #0a0e1a 100%);
+  background: linear-gradient(135deg,
+      #0a0e1a 0%,
+      #1a1035 25%,
+      #0f1729 50%,
+      #1a1035 75%,
+      #0a0e1a 100%);
   background-size: 400% 400%;
   animation: gradientShift 20s ease infinite;
 }
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 /* Glassmorphism Card */
@@ -79,7 +113,9 @@ body {
 }
 
 /* Smooth Transitions */
-button, .category-item, .frequency-item {
+button,
+.category-item,
+.frequency-item {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

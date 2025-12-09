@@ -51,6 +51,19 @@ function App() {
   const [playlistQueue, setPlaylistQueue] = useState([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [playlistMode, setPlaylistMode] = useState('normal'); // 'normal', 'shuffle', 'repeat-one', 'repeat-all'
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('omnisync_theme') || 'dark';
+  });
+
+  // Apply theme to document root
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('omnisync_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -312,7 +325,11 @@ function App() {
     return (
       <>
         <Visualizer isPlaying={isPlaying} currentTrack={displayTrack} />
-        <HomePage onNavigate={handleNavigate} />
+        <HomePage
+          onNavigate={handleNavigate}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
         <PlayerControls
           {...playerControlsProps}
           isPlaying={isPlaying}
