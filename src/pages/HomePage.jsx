@@ -83,12 +83,6 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             description: 'Your sonic circle & synced sessions'
         },
         {
-            id: 'settings',
-            title: 'Settings',
-            icon: Settings,
-            description: 'Customize your experience'
-        },
-        {
             id: 'about',
             title: 'About',
             icon: Info,
