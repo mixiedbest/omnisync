@@ -26,6 +26,7 @@ import { PlaylistsPage } from './pages/PlaylistsPage';
 import { PlaylistSelectorModal } from './components/PlaylistSelectorModal';
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt';
 import { TinnitusTherapy } from './components/TinnitusTherapy';
+import { ContactForm } from './components/ContactForm';
 import './App.css';
 import './polish.css';
 
@@ -43,6 +44,7 @@ function App() {
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const [itemToAdd, setItemToAdd] = useState(null);
   const [showTinnitusTherapy, setShowTinnitusTherapy] = useState(false);
+  const [showContactForm, setShowContactForm] = useState(false);
 
   // Playlist playback state
   const [currentPlaylist, setCurrentPlaylist] = useState(null);
@@ -693,6 +695,23 @@ function App() {
           }}
         />
       )}
+
+      {/* Contact Form */}
+      {showContactForm && (
+        <ContactForm onClose={() => setShowContactForm(false)} />
+      )}
+
+      {/* Contact Button */}
+      <button
+        className="contact-button"
+        onClick={() => setShowContactForm(true)}
+        title="Contact Us"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+          <polyline points="22,6 12,13 2,6" />
+        </svg>
+      </button>
 
       <PWAUpdatePrompt />
     </>
