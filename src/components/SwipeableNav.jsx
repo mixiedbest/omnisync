@@ -10,7 +10,8 @@ export function SwipeableNav({ items, onNavigate }) {
     const containerRef = useRef(null);
 
     const cardsPerView = 3;
-    const maxIndex = Math.max(0, items.length - cardsPerView);
+    // Allow scrolling to show the last item - need to go beyond items.length - cardsPerView
+    const maxIndex = items.length - 1;
 
     const scrollToIndex = (index) => {
         if (containerRef.current) {
