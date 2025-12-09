@@ -112,7 +112,7 @@ export function SwipeableNav({ items, onNavigate }) {
                 onTouchEnd={handleTouchEnd}
                 onMouseDown={handleMouseDown}
                 style={{
-                    transform: `translateX(calc(-${currentIndex * (100 / items.length)}% + ${translateX}px))`,
+                    transform: `translateX(calc(-${currentIndex * 100}% / ${cardsPerView} - ${currentIndex * 20}px + ${translateX}px))`,
                     transition: isDragging ? 'none' : 'transform 0.3s ease'
                 }}
             >
