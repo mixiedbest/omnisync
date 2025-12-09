@@ -10,8 +10,17 @@
 .swipeable-container {
     display: flex;
     gap: 20px;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     cursor: grab;
     user-select: none;
+}
+
+.swipeable-container::-webkit-scrollbar {
+    display: none;
 }
 
 .swipeable-container:active {
@@ -20,6 +29,8 @@
 
 .swipeable-card {
     min-width: calc((100% - 40px) / 3);
+    flex-shrink: 0;
+    scroll-snap-align: start;
     padding: 40px 24px;
     display: flex;
     flex-direction: column;

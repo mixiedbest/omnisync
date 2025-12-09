@@ -6,74 +6,84 @@ export function SwipeableNav({ items, onNavigate }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
-    const [translateX, setTranslateX] = useState(0);
+    const [scrollLeft, setScrollLeft] = useState(0);
     const containerRef = useRef(null);
 
     const cardsPerView = 3;
     const maxIndex = Math.max(0, items.length - cardsPerView);
 
+    const scrollToIndex = (index) => {
+        if (containerRef.current) {
+            const container = containerRef.current;
+            const cardWidth = container.scrollWidth / items.length;
+            const scrollPosition = index * cardWidth;
+            container.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+            setCurrentIndex(index);
+        }
+    };
+
     const handleTouchStart = (e) => {
         setIsDragging(true);
         setStartX(e.touches[0].clientX);
+        if (containerRef.current) {
+            setScrollLeft(containerRef.current.scrollLeft);
+        }
     };
 
     const handleTouchMove = (e) => {
-        if (!isDragging) return;
+        if (!isDragging || !containerRef.current) return;
         const currentX = e.touches[0].clientX;
-        const diff = currentX - startX;
-        setTranslateX(diff);
+        const diff = startX - currentX;
+        containerRef.current.scrollLeft = scrollLeft + diff;
     };
 
     const handleTouchEnd = () => {
         setIsDragging(false);
-
-        // Swipe threshold
-        if (Math.abs(translateX) > 100) {
-            if (translateX > 0 && currentIndex > 0) {
-                setCurrentIndex(currentIndex - 1);
-            } else if (translateX < 0 && currentIndex < maxIndex) {
-                setCurrentIndex(currentIndex + 1);
-            }
+        if (containerRef.current) {
+            const container = containerRef.current;
+            const cardWidth = container.scrollWidth / items.length;
+            const newIndex = Math.round(container.scrollLeft / cardWidth);
+            scrollToIndex(Math.min(Math.max(0, newIndex), maxIndex));
         }
-
-        setTranslateX(0);
     };
 
     const handleMouseDown = (e) => {
         setIsDragging(true);
         setStartX(e.clientX);
+        if (containerRef.current) {
+            setScrollLeft(containerRef.current.scrollLeft);
+        }
     };
 
     const handleMouseMove = (e) => {
-        if (!isDragging) return;
+        if (!isDragging || !containerRef.current) return;
         const currentX = e.clientX;
-        const diff = currentX - startX;
-        setTranslateX(diff);
+        const diff = startX - currentX;
+        containerRef.current.scrollLeft = scrollLeft + diff;
     };
 
     const handleMouseUp = () => {
         setIsDragging(false);
-
-        if (Math.abs(translateX) > 100) {
-            if (translateX > 0 && currentIndex > 0) {
-                setCurrentIndex(currentIndex - 1);
-            } else if (translateX < 0 && currentIndex < maxIndex) {
-                setCurrentIndex(currentIndex + 1);
-            }
+        if (containerRef.current) {
+            const container = containerRef.current;
+            const cardWidth = container.scrollWidth / items.length;
+            const newIndex = Math.round(container.scrollLeft / cardWidth);
+            scrollToIndex(Math.min(Math.max(0, newIndex), maxIndex));
         }
-
-        setTranslateX(0);
     };
 
     const goToPrevious = () => {
         if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);
+            scrollToIndex(currentIndex - 1);
         }
     };
 
     const goToNext = () => {
         if (currentIndex < maxIndex) {
-            setCurrentIndex(currentIndex + 1);
+            scrollToIndex(currentIndex + 1);
         }
     };
 
@@ -90,7 +100,7 @@ export function SwipeableNav({ items, onNavigate }) {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [isDragging, translateX]);
+    }, [isDragging, scrollLeft, startX]);
 
     return (
         <div className="swipeable-nav">
@@ -111,10 +121,6 @@ export function SwipeableNav({ items, onNavigate }) {
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
                 onMouseDown={handleMouseDown}
-                style={{
-                    transform: `translateX(calc(-${currentIndex * 100}% / ${cardsPerView} - ${currentIndex * 20}px + ${translateX}px))`,
-                    transition: isDragging ? 'none' : 'transform 0.3s ease'
-                }}
             >
                 {items.map((item, index) => {
                     const Icon = item.icon;
@@ -150,7 +156,7 @@ export function SwipeableNav({ items, onNavigate }) {
                     <button
                         key={index}
                         className={`dot ${index === currentIndex ? 'active' : ''}`}
-                        onClick={() => setCurrentIndex(index)}
+                        onClick={() => scrollToIndex(index)}
                     />
                 ))}
             </div>
