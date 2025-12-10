@@ -698,3 +698,34 @@
         transform: translateY(-10px);
     }
 }
+
+/* Light Mode Overrides */
+:root[data-theme="light"] .stat-card,
+:root[data-theme="light"] .feature-card,
+:root[data-theme="light"] .connection-card,
+:root[data-theme="light"] .modal-content {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+}
+
+:root[data-theme="light"] .feature-card:hover {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--text-primary);
+}
+
+:root[data-theme="light"] .connection-name,
+:root[data-theme="light"] .modal-content h3 {
+    color: #1a202c;
+}
+
+:root[data-theme="light"] .connection-input {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(123, 95, 184, 0.3);
+    color: #1a202c;
+}
+
+:root[data-theme="light"] .remove-connection-btn,
+:root[data-theme="light"] .sync-btn {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(123, 95, 184, 0.2);
+}

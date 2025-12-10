@@ -360,3 +360,64 @@ select {
     line-height: 1.4;
     margin: 0;
 }
+
+/* Light Mode Overrides */
+:root[data-theme="light"] .tab-btn {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+    color: #1a202c;
+}
+
+:root[data-theme="light"] .tab-btn:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(123, 95, 184, 0.5);
+}
+
+:root[data-theme="light"] .tab-btn.active {
+    background: var(--accent-purple);
+    color: white;
+}
+
+:root[data-theme="light"] .date-input,
+:root[data-theme="light"] select,
+:root[data-theme="light"] .name-input {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(123, 95, 184, 0.3);
+    color: #1a202c;
+}
+
+:root[data-theme="light"] .chart-summary,
+:root[data-theme="light"] .moon-phase-card,
+:root[data-theme="light"] .add-person-btn {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+    color: #1a202c;
+}
+
+:root[data-theme="light"] .planetary-card {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+}
+
+:root[data-theme="light"] .planetary-card:hover {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
+}
+
+:root[data-theme="light"] .intention-btn {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+    color: #2d3748;
+}
+
+:root[data-theme="light"] .intention-btn.active {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+}
+
+:root[data-theme="light"] .moon-purpose,
+:root[data-theme="light"] .planet-header h4,
+:root[data-theme="light"] .planet-freq {
+    color: #1a202c;
+}

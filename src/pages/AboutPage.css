@@ -386,3 +386,37 @@
         padding: 24px 20px;
     }
 }
+
+/* Light Mode Overrides */
+:root[data-theme="light"] .brainwave-card,
+:root[data-theme="light"] .tech-card,
+:root[data-theme="light"] .section-header,
+:root[data-theme="light"] .creator-profile,
+:root[data-theme="light"] .mission-section,
+:root[data-theme="light"] .mission-values {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+}
+
+:root[data-theme="light"] .section-header:hover {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(123, 95, 184, 0.5);
+}
+
+:root[data-theme="light"] .example-box {
+    background: rgba(139, 92, 246, 0.1);
+    color: #1a202c;
+    border-left-color: var(--accent-purple);
+}
+
+:root[data-theme="light"] .benefits-list li {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(139, 92, 246, 0.3);
+    color: #1a202c;
+}
+
+:root[data-theme="light"] .closing,
+:root[data-theme="light"] .privacy-notice {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+}
