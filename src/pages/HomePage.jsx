@@ -59,7 +59,7 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             description: 'Frequency sweep to clear your field'
         },
         {
-            id: 'color-noises',
+            id: 'colors',
             title: 'Color Noises',
             icon: CloudRain,
             description: 'Full spectrum of healing noise colors'

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, User, Sparkles, BookOpen, Activity, Heart, Brain, Zap, Star, Frown, Meh, Smile, Coffee, Battery, BatteryLow, Wind, Cloud, Flame, Moon, Clock, Diamond, Feather, Shield, Palette, Waves, Rocket } from 'lucide-react';
 import { energyProfiles } from '../data/energyProfiles';
 import './InnerSyncPage.css';
+import './InnerSyncLightMode.css';
 
 const iconMap = {
     Diamond, Zap, Flame, Heart, Feather, Shield, Palette, Waves, Rocket

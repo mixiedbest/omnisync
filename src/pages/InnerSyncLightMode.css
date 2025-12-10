@@ -1,0 +1,37 @@
+/* Light Mode Overrides for InnerSync */
+:root[data-theme="light"] .innersync-page {
+    background: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 50%, #b19cd9 100%);
+    background-attachment: fixed;
+}
+
+:root[data-theme="light"] .username-input,
+:root[data-theme="light"] .tab-btn,
+:root[data-theme="light"] .favorite-card,
+:root[data-theme="light"] .journal-entry,
+:root[data-theme="light"] .stat-box,
+:root[data-theme="light"] .session-item,
+:root[data-theme="light"] .gratitude-card,
+:root[data-theme="light"] .history-column {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+}
+
+:root[data-theme="light"] .emotion-card,
+:root[data-theme="light"] .symptom-card {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+:root[data-theme="light"] .emotion-label,
+:root[data-theme="light"] .symptom-label {
+    color: #1a202c;
+}
+
+:root[data-theme="light"] .gratitude-input {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(123, 95, 184, 0.3);
+}
+
+:root[data-theme="light"] .gratitude-entry-card {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(123, 95, 184, 0.2);
+}

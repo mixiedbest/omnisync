@@ -130,3 +130,29 @@
         font-size: 18px;
     }
 }
+
+/* Light Mode */
+:root[data-theme="light"] .disclaimer-content {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.3);
+}
+
+:root[data-theme="light"] .disclaimer-section {
+    background: rgba(123, 95, 184, 0.1);
+}
+
+:root[data-theme="light"] .disclaimer-warning {
+    background: rgba(216, 139, 184, 0.2);
+    border-color: rgba(216, 139, 184, 0.4);
+}
+
+:root[data-theme="light"] .disclaimer-emergency {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #dc2626;
+}
+
+:root[data-theme="light"] .disclaimer-agreement {
+    background: rgba(90, 159, 199, 0.15);
+    border-color: rgba(90, 159, 199, 0.3);
+}

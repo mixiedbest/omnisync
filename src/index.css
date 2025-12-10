@@ -31,23 +31,23 @@
 /* Light Mode */
 :root[data-theme="light"] {
   --bg-primary: linear-gradient(135deg, #a8e6cf 0%, #dda0dd 50%, #b19cd9 100%);
-  --bg-secondary: rgba(255, 255, 255, 0.3);
-  --bg-tertiary: rgba(255, 255, 255, 0.5);
+  --bg-secondary: rgba(255, 255, 255, 0.5);
+  --bg-tertiary: rgba(255, 255, 255, 0.7);
 
-  --accent-purple: #9b7ec8;
-  --accent-blue: #6eb5d9;
-  --accent-teal: #7dd3c0;
-  --accent-pink: #f5a9d0;
+  --accent-purple: #7b5fb8;
+  --accent-blue: #5a9fc7;
+  --accent-teal: #5db8a8;
+  --accent-pink: #d88bb8;
 
-  --text-primary: #2d3748;
-  --text-secondary: #4a5568;
-  --text-muted: #718096;
+  --text-primary: #1a202c;
+  --text-secondary: #2d3748;
+  --text-muted: #4a5568;
 
-  --glass-bg: rgba(255, 255, 255, 0.25);
-  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(123, 95, 184, 0.3);
 
   --shadow-glow: 0 0 40px rgba(168, 230, 207, 0.3);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 * {
