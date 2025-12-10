@@ -210,3 +210,40 @@
         align-items: flex-start;
     }
 }
+
+/* Light Mode */
+:root[data-theme="light"] .favorite-btn {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(123, 95, 184, 0.4);
+    color: var(--accent-purple);
+}
+
+:root[data-theme="light"] .favorite-btn:hover {
+    background: rgba(123, 95, 184, 0.2);
+    border-color: var(--accent-purple);
+}
+
+:root[data-theme="light"] .favorite-btn.favorited {
+    color: #d88bb8;
+    border-color: #d88bb8;
+    background: rgba(216, 139, 184, 0.25);
+}
+
+:root[data-theme="light"] .favorite-btn.favorited:hover {
+    background: rgba(216, 139, 184, 0.35);
+}
+
+:root[data-theme="light"] .frequency-item {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(123, 95, 184, 0.2);
+}
+
+:root[data-theme="light"] .frequency-item:hover {
+    background: rgba(123, 95, 184, 0.2);
+    border-color: rgba(123, 95, 184, 0.4);
+}
+
+:root[data-theme="light"] .frequency-item.active {
+    background: rgba(123, 95, 184, 0.3);
+    border-color: var(--accent-purple);
+}
