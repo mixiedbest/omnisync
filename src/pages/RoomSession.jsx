@@ -970,29 +970,18 @@ export function RoomSession({ room, onBack, username, isAnonymous = false }) {
                 </div>
 
                 {/* Breathing Pacer for Journey Mode */}
-                {isPlaying && selectedSound?.short?.phases && (() => {
-                    const phases = selectedSound[journeyDuration]?.phases || selectedSound.short?.phases;
-                    const phaseIndex = Math.min(currentJourneyPhase, phases.length - 1);
-                    const currentPhase = phases[phaseIndex];
+                {(() => {
+                    const currentPhase = journey?.phases?.[currentJourneyPhase];
                     const breathingPattern = currentPhase?.breathingPattern || 'box';
 
+                    if (!currentPhase?.breathingGuide) return null;
+
                     return (
-                        <div style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            zIndex: 100,
-                            pointerEvents: 'none'
-                        }}>
-                            <div style={{ pointerEvents: 'auto' }}>
-                                <BreathingPacer
-                                    key={`${breathingPattern}-${currentJourneyPhase}`}
-                                    pattern={breathingPattern}
-                                    onClose={() => { }}
-                                />
-                            </div>
-                        </div>
+                        <BreathingPacer
+                            key={`${breathingPattern}-${currentJourneyPhase}`}
+                            pattern={breathingPattern}
+                            onClose={() => { }}
+                        />
                     );
                 })()}
 
