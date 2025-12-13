@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Wind, Settings } from 'lucide-react';
 import './BreathingPacer.css';
 
