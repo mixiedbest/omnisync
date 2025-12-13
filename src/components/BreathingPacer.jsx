@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Wind, Settings } from 'lucide-react';
 import './BreathingPacer.css';
 
@@ -90,7 +91,7 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
         };
     }, [selectedPattern, pattern]); // Added pattern to dependencies to ensure it's up-to-date
 
-    return (
+    return createPortal(
         <div className="breathing-overlay">
             <div className="breathing-overlay-content">
                 <button className="close-pacer-btn" onClick={onClose}>
@@ -176,6 +177,7 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
