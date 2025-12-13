@@ -538,50 +538,87 @@
     }
 }
 
-/* Golden Ratio Explorer Styles */
-.golden-ratio-section {
-    border: 2px solid rgba(251, 191, 36, 0.3);
-    background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(139, 92, 246, 0.05));
+/* Golden Ratio Explorer Button & Modal */
+.golden-ratio-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(139, 92, 246, 0.1));
+    border: 2px solid rgba(251, 191, 36, 0.4);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 12px;
 }
 
-.section-toggle {
-    width: 100%;
+.golden-ratio-btn:hover {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(139, 92, 246, 0.2));
+    border-color: rgba(251, 191, 36, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
+}
+
+.golden-explorer-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 2000;
+    padding: 32px;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(251, 191, 36, 0.3);
 }
 
-.section-toggle:hover {
-    opacity: 0.8;
-}
-
-.toggle-icon {
+.modal-header h3 {
     font-size: 24px;
     font-weight: 700;
-    color: var(--accent-purple);
+    color: var(--text-primary);
+    margin: 0;
 }
 
-.golden-explorer-content {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(251, 191, 36, 0.2);
+.close-modal-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    color: var(--text-primary);
+    transform: rotate(90deg);
 }
 
 .explorer-desc {
     font-size: 14px;
     color: var(--text-secondary);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     line-height: 1.6;
     text-align: center;
 }
 
 .golden-input-group {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
 }
 
 .golden-input-group label {
@@ -596,12 +633,12 @@
 .golden-harmonics-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 32px;
 }
 
 .harmonic-card {
-    padding: 16px;
+    padding: 20px;
     border-radius: 12px;
     text-align: center;
     transition: all 0.3s ease;
@@ -639,26 +676,26 @@
 }
 
 .harmonic-freq {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .harmonic-desc {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--text-secondary);
     margin-bottom: 12px;
 }
 
 .apply-btn {
     width: 100%;
-    padding: 6px 12px;
+    padding: 8px 12px;
     background: rgba(139, 92, 246, 0.2);
     border: 1px solid rgba(139, 92, 246, 0.4);
     border-radius: 6px;
     color: var(--accent-purple);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -671,15 +708,15 @@
 }
 
 .golden-pairs {
-    padding-top: 20px;
-    border-top: 1px solid rgba(251, 191, 36, 0.2);
+    padding-top: 24px;
+    border-top: 2px solid rgba(251, 191, 36, 0.2);
 }
 
 .pairs-label {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     text-align: center;
 }
 
@@ -690,12 +727,12 @@
 }
 
 .pair-btn {
-    padding: 12px;
+    padding: 14px;
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(139, 92, 246, 0.1));
     border: 2px solid rgba(251, 191, 36, 0.3);
     border-radius: 8px;
     color: var(--text-primary);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -709,9 +746,10 @@
 }
 
 /* Light Mode Overrides */
-:root[data-theme="light"] .golden-ratio-section {
-    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(139, 92, 246, 0.1));
-    border-color: rgba(251, 191, 36, 0.4);
+:root[data-theme="light"] .golden-ratio-btn {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(139, 92, 246, 0.15));
+    border-color: rgba(251, 191, 36, 0.5);
+    color: #1a202c;
 }
 
 :root[data-theme="light"] .harmonic-card.descent {
@@ -730,7 +768,8 @@
 }
 
 :root[data-theme="light"] .harmonic-freq,
-:root[data-theme="light"] .pairs-label {
+:root[data-theme="light"] .pairs-label,
+:root[data-theme="light"] .modal-header h3 {
     color: #1a202c;
 }
 
@@ -742,4 +781,11 @@
     .pairs-grid {
         grid-template-columns: 1fr;
     }
+
+    .golden-explorer-modal {
+        width: 95%;
+        padding: 20px;
+    }
 }
+
+```

@@ -412,127 +412,6 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause, on
                     </div>
                 </div>
 
-                {/* Golden Ratio Explorer */}
-                <div className="mixer-section golden-ratio-section">
-                    <button
-                        className="section-toggle"
-                        onClick={() => setShowGoldenExplorer(!showGoldenExplorer)}
-                    >
-                        <div className="section-title">
-                            <Zap size={18} /> Golden Ratio Explorer (φ ≈ 1.618)
-                        </div>
-                        <span className="toggle-icon">{showGoldenExplorer ? '−' : '+'}</span>
-                    </button>
-
-                    {showGoldenExplorer && (
-                        <div className="golden-explorer-content">
-                            <p className="explorer-desc">
-                                Enter any base frequency to see its golden ratio harmonics.
-                                φ-scaled frequencies create naturally balanced, organic sound relationships.
-                            </p>
-
-                            <div className="golden-input-group">
-                                <label>Base Frequency (Hz)</label>
-                                <input
-                                    type="number"
-                                    min="20"
-                                    max="2000"
-                                    step="1"
-                                    value={goldenBaseFreq}
-                                    onChange={(e) => setGoldenBaseFreq(Number(e.target.value))}
-                                    className="freq-input"
-                                />
-                            </div>
-
-                            <div className="golden-harmonics-grid">
-                                <div className="harmonic-card descent">
-                                    <div className="harmonic-label">φ⁻² (Descent)</div>
-                                    <div className="harmonic-freq">{goldenHarmonics.phiDown2} Hz</div>
-                                    <div className="harmonic-desc">Base ÷ φ ÷ φ</div>
-                                    <button
-                                        className="apply-btn"
-                                        onClick={() => applyGoldenHarmonic(goldenHarmonics.phiDown2)}
-                                    >
-                                        Apply
-                                    </button>
-                                </div>
-
-                                <div className="harmonic-card descent">
-                                    <div className="harmonic-label">φ⁻¹ (Grounding)</div>
-                                    <div className="harmonic-freq">{goldenHarmonics.phiDown1} Hz</div>
-                                    <div className="harmonic-desc">Base ÷ φ</div>
-                                    <button
-                                        className="apply-btn"
-                                        onClick={() => applyGoldenHarmonic(goldenHarmonics.phiDown1)}
-                                    >
-                                        Apply
-                                    </button>
-                                </div>
-
-                                <div className="harmonic-card base">
-                                    <div className="harmonic-label">φ⁰ (Base)</div>
-                                    <div className="harmonic-freq">{goldenHarmonics.base} Hz</div>
-                                    <div className="harmonic-desc">Foundation</div>
-                                    <button
-                                        className="apply-btn"
-                                        onClick={() => applyGoldenHarmonic(goldenHarmonics.base)}
-                                    >
-                                        Apply
-                                    </button>
-                                </div>
-
-                                <div className="harmonic-card ascent">
-                                    <div className="harmonic-label">φ¹ (Heart)</div>
-                                    <div className="harmonic-freq">{goldenHarmonics.phiUp1} Hz</div>
-                                    <div className="harmonic-desc">Base × φ</div>
-                                    <button
-                                        className="apply-btn"
-                                        onClick={() => applyGoldenHarmonic(goldenHarmonics.phiUp1)}
-                                    >
-                                        Apply
-                                    </button>
-                                </div>
-
-                                <div className="harmonic-card ascent">
-                                    <div className="harmonic-label">φ² (Awareness)</div>
-                                    <div className="harmonic-freq">{goldenHarmonics.phiUp2} Hz</div>
-                                    <div className="harmonic-desc">Base × φ × φ</div>
-                                    <button
-                                        className="apply-btn"
-                                        onClick={() => applyGoldenHarmonic(goldenHarmonics.phiUp2)}
-                                    >
-                                        Apply
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="golden-pairs">
-                                <div className="pairs-label">Quick Pairs (Base + φ Harmonic)</div>
-                                <div className="pairs-grid">
-                                    <button
-                                        className="pair-btn"
-                                        onClick={() => applyGoldenPair(goldenHarmonics.base, goldenHarmonics.phiUp1)}
-                                    >
-                                        Base + φ¹
-                                    </button>
-                                    <button
-                                        className="pair-btn"
-                                        onClick={() => applyGoldenPair(goldenHarmonics.base, goldenHarmonics.phiUp2)}
-                                    >
-                                        Base + φ²
-                                    </button>
-                                    <button
-                                        className="pair-btn"
-                                        onClick={() => applyGoldenPair(goldenHarmonics.phiDown1, goldenHarmonics.base)}
-                                    >
-                                        φ⁻¹ + Base
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
                 <button
                     className={`generate-btn ${isActive ? 'playing' : ''}`}
                     onClick={handleGenerate}
@@ -560,7 +439,157 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause, on
                         Tinnitus Relief Therapy
                     </button>
                 )}
+
+                <button
+                    className="golden-ratio-btn"
+                    onClick={() => setShowGoldenExplorer(!showGoldenExplorer)}
+                    title="Explore Golden Ratio Frequencies"
+                >
+                    <Zap size={20} />
+                    Golden Ratio Explorer (φ)
+                </button>
             </div>
+
+            {/* Golden Ratio Explorer Modal */}
+            {showGoldenExplorer && (
+                <div className="golden-explorer-modal glass-card">
+                    <div className="modal-header">
+                        <h3>⚛️ Golden Ratio Explorer (φ ≈ 1.618)</h3>
+                        <button className="close-modal-btn" onClick={() => setShowGoldenExplorer(false)}>
+                            <X size={24} />
+                        </button>
+                    </div>
+
+                    <p className="explorer-desc">
+                        Enter any base frequency to see its golden ratio harmonics.
+                        φ-scaled frequencies create naturally balanced, organic sound relationships.
+                    </p>
+
+                    <div className="golden-input-group">
+                        <label>Base Frequency (Hz)</label>
+                        <input
+                            type="number"
+                            min="20"
+                            max="2000"
+                            step="1"
+                            value={goldenBaseFreq}
+                            onChange={(e) => setGoldenBaseFreq(Number(e.target.value))}
+                            className="freq-input"
+                        />
+                    </div>
+
+                    <div className="golden-harmonics-grid">
+                        <div className="harmonic-card descent">
+                            <div className="harmonic-label">φ⁻² (Descent)</div>
+                            <div className="harmonic-freq">{goldenHarmonics.phiDown2} Hz</div>
+                            <div className="harmonic-desc">Base ÷ φ ÷ φ</div>
+                            <button
+                                className="apply-btn"
+                                onClick={() => {
+                                    applyGoldenHarmonic(goldenHarmonics.phiDown2);
+                                    setShowGoldenExplorer(false);
+                                }}
+                            >
+                                Apply
+                            </button>
+                        </div>
+
+                        <div className="harmonic-card descent">
+                            <div className="harmonic-label">φ⁻¹ (Grounding)</div>
+                            <div className="harmonic-freq">{goldenHarmonics.phiDown1} Hz</div>
+                            <div className="harmonic-desc">Base ÷ φ</div>
+                            <button
+                                className="apply-btn"
+                                onClick={() => {
+                                    applyGoldenHarmonic(goldenHarmonics.phiDown1);
+                                    setShowGoldenExplorer(false);
+                                }}
+                            >
+                                Apply
+                            </button>
+                        </div>
+
+                        <div className="harmonic-card base">
+                            <div className="harmonic-label">φ⁰ (Base)</div>
+                            <div className="harmonic-freq">{goldenHarmonics.base} Hz</div>
+                            <div className="harmonic-desc">Foundation</div>
+                            <button
+                                className="apply-btn"
+                                onClick={() => {
+                                    applyGoldenHarmonic(goldenHarmonics.base);
+                                    setShowGoldenExplorer(false);
+                                }}
+                            >
+                                Apply
+                            </button>
+                        </div>
+
+                        <div className="harmonic-card ascent">
+                            <div className="harmonic-label">φ¹ (Heart)</div>
+                            <div className="harmonic-freq">{goldenHarmonics.phiUp1} Hz</div>
+                            <div className="harmonic-desc">Base × φ</div>
+                            <button
+                                className="apply-btn"
+                                onClick={() => {
+                                    applyGoldenHarmonic(goldenHarmonics.phiUp1);
+                                    setShowGoldenExplorer(false);
+                                }}
+                            >
+                                Apply
+                            </button>
+                        </div>
+
+                        <div className="harmonic-card ascent">
+                            <div className="harmonic-label">φ² (Awareness)</div>
+                            <div className="harmonic-freq">{goldenHarmonics.phiUp2} Hz</div>
+                            <div className="harmonic-desc">Base × φ × φ</div>
+                            <button
+                                className="apply-btn"
+                                onClick={() => {
+                                    applyGoldenHarmonic(goldenHarmonics.phiUp2);
+                                    setShowGoldenExplorer(false);
+                                }}
+                            >
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="golden-pairs">
+                        <div className="pairs-label">Quick Pairs (Base + φ Harmonic)</div>
+                        <div className="pairs-grid">
+                            <button
+                                className="pair-btn"
+                                onClick={() => {
+                                    applyGoldenPair(goldenHarmonics.base, goldenHarmonics.phiUp1);
+                                    setShowGoldenExplorer(false);
+                                }}
+                            >
+                                Base + φ¹
+                            </button>
+                            <button
+                                className="pair-btn"
+                                onClick={() => {
+                                    applyGoldenPair(goldenHarmonics.base, goldenHarmonics.phiUp2);
+                                    setShowGoldenExplorer(false);
+                                }}
+                            >
+                                Base + φ²
+                            </button>
+                            <button
+                                className="pair-btn"
+                                onClick={() => {
+                                    applyGoldenPair(goldenHarmonics.phiDown1, goldenHarmonics.base);
+                                    setShowGoldenExplorer(false);
+                                }}
+                            >
+                                φ⁻¹ + Base
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
+        </div >
     );
 }
