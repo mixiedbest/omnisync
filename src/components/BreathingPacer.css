@@ -5,11 +5,13 @@
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.6);
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    display: grid !important;
+    place-items: center !important;
     z-index: 9999;
     animation: fadeIn 0.3s ease;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
 }
 
 .breathing-overlay-content {
