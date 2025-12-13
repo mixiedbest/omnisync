@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { X, Wind, Settings } from 'lucide-react';
 import './BreathingPacer.css';
 
@@ -56,32 +55,6 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
 
     const pattern = BREATHING_PATTERNS[selectedPattern];
 
-    // Lock body scroll when component mounts
-    useEffect(() => {
-        const originalOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-
-        return () => {
-            document.body.style.overflow = originalOverflow;
-        };
-    }, []);
-
-    // Create portal container
-    const [portalContainer] = useState(() => {
-        const div = document.createElement('div');
-        div.id = 'breathing-pacer-portal';
-        div.style.cssText = 'position: fixed; inset: 0; z-index: 9999; pointer-events: none;';
-        return div;
-    });
-
-    useEffect(() => {
-        document.body.appendChild(portalContainer);
-        return () => {
-            document.body.removeChild(portalContainer);
-        };
-    }, [portalContainer]);
-
-
     // Update pattern when prop changes (for journey phase transitions)
     useEffect(() => {
         setSelectedPattern(initialPattern);
@@ -117,8 +90,8 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
         };
     }, [selectedPattern, pattern]); // Added pattern to dependencies to ensure it's up-to-date
 
-    return createPortal(
-        <div className="breathing-overlay" style={{ pointerEvents: 'auto' }}>
+    return (
+        <div className="breathing-overlay">
             <div className="breathing-overlay-content">
                 <button className="close-pacer-btn" onClick={onClose}>
                     <X size={24} />
@@ -203,7 +176,6 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
                     </div>
                 </div>
             </div>
-        </div>,
-        portalContainer
+        </div>
     );
 }

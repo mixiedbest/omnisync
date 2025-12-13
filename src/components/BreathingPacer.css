@@ -1,19 +1,15 @@
 .breathing-overlay {
-    position: fixed !important;
-    inset: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    transform: none !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    min-height: 100vh !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: rgba(0, 0, 0, 0.6);
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    z-index: 9999 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
     animation: fadeIn 0.3s ease;
-    overflow: auto;
 }
 
 .breathing-overlay-content {
