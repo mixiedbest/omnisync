@@ -8,28 +8,14 @@ const BREATHING_PATTERNS = {
         description: 'Equal timing for calm & focus',
         phases: ['Inhale', 'Hold', 'Exhale', 'Hold'],
         timings: [4, 4, 4, 4],
-        color: '#8b5cf6'
+        color: '#60a5fa'
     },
-    '478': {
-        name: '4-7-8 Technique',
-        description: 'Dr. Weil\'s relaxation method',
+    '4-7-8': {
+        name: '4-7-8 Relaxing',
+        description: 'Deep relaxation & sleep',
         phases: ['Inhale', 'Hold', 'Exhale'],
         timings: [4, 7, 8],
-        color: '#06b6d4'
-    },
-    wimhof: {
-        name: 'Wim Hof',
-        description: 'Power breathing for energy',
-        phases: ['Inhale', 'Exhale', 'Hold'],
-        timings: [2, 1, 15],
-        color: '#ef4444'
-    },
-    coherent: {
-        name: 'Coherent Breathing',
-        description: 'Heart-rate variability',
-        phases: ['Inhale', 'Exhale'],
-        timings: [5, 5],
-        color: '#10b981'
+        color: '#818cf8'
     },
     energizing: {
         name: 'Energizing Breath',
@@ -60,37 +46,33 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
         setSelectedPattern(initialPattern);
     }, [initialPattern]);
 
+    // Timer logic
     useEffect(() => {
-        const phases = pattern.phases;
-        const timings = pattern.timings;
-        let step = 0;
         let timeoutId;
+        let currentPhaseIndex = 0;
 
-        const startCycle = () => {
-            // Initial Set
-            setText(phases[0]);
-            setPhaseIndex(0);
-            step = 0;
-            timeoutId = setTimeout(runCycle, timings[0] * 1000);
+        const runPhase = () => {
+            const phase = pattern.phases[currentPhaseIndex];
+            const duration = pattern.timings[currentPhaseIndex];
+
+            setText(phase);
+            setPhaseIndex(currentPhaseIndex);
+
+            timeoutId = setTimeout(() => {
+                currentPhaseIndex = (currentPhaseIndex + 1) % pattern.phases.length;
+                runPhase();
+            }, duration * 1000);
         };
 
-        const runCycle = () => {
-            step = (step + 1) % phases.length;
-            setText(phases[step]);
-            setPhaseIndex(step);
-
-            // Schedule next phase
-            timeoutId = setTimeout(runCycle, timings[step] * 1000);
-        };
-
-        startCycle(); // Start the first cycle
+        runPhase();
 
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [selectedPattern, pattern]); // Added pattern to dependencies to ensure it's up-to-date
+    }, [selectedPattern, pattern]);
 
-    return (
+    // Use createPortal to render outside of any parent containers that might break positioning
+    return createPortal(
         <div className="breathing-overlay">
             <div className="breathing-overlay-content">
                 <button className="close-pacer-btn" onClick={onClose}>
@@ -176,6 +158,7 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
