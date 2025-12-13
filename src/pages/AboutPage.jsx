@@ -299,7 +299,96 @@ export function AboutPage({ onBack }) {
                     )}
                 </div>
 
-                {/* Section 3: About the Creators */}
+                {/* Section 3: The Golden Ratio */}
+                <div className="expandable-section">
+                    <button
+                        className={`section-header ${expandedSection === 'golden' ? 'active' : ''}`}
+                        onClick={() => toggleSection('golden')}
+                    >
+                        <h2>The Golden Ratio (φ) in Sound Healing</h2>
+                        {expandedSection === 'golden' ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                    </button>
+
+                    {expandedSection === 'golden' && (
+                        <div className="section-content fade-in">
+                            <p className="about-intro">
+                                The Golden Ratio (φ ≈ 1.618) is a mathematical constant found throughout nature, art, and music.
+                                When applied to sound frequencies and timing, it creates naturally harmonious, organic relationships
+                                that resonate deeply with the human body and mind.
+                            </p>
+
+                            <section className="brainwave-section">
+                                <h3>What is the Golden Ratio?</h3>
+
+                                <div className="brainwave-card">
+                                    <h4>The Divine Proportion</h4>
+                                    <p>
+                                        The Golden Ratio appears when a line is divided so that the whole length divided by the long part
+                                        equals the long part divided by the short part. This ratio (approximately 1.618:1) creates a sense
+                                        of perfect balance and beauty.
+                                    </p>
+                                    <p>
+                                        You'll find φ in:
+                                    </p>
+                                    <ul>
+                                        <li>The spiral of a nautilus shell</li>
+                                        <li>The arrangement of flower petals</li>
+                                        <li>The proportions of the human body</li>
+                                        <li>Classical architecture and art</li>
+                                        <li>Musical compositions and intervals</li>
+                                    </ul>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>φ-Scaled Frequencies</h4>
+                                    <p>
+                                        In OMNISYNC, we use the Golden Ratio to create frequency relationships that feel naturally balanced.
+                                        Starting from a base frequency (like 432 Hz), we multiply or divide by φ to generate harmonics:
+                                    </p>
+                                    <ul>
+                                        <li><strong>432 Hz × φ = 699 Hz</strong> (Heart Coherence)</li>
+                                        <li><strong>699 Hz × φ = 1131 Hz</strong> (Higher Awareness)</li>
+                                        <li><strong>432 Hz ÷ φ = 267 Hz</strong> (Grounding Calm)</li>
+                                    </ul>
+                                    <p>
+                                        These φ-scaled frequencies create organic, non-linear progressions that mirror patterns found in nature,
+                                        making them particularly effective for meditation and healing.
+                                    </p>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>Golden Ratio Breathing</h4>
+                                    <p>
+                                        Our Golden Ratio breathing pattern uses φ-timed intervals: 4 seconds inhale, 6.5 seconds exhale.
+                                        This creates an approximate 1.618:1 ratio between exhale and inhale, optimizing:
+                                    </p>
+                                    <ul>
+                                        <li>Vagal tone activation</li>
+                                        <li>Heart-rate variability</li>
+                                        <li>Parasympathetic nervous system engagement</li>
+                                        <li>Natural, effortless breathing rhythm</li>
+                                    </ul>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>Experience φ in OMNISYNC</h4>
+                                    <p>
+                                        Explore the Golden Ratio through:
+                                    </p>
+                                    <ul>
+                                        <li><strong>Golden Harmonics Presets</strong> - 12 φ-scaled frequencies including chakra pairings</li>
+                                        <li><strong>Fibonacci Ascension Journey</strong> - Frequency progression through φ multiplications</li>
+                                        <li><strong>Golden Breath Cycle</strong> - φ-timed breathing with healing frequencies</li>
+                                        <li><strong>Chakra Phi Alignment</strong> - Solfeggio frequencies with φ harmonics</li>
+                                        <li><strong>Golden Ratio Explorer</strong> - Interactive tool to create custom φ frequencies</li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    )}
+                </div>
+
+                {/* Section 4: About the Creators */}
                 <div className="expandable-section">
                     <button
                         className={`section-header ${expandedSection === 'creators' ? 'active' : ''}`}
