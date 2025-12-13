@@ -590,6 +590,5 @@ export function CustomGenerator({ onGenerate, isActive, actionLabel, onPause, on
                 </div>
             )}
         </div>
-        </div>
     );
 }
