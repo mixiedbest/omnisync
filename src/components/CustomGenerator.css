@@ -537,3 +537,209 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Golden Ratio Explorer Styles */
+.golden-ratio-section {
+    border: 2px solid rgba(251, 191, 36, 0.3);
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(139, 92, 246, 0.05));
+}
+
+.section-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.section-toggle:hover {
+    opacity: 0.8;
+}
+
+.toggle-icon {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-purple);
+}
+
+.golden-explorer-content {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.explorer-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.golden-input-group {
+    margin-bottom: 24px;
+}
+
+.golden-input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.golden-harmonics-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.harmonic-card {
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid;
+}
+
+.harmonic-card.descent {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.harmonic-card.base {
+    background: rgba(251, 191, 36, 0.1);
+    border-color: rgba(251, 191, 36, 0.5);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.harmonic-card.ascent {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.harmonic-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.harmonic-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.harmonic-freq {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.harmonic-desc {
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.apply-btn {
+    width: 100%;
+    padding: 6px 12px;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    border-radius: 6px;
+    color: var(--accent-purple);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.apply-btn:hover {
+    background: var(--accent-purple);
+    color: white;
+    transform: scale(1.05);
+}
+
+.golden-pairs {
+    padding-top: 20px;
+    border-top: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.pairs-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.pairs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.pair-btn {
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(139, 92, 246, 0.1));
+    border: 2px solid rgba(251, 191, 36, 0.3);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pair-btn:hover {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(139, 92, 246, 0.2));
+    border-color: rgba(251, 191, 36, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(251, 191, 36, 0.3);
+}
+
+/* Light Mode Overrides */
+:root[data-theme="light"] .golden-ratio-section {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(139, 92, 246, 0.1));
+    border-color: rgba(251, 191, 36, 0.4);
+}
+
+:root[data-theme="light"] .harmonic-card.descent {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+:root[data-theme="light"] .harmonic-card.base {
+    background: rgba(251, 191, 36, 0.2);
+    border-color: rgba(251, 191, 36, 0.6);
+}
+
+:root[data-theme="light"] .harmonic-card.ascent {
+    background: rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.4);
+}
+
+:root[data-theme="light"] .harmonic-freq,
+:root[data-theme="light"] .pairs-label {
+    color: #1a202c;
+}
+
+@media (max-width: 768px) {
+    .golden-harmonics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pairs-grid {
+        grid-template-columns: 1fr;
+    }
+}
