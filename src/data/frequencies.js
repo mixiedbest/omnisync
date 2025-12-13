@@ -309,5 +309,109 @@ export const categories = [
                 volumes: { noise: 0.35, binaural: 0.25 }
             }
         ]
+    },
+    {
+        id: "golden-harmonics",
+        title: "GOLDEN HARMONICS",
+        icon: "Sparkles",
+        color: "from-amber-900 to-yellow-900",
+        items: [
+            {
+                id: "gh1",
+                title: "Phi Root (432 Hz)",
+                beat: 0,
+                left: 432,
+                right: 432,
+                desc: "Grounded base frequency - The foundation of golden ratio scaling. Pure 432 Hz resonance."
+            },
+            {
+                id: "gh2",
+                title: "Heart Coherence (699 Hz)",
+                beat: 0,
+                left: 699,
+                right: 699,
+                desc: "432 × φ - Emotional balance and heart chakra resonance. First golden harmonic."
+            },
+            {
+                id: "gh3",
+                title: "Higher Awareness (1131 Hz)",
+                beat: 0,
+                left: 1131,
+                right: 1131,
+                desc: "699 × φ - Intuition and clarity. Second golden harmonic ascension."
+            },
+            {
+                id: "gh4",
+                title: "Grounding Calm (267 Hz)",
+                beat: 0,
+                left: 267,
+                right: 267,
+                desc: "432 ÷ φ - Nervous system calm and deep grounding. Golden descent."
+            },
+            {
+                id: "gh5",
+                title: "Root Phi Pair",
+                beat: 0,
+                left: 396,
+                right: 641,
+                desc: "Root chakra (396 Hz) with φ expansion (641 Hz). Sacred geometry alignment."
+            },
+            {
+                id: "gh6",
+                title: "Sacral Phi Pair",
+                beat: 0,
+                left: 417,
+                right: 675,
+                desc: "Sacral chakra (417 Hz) with φ expansion (675 Hz). Creative flow amplified."
+            },
+            {
+                id: "gh7",
+                title: "Solar Phi Pair",
+                beat: 0,
+                left: 528,
+                right: 854,
+                desc: "Solar plexus (528 Hz) with φ expansion (854 Hz). Power and transformation."
+            },
+            {
+                id: "gh8",
+                title: "Heart Phi Pair",
+                beat: 0,
+                left: 639,
+                right: 1034,
+                desc: "Heart chakra (639 Hz) with φ expansion (1034 Hz). Love field expansion."
+            },
+            {
+                id: "gh9",
+                title: "Throat Phi Pair",
+                beat: 0,
+                left: 741,
+                right: 1199,
+                desc: "Throat chakra (741 Hz) with φ expansion (1199 Hz). Truth amplification."
+            },
+            {
+                id: "gh10",
+                title: "Third Eye Phi Pair",
+                beat: 0,
+                left: 852,
+                right: 1379,
+                desc: "Third eye (852 Hz) with φ expansion (1379 Hz). Intuitive vision enhanced."
+            },
+            {
+                id: "gh11",
+                title: "Crown Phi Pair",
+                beat: 0,
+                left: 963,
+                right: 1558,
+                desc: "Crown chakra (963 Hz) with φ expansion (1558 Hz). Spiritual connection magnified."
+            },
+            {
+                id: "gh12",
+                title: "Golden Drone Layer",
+                beat: 0,
+                left: 432,
+                right: 699,
+                desc: "Base (432 Hz) + First harmonic (699 Hz). Perfect φ relationship for meditation."
+            }
+        ]
     }
 ];

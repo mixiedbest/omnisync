@@ -34,6 +34,17 @@ export function JourneyPlayer({ journey, onBack }) {
     const startPhase = (phaseIndex, resumeFrom = 0) => {
         const phase = phases[phaseIndex];
 
+        // Build layers array for phi harmonics
+        const layers = [];
+        if (phase.phiHarmonic) {
+            // Add phi harmonic as a layer
+            layers.push({
+                carrierFreq: phase.phiHarmonic,
+                beatFreq: 0, // No binaural beat for phi harmonic, just pure tone
+                volume: 0.4 // Slightly quieter than main frequency
+            });
+        }
+
         // Play the phase audio
         play(
             phase.freq || 0,
@@ -46,7 +57,8 @@ export function JourneyPlayer({ journey, onBack }) {
                 bothEars: 0.5,
                 noise: 0.3,
                 soundscape: 0.4
-            }
+            },
+            layers // Pass phi harmonic layers
         );
 
         setCurrentPhaseIndex(phaseIndex);

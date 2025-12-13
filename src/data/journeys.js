@@ -353,5 +353,388 @@ export const journeys = [
                 { name: 'Drift Return', duration: 360, freq: 396, bothEars: 6, noiseType: 'pink', desc: 'Soft re-embodiment', breathingPattern: 'box' }
             ]
         }
+    },
+    {
+        id: 'fibonacci-ascension',
+        title: 'Fibonacci Ascension',
+        icon: 'TrendingUp',
+        description: 'Ascend through φ-scaled frequencies from grounding to higher awareness',
+        category: 'golden-ratio',
+        short: {
+            duration: 900, // 15 minutes
+            phases: [
+                {
+                    name: 'Grounding Descent',
+                    duration: 180,
+                    freq: 267,
+                    bothEars: 0,
+                    noiseType: 'brown',
+                    desc: '432 ÷ φ - Deep nervous system calm',
+                    breathingPattern: '478'
+                },
+                {
+                    name: 'Phi Root Foundation',
+                    duration: 240,
+                    freq: 432,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: 'Pure 432 Hz - The golden foundation',
+                    breathingPattern: 'coherent'
+                },
+                {
+                    name: 'Heart Coherence Rise',
+                    duration: 240,
+                    freq: 699,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: '432 × φ - Emotional balance',
+                    breathingPattern: 'coherent'
+                },
+                {
+                    name: 'Higher Awareness Peak',
+                    duration: 180,
+                    freq: 1131,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: '699 × φ - Intuition and clarity',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Integration',
+                    duration: 60,
+                    freq: 432,
+                    bothEars: 0,
+                    noiseType: null,
+                    soundscapeType: 'tibetan',
+                    desc: 'Return to center',
+                    breathingPattern: 'coherent'
+                }
+            ]
+        },
+        long: {
+            duration: 1800, // 30 minutes
+            phases: [
+                {
+                    name: 'Grounding Descent',
+                    duration: 360,
+                    freq: 267,
+                    bothEars: 0,
+                    noiseType: 'brown',
+                    desc: '432 ÷ φ - Deep nervous system calm',
+                    breathingPattern: '478'
+                },
+                {
+                    name: 'Phi Root Foundation',
+                    duration: 480,
+                    freq: 432,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: 'Pure 432 Hz - The golden foundation',
+                    breathingPattern: 'coherent'
+                },
+                {
+                    name: 'Heart Coherence Rise',
+                    duration: 480,
+                    freq: 699,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: '432 × φ - Emotional balance',
+                    breathingPattern: 'coherent'
+                },
+                {
+                    name: 'Higher Awareness Peak',
+                    duration: 360,
+                    freq: 1131,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: '699 × φ - Intuition and clarity',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Integration',
+                    duration: 120,
+                    freq: 432,
+                    bothEars: 0,
+                    noiseType: null,
+                    soundscapeType: 'tibetan',
+                    desc: 'Return to center',
+                    breathingPattern: 'coherent'
+                }
+            ]
+        }
+    },
+    {
+        id: 'golden-breath-cycle',
+        title: 'Golden Breath Cycle',
+        icon: 'Wind',
+        description: 'Guided breathing with φ-timed inhale/exhale for natural coherence',
+        category: 'golden-ratio',
+        short: {
+            duration: 600, // 10 minutes
+            phases: [
+                {
+                    name: 'Breath Awareness',
+                    duration: 120,
+                    freq: 432,
+                    bothEars: 8,
+                    noiseType: 'pink',
+                    desc: 'Natural breath observation',
+                    breathingPattern: 'coherent'
+                },
+                {
+                    name: 'Golden Ratio Breathing',
+                    duration: 360,
+                    freq: 528,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: '4s inhale / 6.5s exhale (φ ratio)',
+                    breathingPattern: 'golden',
+                    breathingGuide: {
+                        inhale: 4,
+                        hold: 0,
+                        exhale: 6.5,
+                        pause: 0
+                    }
+                },
+                {
+                    name: 'Vagal Tone Activation',
+                    duration: 60,
+                    freq: 639,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: 'Heart-rate variability optimization',
+                    breathingPattern: 'golden',
+                    breathingGuide: {
+                        inhale: 4,
+                        hold: 0,
+                        exhale: 6.5,
+                        pause: 0
+                    }
+                },
+                {
+                    name: 'Integration',
+                    duration: 60,
+                    freq: 432,
+                    bothEars: 0,
+                    noiseType: null,
+                    soundscapeType: 'wind',
+                    desc: 'Return to natural rhythm',
+                    breathingPattern: 'coherent'
+                }
+            ]
+        },
+        long: {
+            duration: 1200, // 20 minutes
+            phases: [
+                {
+                    name: 'Breath Awareness',
+                    duration: 240,
+                    freq: 432,
+                    bothEars: 8,
+                    noiseType: 'pink',
+                    desc: 'Natural breath observation',
+                    breathingPattern: 'coherent'
+                },
+                {
+                    name: 'Golden Ratio Breathing',
+                    duration: 720,
+                    freq: 528,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: '4s inhale / 6.5s exhale (φ ratio)',
+                    breathingPattern: 'golden',
+                    breathingGuide: {
+                        inhale: 4,
+                        hold: 0,
+                        exhale: 6.5,
+                        pause: 0
+                    }
+                },
+                {
+                    name: 'Vagal Tone Activation',
+                    duration: 120,
+                    freq: 639,
+                    bothEars: 0,
+                    noiseType: null,
+                    desc: 'Heart-rate variability optimization',
+                    breathingPattern: 'golden',
+                    breathingGuide: {
+                        inhale: 4,
+                        hold: 0,
+                        exhale: 6.5,
+                        pause: 0
+                    }
+                },
+                {
+                    name: 'Integration',
+                    duration: 120,
+                    freq: 432,
+                    bothEars: 0,
+                    noiseType: null,
+                    soundscapeType: 'wind',
+                    desc: 'Return to natural rhythm',
+                    breathingPattern: 'coherent'
+                }
+            ]
+        }
+    },
+    {
+        id: 'chakra-phi-alignment',
+        title: 'Chakra Phi Alignment',
+        icon: 'Hexagon',
+        description: 'Journey through all 7 chakras with φ-expanded harmonics',
+        category: 'golden-ratio',
+        short: {
+            duration: 840, // 14 minutes (2 min per chakra)
+            phases: [
+                {
+                    name: 'Root Phi Alignment',
+                    duration: 120,
+                    freq: 396,
+                    bothEars: 0,
+                    phiHarmonic: 641,
+                    noiseType: null,
+                    desc: 'Root (396 Hz) + φ expansion (641 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Sacral Phi Alignment',
+                    duration: 120,
+                    freq: 417,
+                    bothEars: 0,
+                    phiHarmonic: 675,
+                    noiseType: null,
+                    desc: 'Sacral (417 Hz) + φ expansion (675 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Solar Phi Alignment',
+                    duration: 120,
+                    freq: 528,
+                    bothEars: 0,
+                    phiHarmonic: 854,
+                    noiseType: null,
+                    desc: 'Solar (528 Hz) + φ expansion (854 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Heart Phi Alignment',
+                    duration: 120,
+                    freq: 639,
+                    bothEars: 0,
+                    phiHarmonic: 1034,
+                    noiseType: null,
+                    desc: 'Heart (639 Hz) + φ expansion (1034 Hz)',
+                    breathingPattern: 'coherent'
+                },
+                {
+                    name: 'Throat Phi Alignment',
+                    duration: 120,
+                    freq: 741,
+                    bothEars: 0,
+                    phiHarmonic: 1199,
+                    noiseType: null,
+                    desc: 'Throat (741 Hz) + φ expansion (1199 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Third Eye Phi Alignment',
+                    duration: 120,
+                    freq: 852,
+                    bothEars: 0,
+                    phiHarmonic: 1379,
+                    noiseType: null,
+                    desc: 'Third Eye (852 Hz) + φ expansion (1379 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Crown Phi Alignment',
+                    duration: 120,
+                    freq: 963,
+                    bothEars: 0,
+                    phiHarmonic: 1558,
+                    noiseType: null,
+                    soundscapeType: 'tibetan',
+                    desc: 'Crown (963 Hz) + φ expansion (1558 Hz)',
+                    breathingPattern: 'coherent'
+                }
+            ]
+        },
+        long: {
+            duration: 2100, // 35 minutes (5 min per chakra)
+            phases: [
+                {
+                    name: 'Root Phi Alignment',
+                    duration: 300,
+                    freq: 396,
+                    bothEars: 0,
+                    phiHarmonic: 641,
+                    noiseType: null,
+                    desc: 'Root (396 Hz) + φ expansion (641 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Sacral Phi Alignment',
+                    duration: 300,
+                    freq: 417,
+                    bothEars: 0,
+                    phiHarmonic: 675,
+                    noiseType: null,
+                    desc: 'Sacral (417 Hz) + φ expansion (675 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Solar Phi Alignment',
+                    duration: 300,
+                    freq: 528,
+                    bothEars: 0,
+                    phiHarmonic: 854,
+                    noiseType: null,
+                    desc: 'Solar (528 Hz) + φ expansion (854 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Heart Phi Alignment',
+                    duration: 300,
+                    freq: 639,
+                    bothEars: 0,
+                    phiHarmonic: 1034,
+                    noiseType: null,
+                    desc: 'Heart (639 Hz) + φ expansion (1034 Hz)',
+                    breathingPattern: 'coherent'
+                },
+                {
+                    name: 'Throat Phi Alignment',
+                    duration: 300,
+                    freq: 741,
+                    bothEars: 0,
+                    phiHarmonic: 1199,
+                    noiseType: null,
+                    desc: 'Throat (741 Hz) + φ expansion (1199 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Third Eye Phi Alignment',
+                    duration: 300,
+                    freq: 852,
+                    bothEars: 0,
+                    phiHarmonic: 1379,
+                    noiseType: null,
+                    desc: 'Third Eye (852 Hz) + φ expansion (1379 Hz)',
+                    breathingPattern: 'box'
+                },
+                {
+                    name: 'Crown Phi Alignment',
+                    duration: 300,
+                    freq: 963,
+                    bothEars: 0,
+                    phiHarmonic: 1558,
+                    noiseType: null,
+                    soundscapeType: 'tibetan',
+                    desc: 'Crown (963 Hz) + φ expansion (1558 Hz)',
+                    breathingPattern: 'coherent'
+                }
+            ]
+        }
     }
 ];
