@@ -37,6 +37,13 @@ const BREATHING_PATTERNS = {
         phases: ['Inhale', 'Hold', 'Exhale'],
         timings: [3, 3, 6],
         color: '#f59e0b'
+    },
+    golden: {
+        name: 'Golden Ratio (φ)',
+        description: 'φ-timed breathing (4s / 6.5s)',
+        phases: ['Inhale', 'Exhale'],
+        timings: [4, 6.5],
+        color: '#fbbf24'
     }
 };
 

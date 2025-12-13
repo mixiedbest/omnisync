@@ -191,6 +191,10 @@
     animation: energizingBreathing 12s infinite ease-in-out;
 }
 
+.breathing-circle.animate-golden {
+    animation: goldenBreathing 10.5s infinite ease-in-out;
+}
+
 @keyframes boxBreathing {
 
     0%,
@@ -293,6 +297,24 @@
     }
 
     /* 6s exhale */
+}
+
+@keyframes goldenBreathing {
+
+    /* Total: 10.5s (4s inhale + 6.5s exhale) */
+    0% {
+        transform: scale(1);
+    }
+
+    /* 4s inhale (38.1% of 10.5s) */
+    38.1% {
+        transform: scale(1.5);
+    }
+
+    /* 6.5s exhale (61.9% of 10.5s) */
+    100% {
+        transform: scale(1);
+    }
 }
 
 .inner-text {
