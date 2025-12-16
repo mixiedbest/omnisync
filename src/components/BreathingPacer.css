@@ -5,8 +5,6 @@
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.6);
-    display: grid !important;
-    place-items: center !important;
     z-index: 9999;
     animation: fadeIn 0.3s ease;
     margin: 0 !important;
@@ -15,8 +13,16 @@
 }
 
 .breathing-overlay-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 90%;
     max-width: 600px;
+    max-height: 90vh;
+    /* Prevent overflow on small screens */
+    overflow-y: auto;
+    /* Allow internal scrolling if needed */
     background: rgba(17, 24, 39, 0.95);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(139, 92, 246, 0.3);
@@ -27,7 +33,6 @@
     justify-content: center;
     padding: 40px 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    position: relative;
 }
 
 .close-pacer-btn {

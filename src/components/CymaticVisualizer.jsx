@@ -45,6 +45,13 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         { name: 'White', value: '#ffffff' }
     ];
 
+    // Calculate the exact physics of the interference
+    // Lissajous figures are defined by the ratio between vertical and horizontal frequencies
+    const leftFreq = carrierFrequency - (beatFrequency / 2);
+    const rightFreq = carrierFrequency + (beatFrequency / 2);
+    // Determine the harmonic ratio (e.g., 204Hz / 200Hz = 1.02)
+    const harmonicRatio = rightFreq / leftFreq;
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -53,7 +60,6 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         const animate = () => {
             if (!canvas) return;
 
-            // Resize canvas to full screen
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
@@ -61,52 +67,56 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             const height = canvas.height;
             const cx = width / 2;
             const cy = height / 2;
+            const scale = Math.min(width, height) * 0.35;
 
-            // Fade effect for trails (laser persistence)
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            // Deep space background
+            ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, width, height);
 
-            ctx.lineWidth = 3;
+            // Laser glow settings
+            ctx.lineWidth = 2.5;
             ctx.lineCap = 'round';
             ctx.shadowBlur = 15;
             ctx.shadowColor = color;
             ctx.strokeStyle = color;
 
-            time += 0.01 * speed;
-
-            // Use the beat frequency to drive the math
-            // Higher beat = faster vibration / more complexity
-            const f = Math.max(1, beatFrequency) * 0.1;
+            // Time step
+            time += 0.02 * speed;
 
             ctx.beginPath();
 
             if (mode === 'lissajous') {
-                // Lissajous: Simulates laser reflecting off two vibrating mirrors
-                const points = 500;
+                // THE REAL PHYSICS:
+                // X Axis oscillates at the Left Frequency
+                // Y Axis oscillates at the Right Frequency
+                // The "beat" comes from the difference between them.
+                // We scale time to make it visible (otherwise it blurs).
+
+                const points = 800;
                 for (let i = 0; i < points; i++) {
-                    const t = time + (i * 0.05); // Trail length
+                    // t represents the phase of the wave
+                    const t = time + (i * 0.01);
 
-                    // The ratio between A and B determines the shape
-                    // We use the carrier frequency and beat frequency to create this ratio
-                    const ratio = 1 + (f * 0.1);
-
-                    const x = cx + Math.sin(t * ratio + complexity) * (Math.min(width, height) * 0.4);
-                    const y = cy + Math.sin(t) * (Math.min(width, height) * 0.4);
+                    // Simple Lissajous: x = A*sin(at), y = B*sin(bt)
+                    // Here 'a' is 1 (base) and 'b' is the harmonicRatio
+                    const x = cx + scale * Math.sin(t);
+                    const y = cy + scale * Math.sin(t * harmonicRatio);
 
                     if (i === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
             } else if (mode === 'mandala') {
-                // Cymatic Plate Simulation (Chladni patterns)
+                // Radial Interference (Chladni Plate Simulation)
                 const points = 360;
-                const radius = Math.min(width, height) * 0.35;
-
                 for (let i = 0; i <= points; i++) {
                     const angle = (i / points) * Math.PI * 2;
 
-                    // Radial vibration
-                    const vibration = Math.sin(angle * complexity + time) * Math.cos(angle * (complexity / 2) - time * 2);
-                    const r = radius + (vibration * 50 * f);
+                    // Interference pattern forming standing waves on a circle
+                    // We use the harmonic ratio to drive the modulation
+                    const wave1 = Math.sin(angle * 4 + time); // Base geometry
+                    const waveInterference = Math.sin(angle * 4 * harmonicRatio - time); // Interference layer
+
+                    const r = scale + (wave1 * waveInterference * 50 * complexity * 0.2);
 
                     const x = cx + Math.cos(angle) * r;
                     const y = cy + Math.sin(angle) * r;
@@ -115,14 +125,19 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     else ctx.lineTo(x, y);
                 }
             } else if (mode === 'wave') {
-                // Oscilloscope / String vibration
+                // True Wave Interference
                 for (let i = 0; i < width; i += 2) {
                     const x = i;
-                    // Superposition of waves
-                    const input = (i * 0.01) + time;
-                    const y = cy +
-                        Math.sin(input * f) * 100 +
-                        Math.sin(input * f * 1.5) * 50;
+                    // Normalized position (-PI to PI)
+                    const phase = (i / width) * Math.PI * 4;
+
+                    // Superposition: Wave 1 + Wave 2
+                    // Wave 2 is faster/slower by the harmonic ratio
+                    const y1 = Math.sin(phase + time);
+                    const y2 = Math.sin(phase * harmonicRatio + time);
+                    const combined = (y1 + y2) * scale * 0.3; // Constructive/Destructive interference
+
+                    const y = cy + combined;
 
                     if (i === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
@@ -130,16 +145,11 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             }
 
             ctx.stroke();
-
             requestRef.current = requestAnimationFrame(animate);
         };
-
         requestRef.current = requestAnimationFrame(animate);
-
-        return () => {
-            if (requestRef.current) cancelAnimationFrame(requestRef.current);
-        };
-    }, [color, beatFrequency, mode, speed, complexity]);
+        return () => cancelAnimationFrame(requestRef.current);
+    }, [color, harmonicRatio, mode, speed, complexity]);
 
     return createPortal(
         <div className="cymatic-overlay">
