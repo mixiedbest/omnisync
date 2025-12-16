@@ -29,16 +29,10 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             description: 'Browse our curated frequency library'
         },
         {
-            id: 'cosmic-alignment',
-            title: 'Cosmic Alignment',
-            icon: Star,
-            description: 'Astrology-based sound healing'
-        },
-        {
-            id: 'journeys',
-            title: 'Curated Journeys',
-            icon: Compass,
-            description: 'Multi-phase sound healing experiences'
+            id: 'colors',
+            title: 'Color Noises',
+            icon: CloudRain,
+            description: 'Full spectrum of healing noise colors'
         },
         {
             id: 'soundscapes',
@@ -47,28 +41,22 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             description: 'Generative ambient environments'
         },
         {
-            id: 'playlists',
-            title: 'Playlists',
-            icon: List,
-            description: 'Your saved custom sequences'
+            id: 'custom',
+            title: 'Custom Generator',
+            icon: Sliders,
+            description: 'Create your own frequency combinations'
+        },
+        {
+            id: 'journeys',
+            title: 'Curated Journeys',
+            icon: Compass,
+            description: 'Multi-phase sound healing experiences'
         },
         {
             id: 'energy-cleanse',
             title: 'Energy Cleanse',
             icon: Zap,
             description: 'Frequency sweep to clear your field'
-        },
-        {
-            id: 'colors',
-            title: 'Color Noises',
-            icon: CloudRain,
-            description: 'Full spectrum of healing noise colors'
-        },
-        {
-            id: 'custom',
-            title: 'Custom Generator',
-            icon: Sliders,
-            description: 'Create your own frequency combinations'
         },
         {
             id: 'innersync',
@@ -81,6 +69,12 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             title: 'Connections',
             icon: Users,
             description: 'Your sonic circle & synced sessions'
+        },
+        {
+            id: 'playlists',
+            title: 'Playlists',
+            icon: List,
+            description: 'Your saved custom sequences'
         },
         {
             id: 'about',
@@ -115,7 +109,7 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
                         {layout === 'grid' ? <Columns size={20} /> : <Grid size={20} />}
                     </button>
                 </div>
-                <img src="/omnisync-logo.png" alt="OMNISYNC" className="home-logo" />
+                <img src="/omnisync-logo-new.png" alt="OMNISYNC" className="home-logo" />
                 <p className="home-subtitle">Please put on headphones and enjoy 🎧</p>
             </div>
 
