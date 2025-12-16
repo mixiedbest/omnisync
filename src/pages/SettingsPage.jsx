@@ -97,6 +97,36 @@ export function SettingsPage({ onBack }) {
                             }
                         </button>
                     </div>
+                    <div className="setting-item">
+                        <div className="setting-info">
+                            <span className="setting-label">PIN Lock for InnerSync</span>
+                            <span className="setting-desc">Require PIN to access your personal healing hub</span>
+                        </div>
+                        <button
+                            className="toggle-btn"
+                            onClick={() => toggleSetting('innerSyncPinLock')}
+                        >
+                            {settings.innerSyncPinLock ?
+                                <ToggleRight size={40} className="toggle-on" /> :
+                                <ToggleLeft size={40} className="toggle-off" />
+                            }
+                        </button>
+                    </div>
+                    <div className="setting-item">
+                        <div className="setting-info">
+                            <span className="setting-label">PIN Lock for Manifestation Portal</span>
+                            <span className="setting-desc">Require PIN to access manifestation portal</span>
+                        </div>
+                        <button
+                            className="toggle-btn"
+                            onClick={() => toggleSetting('manifestationPinLock')}
+                        >
+                            {settings.manifestationPinLock ?
+                                <ToggleRight size={40} className="toggle-on" /> :
+                                <ToggleLeft size={40} className="toggle-off" />
+                            }
+                        </button>
+                    </div>
                 </div>
 
                 {/* App Behavior */}

@@ -93,12 +93,6 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             title: 'About',
             icon: Info,
             description: 'About the app & creators'
-        },
-        {
-            id: 'disclaimer',
-            title: 'Disclaimer',
-            icon: FileText,
-            description: 'Important safety information'
         }
     ];
 
@@ -206,6 +200,22 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
                 >
                     ✨ Manifestation Anthem ✨
                 </a>
+            </div>
+
+            {/* Footer Navigation */}
+            <div className="footer-nav">
+                <button className="footer-nav-btn" onClick={() => onNavigate('profile')}>
+                    <User size={20} />
+                    <span>Profile</span>
+                </button>
+                <button className="footer-nav-btn" onClick={() => onNavigate('settings')}>
+                    <Settings size={20} />
+                    <span>Settings</span>
+                </button>
+                <button className="footer-nav-btn" onClick={() => onNavigate('disclaimer')}>
+                    <FileText size={20} />
+                    <span>Disclaimer</span>
+                </button>
             </div>
 
             <footer className="home-footer">

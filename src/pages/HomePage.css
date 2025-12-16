@@ -198,8 +198,43 @@
     box-shadow: 0 8px 30px rgba(236, 72, 153, 0.6);
 }
 
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 40px 0 20px;
+    padding: 0 20px;
+}
+
+.footer-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.footer-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+    border-color: var(--accent-purple);
+}
+
+.footer-nav-btn svg {
+    flex-shrink: 0;
+}
+
 .home-footer {
-    margin-top: auto;
+    margin-top: 20px;
     padding: 20px;
     text-align: center;
     font-size: 13px;

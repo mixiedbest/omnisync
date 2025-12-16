@@ -69,6 +69,19 @@ export function ManifestationPortalPage({ onNavigate }) {
         currentPreset?.frequencies.beat || 10
     );
 
+    // Manage audio playback based on stage
+    useEffect(() => {
+        if (stage === 'portal' && isPlaying) {
+            play();
+        } else {
+            stop();
+        }
+
+        return () => {
+            stop();
+        };
+    }, [stage, isPlaying, play, stop]);
+
     // Portal animation
     useEffect(() => {
         if (stage !== 'portal' || !canvasRef.current) return;
@@ -274,12 +287,10 @@ export function ManifestationPortalPage({ onNavigate }) {
             setStage('portal');
             setPortalActive(true);
             setIsPlaying(true);
-            play(); // Start audio
         }, 500);
     };
 
     const completeSession = () => {
-        stop(); // Stop audio
         setIsPlaying(false);
         setStage('completion');
         setTimeout(() => {
