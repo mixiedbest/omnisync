@@ -232,8 +232,9 @@
 }
 
 .preset-glyph .glyph {
-    font-size: 48px;
-    filter: drop-shadow(0 0 10px var(--preset-color));
+    color: var(--preset-color);
+    filter: drop-shadow(0 0 15px var(--preset-color));
+    transition: all 0.3s ease;
 }
 
 .preset-glyph .preset-name {

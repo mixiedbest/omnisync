@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Sparkles } from 'lucide-react';
+import { X, Sparkles, Anchor, Heart, Waves, TrendingUp, Zap, TreePine } from 'lucide-react';
+import { useBinauralBeat } from '../hooks/useBinauralBeat';
 import './ManifestationPortalPage.css';
 
 export function ManifestationPortalPage({ onNavigate }) {
@@ -7,6 +8,7 @@ export function ManifestationPortalPage({ onNavigate }) {
     const [intention, setIntention] = useState('');
     const [selectedPreset, setSelectedPreset] = useState(null);
     const [portalActive, setPortalActive] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
 
@@ -14,8 +16,8 @@ export function ManifestationPortalPage({ onNavigate }) {
         {
             id: 'grounded',
             name: 'Grounded & Safe',
-            glyph: '🌳',
-            frequencies: [194, 256], // Root + φ
+            icon: Anchor,
+            frequencies: { left: 194, right: 256, beat: 10 },
             breathPattern: { inhale: 4, hold: 2, exhale: 6 },
             visualStyle: 'heavy',
             color: '#8B4513'
@@ -23,8 +25,8 @@ export function ManifestationPortalPage({ onNavigate }) {
         {
             id: 'love',
             name: 'Open Heart / Love',
-            glyph: '💚',
-            frequencies: [639, 1034], // Heart + φ expansion
+            icon: Heart,
+            frequencies: { left: 639, right: 1034, beat: 8 },
             breathPattern: { inhale: 5, hold: 2, exhale: 5 },
             visualStyle: 'torus',
             color: '#16a34a'
@@ -32,8 +34,8 @@ export function ManifestationPortalPage({ onNavigate }) {
         {
             id: 'creative',
             name: 'Creative Flow',
-            glyph: '🌊',
-            frequencies: [528, 741], // Creation frequencies
+            icon: Waves,
+            frequencies: { left: 528, right: 741, beat: 6 },
             breathPattern: { inhale: 4, hold: 1, exhale: 4 },
             visualStyle: 'flowing',
             color: '#2563eb'
@@ -41,8 +43,8 @@ export function ManifestationPortalPage({ onNavigate }) {
         {
             id: 'clarity',
             name: 'Clarity & Direction',
-            glyph: '✨',
-            frequencies: [852, 1379], // Third eye + φ
+            icon: Zap,
+            frequencies: { left: 852, right: 1379, beat: 7 },
             breathPattern: { inhale: 4, hold: 3, exhale: 4 },
             visualStyle: 'geometric',
             color: '#4f46e5'
@@ -50,13 +52,22 @@ export function ManifestationPortalPage({ onNavigate }) {
         {
             id: 'abundance',
             name: 'Abundance / Expansion',
-            glyph: '🌟',
-            frequencies: [432, 699, 1131], // φ harmonic ladder
+            icon: TrendingUp,
+            frequencies: { left: 432, right: 699, beat: 5 },
             breathPattern: { inhale: 6, hold: 2, exhale: 6 },
             visualStyle: 'spiral',
             color: '#eab308'
         }
     ];
+
+    const currentPreset = presets.find(p => p.id === selectedPreset);
+
+    // Audio playback
+    const { play, stop } = useBinauralBeat(
+        currentPreset?.frequencies.left || 432,
+        currentPreset?.frequencies.right || 432,
+        currentPreset?.frequencies.beat || 10
+    );
 
     // Portal animation
     useEffect(() => {
@@ -262,10 +273,14 @@ export function ManifestationPortalPage({ onNavigate }) {
         setTimeout(() => {
             setStage('portal');
             setPortalActive(true);
+            setIsPlaying(true);
+            play(); // Start audio
         }, 500);
     };
 
     const completeSession = () => {
+        stop(); // Stop audio
+        setIsPlaying(false);
         setStage('completion');
         setTimeout(() => {
             setStage('entrance');
@@ -326,7 +341,7 @@ export function ManifestationPortalPage({ onNavigate }) {
                                 onClick={() => selectPreset(preset.id)}
                                 style={{ '--preset-color': preset.color }}
                             >
-                                <span className="glyph">{preset.glyph}</span>
+                                <preset.icon size={48} className="glyph" />
                                 <span className="preset-name">{preset.name}</span>
                             </button>
                         ))}
