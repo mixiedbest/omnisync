@@ -144,10 +144,14 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     time += 0.05;
 
                     const dropletRadius = scale * 0.8;
-                    const resolution = 15; // Grid resolution
+                    const resolution = 12; // Finer grid
+
+                    // Calculate nodal pattern parameters from frequencies
+                    const radialNodes = Math.floor(leftFreq / 100); // Radial pattern count
+                    const angularNodes = Math.floor(Math.abs(rightFreq - leftFreq) / 50); // Angular pattern count
 
                     // Draw the droplet as a grid of oscillating points
-                    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 30) {
+                    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 40) {
                         for (let r = 0; r < dropletRadius; r += resolution) {
                             const x = cx + r * Math.cos(angle);
                             const y = cy + r * Math.sin(angle);
@@ -155,22 +159,29 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                             // Distance from center (normalized)
                             const distFromCenter = r / dropletRadius;
 
-                            // Wave equation for surface deformation
-                            // Both frequencies create standing waves
-                            const wave1 = Math.sin(distFromCenter * leftFreq * 0.02 - time * 2);
-                            const wave2 = Math.sin(distFromCenter * rightFreq * 0.02 - time * 2 + Math.PI / 4);
-                            const interference = (wave1 + wave2) / 2;
+                            // Radial wave (from left frequency)
+                            const radialWave = Math.sin(distFromCenter * leftFreq * 0.1 - time * 3);
+
+                            // Angular wave (from frequency difference)
+                            const angularWave = Math.sin(angle * angularNodes + time * 2);
+
+                            // Secondary radial wave (from right frequency)
+                            const radialWave2 = Math.sin(distFromCenter * rightFreq * 0.1 - time * 3 + Math.PI / 3);
+
+                            // Combine all waves
+                            const interference = (radialWave + radialWave2 + angularWave * 0.5) / 2.5;
 
                             // Amplitude decreases toward edge
-                            const amplitude = (1 - distFromCenter) * 20 * interference;
+                            const amplitude = (1 - distFromCenter * 0.5) * 40 * interference;
 
                             // Offset point based on wave amplitude
                             const offsetX = x + amplitude * Math.cos(angle);
                             const offsetY = y + amplitude * Math.sin(angle);
 
-                            // Draw point
-                            ctx.globalAlpha = 0.6 + Math.abs(interference) * 0.4;
-                            ctx.fillRect(offsetX - 1, offsetY - 1, 2, 2);
+                            // Draw point with brightness based on amplitude
+                            ctx.globalAlpha = 0.5 + Math.abs(interference) * 0.5;
+                            const size = 1 + Math.abs(interference) * 2;
+                            ctx.fillRect(offsetX - size / 2, offsetY - size / 2, size, size);
                         }
                     }
 
