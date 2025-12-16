@@ -97,230 +97,234 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         const animate = () => {
             if (!canvas) return;
 
+            // Init Canvas & Vars
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-
             const width = canvas.width;
             const height = canvas.height;
             const cx = width / 2;
             const cy = height / 2;
             const scale = Math.min(width, height) * 0.35;
 
-            // Deep space background
+            // Background
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, width, height);
 
+            // Styles
             ctx.lineWidth = noiseType ? 1.5 : 2;
             ctx.lineCap = 'round';
             ctx.shadowBlur = noiseType ? 15 : 10;
             ctx.shadowColor = color;
             ctx.strokeStyle = color;
-            ctx.fillStyle = color; // For sand particles
-
-            // DEBUG INFO (Temporary)
-            ctx.font = '12px mysans';
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.fillText(`Mode: ${mode} | Noise: ${noiseType} | Track: ${trackTitle}`, 20, 30);
             ctx.fillStyle = color;
 
-            ctx.beginPath();
+            try {
+                // Debug Text
+                ctx.font = '14px monospace';
+                ctx.fillStyle = 'white';
+                ctx.fillText(`Debug: M=${mode} N=${noiseType}`, 20, 30);
 
-            // PHYSICS ENGINE
-            // Noise = Fast/Random Chaos. Binaural = Smooth/Harmonic Math.
+                ctx.fillStyle = color;
+                ctx.beginPath();
 
-            if (mode === 'chladni') {
-                // --- CHLADNI PLATE (SAND) SIMULATION ---
-                // m and n determine the complexity of the grid
-                // We map frequencies to these integers/floats
-                // Low freq = simple pattern (m=2), High freq = complex (m=10)
-                const m = 2 + (leftFreq / 100);
-                const n = 2 + (rightFreq / 100);
+                if (mode === 'chladni') {
+                    // Chladni Logic
+                    const m = 2 + (leftFreq / 100);
+                    const n = 2 + (rightFreq / 100);
 
-                sandParticles.current.forEach(p => {
-                    // Safety check for HMR or init
-                    if (typeof p.vx === 'undefined') p.vx = 0;
-                    if (typeof p.vy === 'undefined') p.vy = 0;
+                    sandParticles.current.forEach(p => {
+                        if (typeof p.vx === 'undefined') p.vx = 0;
+                        if (typeof p.vy === 'undefined') p.vy = 0;
 
-                    // Normalize position to -1 to 1 based on center
-                    const nx = (p.x - cx) / (scale * 1.5);
-                    const ny = (p.y - cy) / (scale * 1.5);
+                        // Normalize position to -1 to 1 based on center
+                        const nx = (p.x - cx) / (scale * 1.5);
+                        const ny = (p.y - cy) / (scale * 1.5);
 
-                    const pi = Math.PI;
-                    const val = Math.cos(n * pi * nx) * Math.cos(m * pi * ny) - Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
+                        const pi = Math.PI;
+                        const val = Math.cos(n * pi * nx) * Math.cos(m * pi * ny) - Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
 
-                    const amp = Math.abs(val);
+                        const amp = Math.abs(val);
 
-                    // NEWTONIAN PHYSICS
-                    // 1. Friction (Damping) - stronger in nodes
-                    const damping = 0.92;
-                    p.vx *= damping;
-                    p.vy *= damping;
+                        // NEWTONIAN PHYSICS
+                        // 1. Friction (Damping) - stronger in nodes
+                        const damping = 0.92;
+                        p.vx *= damping;
+                        p.vy *= damping;
 
-                    // 2. Excitation (Force) - only where plate vibrates
-                    if (amp > 0.05) {
-                        const force = amp * 2.0; // Acceleration strength
-                        p.vx += (Math.random() - 0.5) * force;
-                        p.vy += (Math.random() - 0.5) * force;
-                    }
-
-                    // 3. Thermal Motion (keeps them alive)
-                    p.vx += (Math.random() - 0.5) * 0.1;
-                    p.vy += (Math.random() - 0.5) * 0.1;
-
-                    // 4. Update Position
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    // 5. Bounds Check (Wrap around for continuous flow)
-                    if (p.x < 0) p.x = width;
-                    if (p.x > width) p.x = 0;
-                    if (p.y < 0) p.y = height;
-                    if (p.y > height) p.y = 0;
-
-                    // Draw Particle
-                    ctx.fillRect(p.x, p.y, 1.5, 1.5);
-                });
-                time += 0.05;
-
-            } else if (noiseType) {
-                // --- NOISE VISUALIZATION (Mode-Aware) ---
-                time += 0.1; // Noise moves faster
-                const points = 800;
-
-                // Determine craziness based on noise type
-                const isCalm = ['brown', 'green', 'ocean', 'earth'].some(t => noiseType.includes(t));
-                const jitterAmt = isCalm ? 5 : 20;
-                const waveSpeed = isCalm ? 0.2 : 1.0;
-
-                if (mode === 'lissajous') {
-                    // "Fuzzy Electron Cloud"
-                    for (let i = 0; i < points; i++) {
-                        const t = time + (i * 0.05);
-                        // Lissajous base ...
-                        const bx = Math.sin(t * 1.5);
-                        const by = Math.sin(t * 1.2); // Slightly discordant ratio
-
-                        // ... plus Noise Jitter
-                        const noiseX = (Math.random() - 0.5) * jitterAmt;
-                        const noiseY = (Math.random() - 0.5) * jitterAmt;
-
-                        const x = cx + bx * scale + noiseX;
-                        const y = cy + by * scale + noiseY;
-
-                        if (i === 0) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
-                    }
-                }
-                else if (mode === 'mandala') {
-                    // "Smoky Portal"
-                    for (let i = 0; i <= 360; i++) {
-                        const angle = (i / 360) * Math.PI * 2;
-                        // Noise modulating radius
-                        const noiseR = Math.sin(angle * 10 + time * waveSpeed) * Math.cos(angle * 4 - time);
-                        const r = scale * (0.8 + 0.1 * noiseR) + (Math.random() * jitterAmt);
-
-                        const x = cx + Math.cos(angle) * r;
-                        const y = cy + Math.sin(angle) * r;
-
-                        if (i === 0) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
-                    }
-                }
-                else if (mode === 'wave') {
-                    // "Oscilloscope Static"
-                    for (let i = 0; i < width; i += 5) {
-                        const x = i;
-                        // Base wave + Random Noise
-                        const base = Math.sin(i * 0.01 + time);
-                        const noise = (Math.random() - 0.5) * (isCalm ? 0.2 : 0.8);
-
-                        const y = cy + (base + noise) * scale * 0.4;
-
-                        if (i === 0) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
-                    }
-                }
-                // FALLBACK / DEFAULT "PARTICLE" MODE for Soundscapes
-                else {
-                    // Distinct Logic for Soundscapes
-                    if (noiseType === 'rain') {
-                        // Falling rain
-                        for (let i = 0; i < 100; i++) {
-                            const rx = Math.random() * width;
-                            const ry = (Math.random() * height + time * 50) % height;
-                            ctx.moveTo(rx, ry);
-                            ctx.lineTo(rx, ry + 15); // Drop length
+                        // 2. Excitation (Force) - only where plate vibrates
+                        if (amp > 0.05) {
+                            const force = amp * 2.0; // Acceleration strength
+                            p.vx += (Math.random() - 0.5) * force;
+                            p.vy += (Math.random() - 0.5) * force;
                         }
-                    }
-                    else if (noiseType === 'ocean') {
-                        // Rolling horizontal waves
-                        for (let i = 0; i < width; i += 10) {
-                            const yOff = Math.sin(i * 0.01 + time) * 50 + Math.sin(i * 0.03 - time) * 30;
-                            const y = cy + yOff;
-                            if (i === 0) ctx.moveTo(i, y);
-                            else ctx.lineTo(i, y);
-                        }
-                        // Second wave layer
-                        for (let i = 0; i < width; i += 15) {
-                            const yOff = Math.sin(i * 0.015 + time * 1.2) * 40;
-                            const y = cy + yOff + 40;
-                            ctx.moveTo(i, y); ctx.lineTo(i + 5, y);
-                        }
-                    }
-                    else {
-                        // Cosmic / General Noise (Starfield)
-                        // Regenerate random points each frame for "static" look
-                        const starCount = isCalm ? 300 : 1000;
-                        for (let p = 0; p < starCount; p++) {
-                            // Radial expansion effect
-                            const ang = Math.random() * Math.PI * 2;
-                            const dist = Math.random() * scale * 1.5;
-                            const rx = cx + Math.cos(ang) * dist;
-                            const ry = cy + Math.sin(ang) * dist;
 
-                            // Flicker movement
-                            const flicker = Math.random() * 2;
-                            ctx.moveTo(rx, ry);
-                            ctx.lineTo(rx + flicker, ry + flicker);
-                        }
-                    }
-                }
-                ctx.stroke();
+                        // 3. Thermal Motion (keeps them alive)
+                        p.vx += (Math.random() - 0.5) * 0.1;
+                        p.vy += (Math.random() - 0.5) * 0.1;
 
-            } else {
-                // --- BINAURAL VISUALIZATION (Pure Physics) ---
-                // Advance time for the next frame
-                // We advance essentially "one frame's worth" of simulation time
-                time += 0.05; // Base speed
-                const timeStep = 0.005;
-                const frameDuration = 0.5;
+                        // 4. Update Position
+                        p.x += p.vx;
+                        p.y += p.vy;
 
-                for (let t = 0; t < frameDuration; t += timeStep) {
-                    const simTime = time + t;
-                    let x, y;
+                        // 5. Bounds Check (Wrap around for continuous flow)
+                        if (p.x < 0) p.x = width;
+                        if (p.x > width) p.x = 0;
+                        if (p.y < 0) p.y = height;
+                        if (p.y > height) p.y = 0;
+
+                        // Draw Particle
+                        ctx.fillRect(p.x, p.y, 1.5, 1.5);
+                    });
+                    time += 0.05;
+
+                } else if (noiseType) {
+                    // --- NOISE VISUALIZATION (Mode-Aware) ---
+                    time += 0.1; // Noise moves faster
+                    const points = 800;
+
+                    // Determine craziness based on noise type
+                    const isCalm = ['brown', 'green', 'ocean', 'earth'].some(t => noiseType.includes(t));
+                    const jitterAmt = isCalm ? 5 : 20;
+                    const waveSpeed = isCalm ? 0.2 : 1.0;
 
                     if (mode === 'lissajous') {
-                        const fScale = 0.05;
-                        x = cx + scale * Math.sin(simTime * leftFreq * fScale);
-                        y = cy + scale * Math.sin(simTime * rightFreq * fScale);
+                        // "Fuzzy Electron Cloud"
+                        for (let i = 0; i < points; i++) {
+                            const t = time + (i * 0.05);
+                            // Lissajous base ...
+                            const bx = Math.sin(t * 1.5);
+                            const by = Math.sin(t * 1.2); // Slightly discordant ratio
 
-                    } else if (mode === 'mandala') {
-                        const angle = (simTime * leftFreq * 0.05) % (Math.PI * 2);
-                        const r = scale * (0.8 + 0.2 * Math.sin(simTime * rightFreq * 0.05));
-                        x = cx + Math.cos(angle) * r;
-                        y = cy + Math.sin(angle) * r;
+                            // ... plus Noise Jitter
+                            const noiseX = (Math.random() - 0.5) * jitterAmt;
+                            const noiseY = (Math.random() - 0.5) * jitterAmt;
 
-                    } else if (mode === 'wave') {
-                        x = (simTime * 500) % width;
-                        const combinedAmp = Math.sin(simTime * leftFreq * 0.05) + Math.sin(simTime * rightFreq * 0.05);
-                        y = cy + combinedAmp * scale * 0.4;
-                        if (x < 10) ctx.moveTo(x, y);
+                            const x = cx + bx * scale + noiseX;
+                            const y = cy + by * scale + noiseY;
+
+                            if (i === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
                     }
+                    else if (mode === 'mandala') {
+                        // "Smoky Portal"
+                        for (let i = 0; i <= 360; i++) {
+                            const angle = (i / 360) * Math.PI * 2;
+                            // Noise modulating radius
+                            const noiseR = Math.sin(angle * 10 + time * waveSpeed) * Math.cos(angle * 4 - time);
+                            const r = scale * (0.8 + 0.1 * noiseR) + (Math.random() * jitterAmt);
 
-                    if (t === 0 && mode !== 'wave') ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
+                            const x = cx + Math.cos(angle) * r;
+                            const y = cy + Math.sin(angle) * r;
+
+                            if (i === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                    }
+                    else if (mode === 'wave') {
+                        // "Oscilloscope Static"
+                        for (let i = 0; i < width; i += 5) {
+                            const x = i;
+                            // Base wave + Random Noise
+                            const base = Math.sin(i * 0.01 + time);
+                            const noise = (Math.random() - 0.5) * (isCalm ? 0.2 : 0.8);
+
+                            const y = cy + (base + noise) * scale * 0.4;
+
+                            if (i === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                    }
+                    // FALLBACK / DEFAULT "PARTICLE" MODE for Soundscapes
+                    else {
+                        // Distinct Logic for Soundscapes
+                        if (noiseType === 'rain') {
+                            // Falling rain
+                            for (let i = 0; i < 100; i++) {
+                                const rx = Math.random() * width;
+                                const ry = (Math.random() * height + time * 50) % height;
+                                ctx.moveTo(rx, ry);
+                                ctx.lineTo(rx, ry + 15); // Drop length
+                            }
+                        }
+                        else if (noiseType === 'ocean') {
+                            // Rolling horizontal waves
+                            for (let i = 0; i < width; i += 10) {
+                                const yOff = Math.sin(i * 0.01 + time) * 50 + Math.sin(i * 0.03 - time) * 30;
+                                const y = cy + yOff;
+                                if (i === 0) ctx.moveTo(i, y);
+                                else ctx.lineTo(i, y);
+                            }
+                            // Second wave layer
+                            for (let i = 0; i < width; i += 15) {
+                                const yOff = Math.sin(i * 0.015 + time * 1.2) * 40;
+                                const y = cy + yOff + 40;
+                                ctx.moveTo(i, y); ctx.lineTo(i + 5, y);
+                            }
+                        }
+                        else {
+                            // Cosmic / General Noise (Starfield)
+                            // Regenerate random points each frame for "static" look
+                            const starCount = isCalm ? 300 : 1000;
+                            for (let p = 0; p < starCount; p++) {
+                                // Radial expansion effect
+                                const ang = Math.random() * Math.PI * 2;
+                                const dist = Math.random() * scale * 1.5;
+                                const rx = cx + Math.cos(ang) * dist;
+                                const ry = cy + Math.sin(ang) * dist;
+
+                                // Flicker movement
+                                const flicker = Math.random() * 2;
+                                ctx.moveTo(rx, ry);
+                                ctx.lineTo(rx + flicker, ry + flicker);
+                            }
+                        }
+                    }
+                    ctx.stroke();
+
+                } else {
+                    // --- BINAURAL VISUALIZATION (Pure Physics) ---
+                    // Advance time for the next frame
+                    // We advance essentially "one frame's worth" of simulation time
+                    time += 0.05; // Base speed
+                    const timeStep = 0.005;
+                    const frameDuration = 0.5;
+
+                    for (let t = 0; t < frameDuration; t += timeStep) {
+                        const simTime = time + t;
+                        let x, y;
+
+                        if (mode === 'lissajous') {
+                            const fScale = 0.05;
+                            x = cx + scale * Math.sin(simTime * leftFreq * fScale);
+                            y = cy + scale * Math.sin(simTime * rightFreq * fScale);
+
+                        } else if (mode === 'mandala') {
+                            const angle = (simTime * leftFreq * 0.05) % (Math.PI * 2);
+                            const r = scale * (0.8 + 0.2 * Math.sin(simTime * rightFreq * 0.05));
+                            x = cx + Math.cos(angle) * r;
+                            y = cy + Math.sin(angle) * r;
+
+                        } else if (mode === 'wave') {
+                            x = (simTime * 500) % width;
+                            const combinedAmp = Math.sin(simTime * leftFreq * 0.05) + Math.sin(simTime * rightFreq * 0.05);
+                            y = cy + combinedAmp * scale * 0.4;
+                            if (x < 10) ctx.moveTo(x, y);
+                        }
+
+                        if (t === 0 && mode !== 'wave') ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
                 }
-                ctx.stroke();
+
+
+            } catch (err) {
+                console.error(err);
+                // If context is lost, this might fail, but usually fine
+                ctx.fillStyle = 'red';
+                ctx.font = '20px monospace';
+                ctx.fillText('Msg: ' + err.message, 20, 100);
             }
 
             requestRef.current = requestAnimationFrame(animate);
