@@ -452,10 +452,10 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         ))}
                     </div>
                 </div>
-            </div >
+            </div>
 
             {/* Floating Action Buttons */}
-            < div className="fab-container" >
+            <div className="fab-container">
                 <button
                     className="fab-btn"
                     onClick={() => setShowControls(!showControls)}
@@ -470,8 +470,8 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 >
                     <X size={24} />
                 </button>
-            </div >
-        </div >,
+            </div>
+        </div>,
         document.body
     );
 }
