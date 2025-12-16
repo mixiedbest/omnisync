@@ -136,45 +136,50 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             ctx.fillStyle = color;
 
             try {
-                // Debug Text on Canvas
-                ctx.font = '14px monospace';
-                ctx.fillStyle = 'white';
-                ctx.fillText(`M:${mode} N:${noiseType}`, 20, 30);
-
                 ctx.fillStyle = color;
                 ctx.beginPath();
 
                 if (mode === 'droplet') {
-                    // SINGLE DROPLET IMPACT - Continuous expanding rings
-                    time += 0.08;
+                    // DROPLET SURFACE DEFORMATION - Standing wave pattern
+                    time += 0.05;
 
-                    // Ring spacing based on frequency
-                    const avgFreq = (leftFreq + rightFreq) / 2;
-                    const ringSpacing = Math.max(20, 800 / avgFreq);
-                    const maxRadius = Math.max(width, height) * 0.7;
+                    const dropletRadius = scale * 0.8;
+                    const resolution = 15; // Grid resolution
 
-                    // Draw expanding rings
-                    for (let r = 0; r < maxRadius; r += ringSpacing) {
-                        const ringAge = r + (time * 60);
-                        const currentRadius = ringAge % maxRadius;
+                    // Draw the droplet as a grid of oscillating points
+                    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 30) {
+                        for (let r = 0; r < dropletRadius; r += resolution) {
+                            const x = cx + r * Math.cos(angle);
+                            const y = cy + r * Math.sin(angle);
 
-                        if (currentRadius < maxRadius) {
-                            // Exponential damping
-                            const damping = Math.exp(-currentRadius / (maxRadius * 0.5));
+                            // Distance from center (normalized)
+                            const distFromCenter = r / dropletRadius;
 
-                            // Frequency modulation for thickness
-                            const oscillation = Math.sin(time * avgFreq * 0.05 + r * 0.1);
-                            const thickness = 1 + oscillation * 0.5;
+                            // Wave equation for surface deformation
+                            // Both frequencies create standing waves
+                            const wave1 = Math.sin(distFromCenter * leftFreq * 0.02 - time * 2);
+                            const wave2 = Math.sin(distFromCenter * rightFreq * 0.02 - time * 2 + Math.PI / 4);
+                            const interference = (wave1 + wave2) / 2;
 
-                            if (damping > 0.08) {
-                                ctx.lineWidth = thickness * damping * 3;
-                                ctx.globalAlpha = damping * 0.8;
-                                ctx.beginPath();
-                                ctx.arc(cx, cy, currentRadius, 0, Math.PI * 2);
-                                ctx.stroke();
-                            }
+                            // Amplitude decreases toward edge
+                            const amplitude = (1 - distFromCenter) * 20 * interference;
+
+                            // Offset point based on wave amplitude
+                            const offsetX = x + amplitude * Math.cos(angle);
+                            const offsetY = y + amplitude * Math.sin(angle);
+
+                            // Draw point
+                            ctx.globalAlpha = 0.6 + Math.abs(interference) * 0.4;
+                            ctx.fillRect(offsetX - 1, offsetY - 1, 2, 2);
                         }
                     }
+
+                    // Draw droplet outline
+                    ctx.globalAlpha = 0.3;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, dropletRadius, 0, Math.PI * 2);
+                    ctx.stroke();
                     ctx.globalAlpha = 1.0;
 
                 } else if (noiseType) {
