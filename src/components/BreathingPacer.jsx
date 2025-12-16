@@ -31,6 +31,20 @@ const BREATHING_PATTERNS = {
         phases: ['Inhale', 'Exhale'],
         timings: [4, 6.5],
         color: '#fbbf24'
+    },
+    coherent: {
+        name: 'Coherent (5-5)',
+        description: 'Balance & HRV (5s / 5s)',
+        phases: ['Inhale', 'Exhale'],
+        timings: [5, 5],
+        color: '#ec4899'
+    },
+    '7-11': {
+        name: '7-11 Deep Calm',
+        description: 'Anti-anxiety (7s / 11s)',
+        phases: ['Inhale', 'Exhale'],
+        timings: [7, 11],
+        color: '#14b8a6'
     }
 };
 
