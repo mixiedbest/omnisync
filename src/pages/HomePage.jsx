@@ -86,7 +86,7 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             id: 'about',
             title: 'About',
             icon: Info,
-            description: 'Brainwaves, breathing techniques & creators'
+            description: 'About the app & creators'
         },
         {
             id: 'disclaimer',
