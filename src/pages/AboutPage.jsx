@@ -402,26 +402,35 @@ export function AboutPage({ onBack }) {
                         <div className="section-content fade-in">
                             <p className="about-intro">
                                 Cymatics is the study of visible sound vibration. When sound waves travel through a medium (like sand, water, or light),
-                                they organize matter into complex, geometric patterns. OMNISYNC visualizes this phenomenon in real-time.
+                                they organize matter into complex, geometric patterns. OMNISYNC features <strong>digital simulations</strong> of these real-world phenomena,
+                                allowing you to visualize how your frequencies would interact with physical matter in real-time.
                             </p>
 
                             <section className="brainwave-section">
                                 <div className="brainwave-card">
-                                    <h4>Lissajous Figures (The Harmony of Math)</h4>
+                                    <h4>Lissajous Figures</h4>
                                     <p>
                                         These intricate loops appear when two different sound frequencies intersect.
-                                        In our visualizer, the Left Ear frequency drives the X-axis and the Right Ear frequency drives the Y-axis.
+                                        The Left Ear frequency drives the X-axis and the Right Ear frequency drives the Y-axis.
                                         The resulting shape reveals the exact harmonic relationship between the tones.
-                                        Stable ratios create closed knots; complex ratios create shifting 3D webs.
+                                        Stable ratios create closed knots; complex ratios create shifting patterns.
                                     </p>
                                 </div>
 
                                 <div className="brainwave-card">
-                                    <h4>Chladni Plates (The Sand Mode)</h4>
+                                    <h4>Droplet Mode</h4>
                                     <p>
-                                        Based on the experiments of Ernst Chladni, this mode simulates grains of sand on a vibrating metal plate.
-                                        As the plate vibrates, sand is kicked away from areas of high vibration (antinodes) and settles into areas of stillness (nodes).
-                                        This naturally forms geometric mandalas that become more complex as the frequency rises.
+                                        Simulates a water droplet's surface vibrating at your chosen frequencies.
+                                        Watch as standing wave patterns form on the droplet, creating nodal lines and interference patterns.
+                                        Higher frequencies create more complex patterns with tighter nodes, while lower frequencies produce simpler, larger formations.
+                                    </p>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>Mandala & Wave Modes</h4>
+                                    <p>
+                                        Additional visualization modes that transform your frequencies into rotating geometric patterns and oscilloscope-style waveforms.
+                                        Each mode offers a unique perspective on how your chosen frequencies interact and harmonize.
                                     </p>
                                 </div>
                             </section>
