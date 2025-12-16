@@ -131,6 +131,10 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 const n = 2 + (rightFreq / 100);
 
                 sandParticles.current.forEach(p => {
+                    // Safety check for HMR or init
+                    if (typeof p.vx === 'undefined') p.vx = 0;
+                    if (typeof p.vy === 'undefined') p.vy = 0;
+
                     // Normalize position to -1 to 1 based on center
                     const nx = (p.x - cx) / (scale * 1.5);
                     const ny = (p.y - cy) / (scale * 1.5);
@@ -230,9 +234,54 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         else ctx.lineTo(x, y);
                     }
                 }
+                // FALLBACK / DEFAULT "PARTICLE" MODE for Soundscapes
+                else {
+                    // Distinct Logic for Soundscapes
+                    if (noiseType === 'rain') {
+                        // Falling rain
+                        for (let i = 0; i < 100; i++) {
+                            const rx = Math.random() * width;
+                            const ry = (Math.random() * height + time * 50) % height;
+                            ctx.moveTo(rx, ry);
+                            ctx.lineTo(rx, ry + 15); // Drop length
+                        }
+                    }
+                    else if (noiseType === 'ocean') {
+                        // Rolling horizontal waves
+                        for (let i = 0; i < width; i += 10) {
+                            const yOff = Math.sin(i * 0.01 + time) * 50 + Math.sin(i * 0.03 - time) * 30;
+                            const y = cy + yOff;
+                            if (i === 0) ctx.moveTo(i, y);
+                            else ctx.lineTo(i, y);
+                        }
+                        // Second wave layer
+                        for (let i = 0; i < width; i += 15) {
+                            const yOff = Math.sin(i * 0.015 + time * 1.2) * 40;
+                            const y = cy + yOff + 40;
+                            ctx.moveTo(i, y); ctx.lineTo(i + 5, y);
+                        }
+                    }
+                    else {
+                        // Cosmic / General Noise (Starfield)
+                        // Regenerate random points each frame for "static" look
+                        const starCount = isCalm ? 300 : 1000;
+                        for (let p = 0; p < starCount; p++) {
+                            // Radial expansion effect
+                            const ang = Math.random() * Math.PI * 2;
+                            const dist = Math.random() * scale * 1.5;
+                            const rx = cx + Math.cos(ang) * dist;
+                            const ry = cy + Math.sin(ang) * dist;
+
+                            // Flicker movement
+                            const flicker = Math.random() * 2;
+                            ctx.moveTo(rx, ry);
+                            ctx.lineTo(rx + flicker, ry + flicker);
+                        }
+                    }
+                }
                 ctx.stroke();
-            }
-            else {
+
+            } else {
                 // --- BINAURAL VISUALIZATION (Pure Physics) ---
                 // Advance time for the next frame
                 // We advance essentially "one frame's worth" of simulation time
