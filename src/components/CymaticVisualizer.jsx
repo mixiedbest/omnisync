@@ -117,6 +117,12 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             ctx.strokeStyle = color;
             ctx.fillStyle = color; // For sand particles
 
+            // DEBUG INFO (Temporary)
+            ctx.font = '12px mysans';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.fillText(`Mode: ${mode} | Noise: ${noiseType} | Track: ${trackTitle}`, 20, 30);
+            ctx.fillStyle = color;
+
             ctx.beginPath();
 
             // PHYSICS ENGINE
