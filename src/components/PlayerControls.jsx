@@ -131,7 +131,7 @@ export function PlayerControls({
                         style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: '60px' }}
                     >
                         <Zap size={20} />
-                        <span style={{ fontSize: '10px', opacity: 0.8 }}>Lasers</span>
+                        <span style={{ fontSize: '10px', opacity: 0.8 }}>Cymatics</span>
                     </button>
 
                     <button

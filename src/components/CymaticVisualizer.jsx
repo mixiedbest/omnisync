@@ -15,7 +15,9 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             for (let i = 0; i < 4000; i++) {
                 sandParticles.current.push({
                     x: Math.random() * window.innerWidth,
-                    y: Math.random() * window.innerHeight
+                    y: Math.random() * window.innerHeight,
+                    vx: 0,
+                    vy: 0
                 });
             }
         }
@@ -133,43 +135,41 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     const nx = (p.x - cx) / (scale * 1.5);
                     const ny = (p.y - cy) / (scale * 1.5);
 
-                    // Chladni Formula:
-                    // Nodes are where this equation ~= 0
-                    // Amplitude = cos(n*pi*x)*cos(m*pi*y) - cos(m*pi*x)*cos(n*pi*y)
                     const pi = Math.PI;
                     const val = Math.cos(n * pi * nx) * Math.cos(m * pi * ny) - Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
 
-                    // Amplitude at this point (rectified)
                     const amp = Math.abs(val);
 
-                    // PHYSICS:
-                    // If amp is high, particle gets kicked randomly.
-                    // If amp is low (node), particle stays still.
-                    if (amp > 0.05) { // Lowered threshold for movement
-                        // Move randomly away from high vibration
-                        // The shake amount depends on how loud the vibration is
-                        const shake = amp * 10;
-                        p.x += (Math.random() - 0.5) * shake;
-                        p.y += (Math.random() - 0.5) * shake;
+                    // NEWTONIAN PHYSICS
+                    // 1. Friction (Damping) - stronger in nodes
+                    const damping = 0.92;
+                    p.vx *= damping;
+                    p.vy *= damping;
 
-                        // Keep within bounds (virtual plate)
-                        // If it flies off, reset to random position
-                        const dist = Math.sqrt(nx * nx + ny * ny);
-                        if (dist > 1) {
-                            p.x = cx + (Math.random() - 0.5) * scale;
-                            p.y = cy + (Math.random() - 0.5) * scale;
-                        }
-                    } else {
-                        // "Thermal Noise" to prevent freezing
-                        // Tiny brownian motion even in nodes
-                        p.x += (Math.random() - 0.5) * 0.5;
-                        p.y += (Math.random() - 0.5) * 0.5;
+                    // 2. Excitation (Force) - only where plate vibrates
+                    if (amp > 0.05) {
+                        const force = amp * 2.0; // Acceleration strength
+                        p.vx += (Math.random() - 0.5) * force;
+                        p.vy += (Math.random() - 0.5) * force;
                     }
+
+                    // 3. Thermal Motion (keeps them alive)
+                    p.vx += (Math.random() - 0.5) * 0.1;
+                    p.vy += (Math.random() - 0.5) * 0.1;
+
+                    // 4. Update Position
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // 5. Bounds Check (Wrap around for continuous flow)
+                    if (p.x < 0) p.x = width;
+                    if (p.x > width) p.x = 0;
+                    if (p.y < 0) p.y = height;
+                    if (p.y > height) p.y = 0;
 
                     // Draw Particle
                     ctx.fillRect(p.x, p.y, 1.5, 1.5);
                 });
-
                 time += 0.05;
 
             } else if (noiseType) {

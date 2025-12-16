@@ -388,7 +388,48 @@ export function AboutPage({ onBack }) {
                     )}
                 </div>
 
-                {/* Section 4: About the Creators */}
+                {/* Section 4: Cymatics */}
+                <div className="expandable-section">
+                    <button
+                        className={`section-header ${expandedSection === 'cymatics' ? 'active' : ''}`}
+                        onClick={() => toggleSection('cymatics')}
+                    >
+                        <h2>Cymatics: Seeing Sound</h2>
+                        {expandedSection === 'cymatics' ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                    </button>
+
+                    {expandedSection === 'cymatics' && (
+                        <div className="section-content fade-in">
+                            <p className="about-intro">
+                                Cymatics is the study of visible sound vibration. When sound waves travel through a medium (like sand, water, or light),
+                                they organize matter into complex, geometric patterns. OMNISYNC visualizes this phenomenon in real-time.
+                            </p>
+
+                            <section className="brainwave-section">
+                                <div className="brainwave-card">
+                                    <h4>Lissajous Figures (The Harmony of Math)</h4>
+                                    <p>
+                                        These intricate loops appear when two different sound frequencies intersect.
+                                        In our visualizer, the Left Ear frequency drives the X-axis and the Right Ear frequency drives the Y-axis.
+                                        The resulting shape reveals the exact harmonic relationship between the tones.
+                                        Stable ratios create closed knots; complex ratios create shifting 3D webs.
+                                    </p>
+                                </div>
+
+                                <div className="brainwave-card">
+                                    <h4>Chladni Plates (The Sand Mode)</h4>
+                                    <p>
+                                        Based on the experiments of Ernst Chladni, this mode simulates grains of sand on a vibrating metal plate.
+                                        As the plate vibrates, sand is kicked away from areas of high vibration (antinodes) and settles into areas of stillness (nodes).
+                                        This naturally forms geometric mandalas that become more complex as the frequency rises.
+                                    </p>
+                                </div>
+                            </section>
+                        </div>
+                    )}
+                </div>
+
+                {/* Section 5: About the Creators */}
                 <div className="expandable-section">
                     <button
                         className={`section-header ${expandedSection === 'creators' ? 'active' : ''}`}
