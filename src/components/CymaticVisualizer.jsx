@@ -8,6 +8,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     const requestRef = useRef(null);
     const [mode, setMode] = useState(noiseType ? 'particle' : 'lissajous');
     const sandParticles = useRef([]);
+    const [debugMsg, setDebugMsg] = useState('Init...');
 
     // Initialize sand particles
     useEffect(() => {
@@ -90,16 +91,32 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     const rightFreq = rightFrequency || (carrierFrequency + (beatFrequency / 2));
 
     useEffect(() => {
+        if (!canvasRef.current) {
+            setDebugMsg('No Canvas Ref');
+            return;
+        }
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        let ctx;
+        try {
+            ctx = canvas.getContext('2d');
+        } catch (e) {
+            setDebugMsg('Context Error: ' + e.message);
+            return;
+        }
+
         let time = 0;
 
         const animate = () => {
             if (!canvas) return;
 
             // Init Canvas & Vars
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            try {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            } catch (e) {
+                setDebugMsg('Resize Error: ' + e.message);
+            }
+
             const width = canvas.width;
             const height = canvas.height;
             const cx = width / 2;
@@ -119,10 +136,10 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             ctx.fillStyle = color;
 
             try {
-                // Debug Text
+                // Debug Text on Canvas
                 ctx.font = '14px monospace';
                 ctx.fillStyle = 'white';
-                ctx.fillText(`Debug: M=${mode} N=${noiseType}`, 20, 30);
+                ctx.fillText(`M:${mode} N:${noiseType}`, 20, 30);
 
                 ctx.fillStyle = color;
                 ctx.beginPath();
@@ -377,6 +394,16 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     return createPortal(
         <div className="cymatic-overlay">
             <canvas ref={canvasRef} className="cymatic-canvas" />
+
+            {/* DOM Debug Overlay - Validates Logic Life */}
+            <div style={{
+                position: 'absolute', top: 60, left: 20,
+                color: 'white', background: 'rgba(255,0,0,0.8)',
+                zIndex: 10001, padding: '8px', borderRadius: '4px',
+                pointerEvents: 'none', fontFamily: 'monospace'
+            }}>
+                DOM Debug: {debugMsg}
+            </div>
 
             {/* Controls Overlay */}
             <div className={`cymatic-controls ${showControls ? 'visible' : 'hidden'}`}>
