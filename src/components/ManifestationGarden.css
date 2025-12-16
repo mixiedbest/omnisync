@@ -1,0 +1,778 @@
+.manifestation-garden {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(180deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+    overflow: hidden;
+}
+
+.garden-canvas {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ground */
+.ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background: linear-gradient(180deg, transparent 0%, #2d1810 50%, #1a0f08 100%);
+}
+
+.soil {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: #1a0f08;
+    box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Tree Container */
+.tree-container {
+    position: absolute;
+    bottom: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 1s ease;
+}
+
+/* Seed Stage */
+.seed-visual {
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+.seed {
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #eab308, #ca8a04);
+    border-radius: 50% 50% 50% 70%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: seedPulse 2s ease-in-out infinite;
+}
+
+.seed-glow {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, rgba(234, 179, 8, 0.4), transparent);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes seedPulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* Sprout Stage */
+.sprout-visual {
+    position: relative;
+    width: 60px;
+    height: 80px;
+    animation: sproutGrow 1s ease-out;
+}
+
+.sprout-stem {
+    width: 4px;
+    height: 60px;
+    background: linear-gradient(180deg, #16a34a, #15803d);
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.sprout-leaves {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.leaf {
+    width: 20px;
+    height: 30px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border-radius: 50% 0;
+    position: absolute;
+}
+
+.leaf.left {
+    transform: rotate(-45deg);
+    left: -15px;
+    animation: leafSway 3s ease-in-out infinite;
+}
+
+.leaf.right {
+    transform: rotate(135deg) scaleX(-1);
+    right: -15px;
+    animation: leafSway 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes sproutGrow {
+    from {
+        transform: scaleY(0);
+        transform-origin: bottom;
+    }
+
+    to {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes leafSway {
+
+    0%,
+    100% {
+        transform: rotate(-45deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(-45deg) translateY(-5px);
+    }
+}
+
+/* Tree Stage */
+.tree-visual {
+    position: relative;
+    width: 200px;
+    height: 300px;
+    animation: treeGrow 2s ease-out;
+}
+
+.trunk {
+    width: 40px;
+    height: 150px;
+    background: linear-gradient(90deg, #6b4423, #8B4513, #6b4423);
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px 20px 0 0;
+}
+
+.bark-texture {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg,
+            transparent,
+            transparent 5px,
+            rgba(0, 0, 0, 0.1) 5px,
+            rgba(0, 0, 0, 0.1) 6px);
+}
+
+.roots {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+}
+
+.root {
+    width: 6px;
+    height: 40px;
+    background: linear-gradient(180deg, #6b4423, #4a2f1a);
+    position: absolute;
+    border-radius: 3px;
+    transform-origin: top;
+}
+
+.root-1 {
+    left: 20%;
+    transform: rotate(-30deg);
+}
+
+.root-2 {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.root-3 {
+    right: 20%;
+    transform: rotate(30deg);
+}
+
+.branches {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+}
+
+.branch {
+    width: 60px;
+    height: 6px;
+    background: linear-gradient(90deg, #6b4423, #8B4513);
+    position: absolute;
+    border-radius: 3px;
+    transform-origin: left;
+    animation: branchSway 4s ease-in-out infinite;
+}
+
+.branch-1 {
+    left: 20px;
+    top: 0;
+    transform: rotate(-30deg);
+}
+
+.branch-2 {
+    right: 20px;
+    top: 20px;
+    transform: rotate(30deg);
+    animation-delay: 0.5s;
+}
+
+.branch-3 {
+    left: 15px;
+    top: 40px;
+    transform: rotate(-20deg);
+    animation-delay: 1s;
+}
+
+.branch-4 {
+    right: 15px;
+    top: 60px;
+    transform: rotate(25deg);
+    animation-delay: 1.5s;
+}
+
+.branch-5 {
+    left: 25px;
+    top: 80px;
+    transform: rotate(-25deg);
+    animation-delay: 2s;
+}
+
+@keyframes branchSway {
+
+    0%,
+    100% {
+        transform: rotate(var(--rotate, 0deg));
+    }
+
+    50% {
+        transform: rotate(calc(var(--rotate, 0deg) + 5deg));
+    }
+}
+
+.canopy {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 180px;
+}
+
+.foliage {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.8), rgba(22, 163, 74, 0.6));
+    animation: foliageSway 5s ease-in-out infinite;
+}
+
+.foliage-1 {
+    width: 100px;
+    height: 100px;
+    top: 20px;
+    left: 40px;
+}
+
+.foliage-2 {
+    width: 120px;
+    height: 120px;
+    top: 40px;
+    left: 20px;
+    animation-delay: 0.5s;
+}
+
+.foliage-3 {
+    width: 90px;
+    height: 90px;
+    top: 30px;
+    right: 30px;
+    animation-delay: 1s;
+}
+
+@keyframes foliageSway {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-10px) scale(1.02);
+    }
+}
+
+@keyframes treeGrow {
+    from {
+        transform: scaleY(0);
+        transform-origin: bottom;
+        opacity: 0;
+    }
+
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+/* Manifestation Flowers */
+.manifestation-flower {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: flowerAppear 0.8s ease-out;
+}
+
+.manifestation-flower:hover {
+    transform: scale(1.2);
+    z-index: 10;
+}
+
+.flower-glow {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--flower-color), transparent);
+    opacity: 0.4;
+    animation: flowerGlow 2s ease-in-out infinite;
+}
+
+.flower-petals {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.petal {
+    position: absolute;
+    width: 16px;
+    height: 24px;
+    background: var(--flower-color);
+    border-radius: 50% 50% 50% 0;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 100%;
+    opacity: 0.9;
+}
+
+.flower-center {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, #fbbf24, #f59e0b);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}
+
+@keyframes flowerAppear {
+    from {
+        transform: scale(0) translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes flowerGlow {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+.manifestation-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 12px 16px;
+    border-radius: 8px;
+    white-space: nowrap;
+    margin-bottom: 10px;
+    pointer-events: none;
+    animation: tooltipAppear 0.3s ease;
+}
+
+.tooltip-text {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.tooltip-date {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+}
+
+@keyframes tooltipAppear {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Ambient Elements */
+.firefly {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #fbbf24;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #fbbf24;
+    animation: fireflyFloat 6s ease-in-out infinite;
+    opacity: 0;
+}
+
+@keyframes fireflyFloat {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: translate(0, 0);
+    }
+
+    10%,
+    90% {
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(calc(-20px + 40px * var(--random-x, 0.5)),
+                calc(-30px + 60px * var(--random-y, 0.5)));
+    }
+}
+
+/* Garden Stats */
+.garden-stats {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 24px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 12px 24px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-size: 14px;
+}
+
+.stat svg {
+    color: #eab308;
+}
+
+/* Seed Ceremony */
+.seed-ceremony {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+}
+
+.ceremony-stage {
+    text-align: center;
+    max-width: 500px;
+    padding: 40px;
+}
+
+.ceremony-icon {
+    color: #eab308;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.6));
+}
+
+.ceremony-icon.pulse {
+    animation: iconPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.ceremony-stage h2 {
+    font-size: 32px;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.ceremony-text {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.seed-intention-input {
+    width: 100%;
+    min-height: 120px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(234, 179, 8, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    resize: none;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+
+.seed-intention-input:focus {
+    outline: none;
+    border-color: rgba(234, 179, 8, 0.6);
+    box-shadow: 0 0 20px rgba(234, 179, 8, 0.2);
+}
+
+.ceremony-btn {
+    padding: 16px 48px;
+    background: linear-gradient(135deg, #eab308, #f59e0b);
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(234, 179, 8, 0.3);
+}
+
+.ceremony-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(234, 179, 8, 0.5);
+}
+
+/* Planting Animation */
+.planting-animation {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 32px;
+}
+
+.hands {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.hand {
+    width: 60px;
+    height: 80px;
+    background: linear-gradient(135deg, #d4a574, #c49563);
+    border-radius: 30px 30px 10px 10px;
+    position: absolute;
+    top: 20px;
+}
+
+.hand.left {
+    left: 20px;
+    animation: handPlant 3s ease-in-out;
+}
+
+.hand.right {
+    right: 20px;
+    animation: handPlant 3s ease-in-out 0.2s;
+}
+
+@keyframes handPlant {
+
+    0%,
+    100% {
+        transform: translateY(-20px);
+    }
+
+    50% {
+        transform: translateY(40px);
+    }
+}
+
+.seed-being-planted {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: seedDrop 3s ease-in-out;
+}
+
+@keyframes seedDrop {
+    0% {
+        transform: translate(-50%, -100px);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, 20px);
+        opacity: 0;
+    }
+}
+
+.soil-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.particle {
+    width: 6px;
+    height: 6px;
+    background: #6b4423;
+    border-radius: 50%;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    animation: particleFall 3s ease-out;
+}
+
+.particle:nth-child(1) {
+    animation-delay: 1.5s;
+    left: 45%;
+}
+
+.particle:nth-child(2) {
+    animation-delay: 1.6s;
+    left: 55%;
+}
+
+.particle:nth-child(3) {
+    animation-delay: 1.7s;
+    left: 40%;
+}
+
+.particle:nth-child(4) {
+    animation-delay: 1.8s;
+    left: 60%;
+}
+
+.particle:nth-child(5) {
+    animation-delay: 1.9s;
+    left: 50%;
+}
+
+.particle:nth-child(6) {
+    animation-delay: 2s;
+    left: 48%;
+}
+
+@keyframes particleFall {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

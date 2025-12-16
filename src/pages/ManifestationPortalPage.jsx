@@ -2,20 +2,25 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Sparkles, Anchor, Heart, Waves, TrendingUp, Zap, TreePine } from 'lucide-react';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
 import { PinLock } from '../components/PinLock';
+import { ManifestationGarden, SeedPlantingCeremony } from '../components/ManifestationGarden';
+import { BreathSync } from '../components/BreathSync';
 import './ManifestationPortalPage.css';
 
 export function ManifestationPortalPage({ onNavigate }) {
-    const [stage, setStage] = useState('entrance'); // entrance, input, preset, portal, completion
+    const [stage, setStage] = useState('entrance'); // entrance, seed-ceremony, input, preset, portal, completion, garden
     const [intention, setIntention] = useState('');
     const [selectedPreset, setSelectedPreset] = useState(null);
     const [portalActive, setPortalActive] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [showPinLock, setShowPinLock] = useState(false);
     const [isUnlocked, setIsUnlocked] = useState(false);
+    const [manifestations, setManifestations] = useState([]);
+    const [seedPlanted, setSeedPlanted] = useState(false);
+    const [showGarden, setShowGarden] = useState(false);
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
 
-    // Check PIN lock on mount
+    // Check PIN lock and load manifestations on mount
     useEffect(() => {
         const settings = JSON.parse(localStorage.getItem('omnisync_settings') || '{}');
         if (settings.manifestationPinLock) {
@@ -23,6 +28,12 @@ export function ManifestationPortalPage({ onNavigate }) {
         } else {
             setIsUnlocked(true);
         }
+
+        // Load seed and manifestations
+        const seed = localStorage.getItem('omnisync_manifestation_seed');
+        const savedManifestations = JSON.parse(localStorage.getItem('omnisync_manifestations') || '[]');
+        setSeedPlanted(!!seed);
+        setManifestations(savedManifestations);
     }, []);
 
     const presets = [
@@ -296,6 +307,17 @@ export function ManifestationPortalPage({ onNavigate }) {
     };
 
     const enterPortal = () => {
+        // Check if seed has been planted
+        if (!seedPlanted) {
+            setStage('seed-ceremony');
+        } else {
+            setStage('input');
+        }
+    };
+
+    const handleSeedPlanted = (seedIntention) => {
+        localStorage.setItem('omnisync_manifestation_seed', seedIntention);
+        setSeedPlanted(true);
         setStage('input');
     };
 
@@ -310,6 +332,21 @@ export function ManifestationPortalPage({ onNavigate }) {
 
     const completeSession = () => {
         setIsPlaying(false);
+
+        // Save manifestation to garden
+        if (intention && selectedPreset) {
+            const newManifestation = {
+                id: Date.now(),
+                intention,
+                archetype: selectedPreset,
+                date: new Date().toISOString(),
+                bloomed: false
+            };
+            const updated = [...manifestations, newManifestation];
+            setManifestations(updated);
+            localStorage.setItem('omnisync_manifestations', JSON.stringify(updated));
+        }
+
         setStage('completion');
         setTimeout(() => {
             setStage('entrance');
@@ -317,6 +354,14 @@ export function ManifestationPortalPage({ onNavigate }) {
             setSelectedPreset(null);
             setPortalActive(false);
         }, 5000);
+    };
+
+    const viewGarden = () => {
+        setShowGarden(true);
+    };
+
+    const closeGarden = () => {
+        setShowGarden(false);
     };
 
     // Show PIN lock if enabled and not unlocked
@@ -335,6 +380,24 @@ export function ManifestationPortalPage({ onNavigate }) {
 
     return (
         <div className={`manifestation-portal ${stage}`}>
+            {/* Garden View Modal */}
+            {showGarden && (
+                <div className="garden-modal">
+                    <button className="close-garden-btn" onClick={closeGarden}>
+                        <X size={24} />
+                    </button>
+                    <ManifestationGarden
+                        manifestations={manifestations}
+                        onSelectManifestation={(m) => console.log('Selected:', m)}
+                    />
+                </div>
+            )}
+
+            {/* Seed Planting Ceremony */}
+            {stage === 'seed-ceremony' && (
+                <SeedPlantingCeremony onComplete={handleSeedPlanted} />
+            )}
+
             {/* Entrance Stage */}
             {stage === 'entrance' && (
                 <div className="portal-entrance fade-in">
@@ -346,6 +409,12 @@ export function ManifestationPortalPage({ onNavigate }) {
                     <button className="enter-portal-btn" onClick={enterPortal}>
                         Enter the Portal
                     </button>
+                    {seedPlanted && manifestations.length > 0 && (
+                        <button className="view-garden-btn" onClick={viewGarden}>
+                            <TreePine size={20} />
+                            View Your Garden ({manifestations.length})
+                        </button>
+                    )}
                 </div>
             )}
 
@@ -396,6 +465,21 @@ export function ManifestationPortalPage({ onNavigate }) {
             {stage === 'portal' && (
                 <div className="portal-active">
                     <canvas ref={canvasRef} className="portal-canvas" />
+
+                    {/* Breath Synchronization Overlay */}
+                    {currentPreset && (
+                        <BreathSync
+                            breathPattern={currentPreset.breathPattern}
+                            isActive={true}
+                            onBreathCycle={(count) => {
+                                // Optional: Do something on breath cycles
+                                if (count % 5 === 0) {
+                                    console.log(`${count} breath cycles completed`);
+                                }
+                            }}
+                        />
+                    )}
+
                     <button className="complete-btn" onClick={completeSession}>
                         Complete
                     </button>
