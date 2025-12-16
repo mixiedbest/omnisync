@@ -225,6 +225,92 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     });
                     time += 0.05;
 
+                } else if (mode === 'droplet') {
+                    // SINGLE DROPLET - Concentric ripples from center
+                    time += 0.05;
+
+                    const numRipples = 20;
+                    const maxRadius = Math.max(width, height);
+
+                    for (let i = 0; i < numRipples; i++) {
+                        // Each ripple expands outward
+                        const rippleAge = (time * 50 + i * 30) % maxRadius;
+                        const radius = rippleAge;
+
+                        // Wave amplitude based on both frequencies (interference)
+                        const freq1Wave = Math.sin(time * leftFreq * 0.01 + i * 0.5);
+                        const freq2Wave = Math.sin(time * rightFreq * 0.01 + i * 0.5);
+                        const interference = (freq1Wave + freq2Wave) / 2;
+
+                        // Damping - ripples fade as they expand
+                        const damping = Math.exp(-rippleAge / (maxRadius * 0.3));
+                        const amplitude = 15 * interference * damping;
+
+                        if (damping > 0.05) { // Only draw visible ripples
+                            ctx.lineWidth = 2 * damping;
+                            ctx.globalAlpha = damping;
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    }
+                    ctx.globalAlpha = 1.0;
+
+                } else if (mode === 'water') {
+                    // WATER SURFACE - Complex wave interference
+                    time += 0.05;
+
+                    const resolution = 8; // Grid spacing
+                    const waveSpeed = 0.02;
+
+                    // Create wave sources based on frequencies
+                    const numSources = 4;
+                    const sources = [];
+                    for (let i = 0; i < numSources; i++) {
+                        const angle = (i / numSources) * Math.PI * 2;
+                        const dist = scale * 0.6;
+                        sources.push({
+                            x: cx + Math.cos(angle) * dist,
+                            y: cy + Math.sin(angle) * dist,
+                            freq: i % 2 === 0 ? leftFreq : rightFreq,
+                            phase: i * Math.PI / 2
+                        });
+                    }
+
+                    // Draw wave field
+                    for (let x = 0; x < width; x += resolution) {
+                        for (let y = 0; y < height; y += resolution) {
+                            let totalAmp = 0;
+
+                            // Sum waves from all sources
+                            sources.forEach(source => {
+                                const dx = x - source.x;
+                                const dy = y - source.y;
+                                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                                // Wave equation: A * sin(k*r - ω*t + φ)
+                                const k = source.freq * 0.01; // Wave number
+                                const omega = source.freq * waveSpeed;
+                                const damping = Math.exp(-dist / (scale * 2));
+
+                                const wave = Math.sin(k * dist - omega * time + source.phase) * damping;
+                                totalAmp += wave;
+                            });
+
+                            // Normalize and map to brightness
+                            const normalized = (totalAmp / numSources + 1) / 2; // 0 to 1
+                            const brightness = Math.floor(normalized * 255);
+
+                            // Draw pixel with wave amplitude
+                            if (normalized > 0.3 && normalized < 0.7) {
+                                ctx.fillStyle = color;
+                                ctx.globalAlpha = Math.abs(totalAmp / numSources);
+                                ctx.fillRect(x, y, resolution, resolution);
+                            }
+                        }
+                    }
+                    ctx.globalAlpha = 1.0;
+
                 } else if (noiseType) {
                     // --- NOISE VISUALIZATION (Mode-Aware) ---
                     time += 0.1; // Noise moves faster
@@ -335,34 +421,27 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     // Advance time for the next frame
                     // We advance essentially "one frame's worth" of simulation time
                     time += 0.05; // Base speed
-                    const timeStep = 0.002; // Smaller steps for smoother curves
-                    const frameDuration = 1.0; // Longer trail
+                    const timeStep = 0.005; // Smaller steps for smoother curves
+                    const frameDuration = 0.5; // Longer trail
 
                     for (let t = 0; t < frameDuration; t += timeStep) {
                         const simTime = time + t;
                         let x, y;
 
                         if (mode === 'lissajous') {
-                            // Normalize frequencies for visible patterns
-                            // Use ratio instead of absolute values
-                            const freqRatio = rightFreq / leftFreq;
-                            const baseFreq = Math.min(leftFreq, rightFreq);
-                            const fScale = 0.001; // Much slower for high frequencies
-
-                            x = cx + scale * Math.sin(simTime * baseFreq * fScale);
-                            y = cy + scale * Math.sin(simTime * baseFreq * freqRatio * fScale + Math.PI / 4);
+                            const fScale = 0.05;
+                            x = cx + scale * Math.sin(simTime * leftFreq * fScale);
+                            y = cy + scale * Math.sin(simTime * rightFreq * fScale);
 
                         } else if (mode === 'mandala') {
-                            const fScale = 0.002;
-                            const angle = (simTime * leftFreq * fScale) % (Math.PI * 2);
-                            const r = scale * (0.8 + 0.2 * Math.sin(simTime * rightFreq * fScale));
+                            const angle = (simTime * leftFreq * 0.05) % (Math.PI * 2);
+                            const r = scale * (0.8 + 0.2 * Math.sin(simTime * rightFreq * 0.05));
                             x = cx + Math.cos(angle) * r;
                             y = cy + Math.sin(angle) * r;
 
                         } else if (mode === 'wave') {
                             x = (simTime * 500) % width;
-                            const fScale = 0.002;
-                            const combinedAmp = Math.sin(simTime * leftFreq * fScale) + Math.sin(simTime * rightFreq * fScale);
+                            const combinedAmp = Math.sin(simTime * leftFreq * 0.05) + Math.sin(simTime * rightFreq * 0.05);
                             y = cy + combinedAmp * scale * 0.4;
                             if (x < 10) ctx.moveTo(x, y);
                         }
@@ -463,6 +542,14 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                             className={mode === 'chladni' ? 'active' : ''}
                             onClick={() => setMode('chladni')}
                         >Sand</button>
+                        <button
+                            className={mode === 'droplet' ? 'active' : ''}
+                            onClick={() => setMode('droplet')}
+                        >Droplet</button>
+                        <button
+                            className={mode === 'water' ? 'active' : ''}
+                            onClick={() => setMode('water')}
+                        >Water</button>
                     </div>
                 </div>
 
