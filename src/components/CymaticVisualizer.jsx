@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { X, Mic, Maximize2, Settings, Palette } from 'lucide-react';
 import './CymaticVisualizer.css';
 
-export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequency = 432, trackTitle = '', noiseType = null }) {
+export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequency = 432, leftFrequency, rightFrequency, trackTitle = '', noiseType = null }) {
     const canvasRef = useRef(null);
     const requestRef = useRef(null);
     const [mode, setMode] = useState(noiseType ? 'particle' : 'lissajous');
@@ -126,6 +126,22 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             // Background
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, width, height);
+
+            // === TEST PATTERN (PROOF OF LIFE) ===
+            // Draw a pulsing circle in the center
+            const pulseSize = 50 + Math.sin(time * 0.1) * 30;
+            ctx.fillStyle = '#00ff00'; // Bright green
+            ctx.beginPath();
+            ctx.arc(cx, cy, pulseSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 24px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('CYMATICS ACTIVE', cx, cy - 100);
+            ctx.fillText(`Mode: ${mode}`, cx, cy + 100);
+            // === END TEST PATTERN ===
 
             // Styles
             ctx.lineWidth = noiseType ? 1.5 : 2;
@@ -344,6 +360,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 ctx.fillText('Msg: ' + err.message, 20, 100);
             }
 
+            time += 0.05; // Increment time for animations
             requestRef.current = requestAnimationFrame(animate);
         };
         requestRef.current = requestAnimationFrame(animate);
