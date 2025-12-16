@@ -145,10 +145,15 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 ctx.beginPath();
 
                 if (mode === 'chladni') {
-                    // REAL CHLADNI PLATE PHYSICS
-                    // Sand is pushed AWAY from vibrating areas, accumulates in nodal lines
-                    const m = 2 + (leftFreq / 100);
-                    const n = 2 + (rightFreq / 100);
+                    // REAL CHLADNI PLATE PHYSICS with temporal vibration
+                    // Normalize frequencies to reasonable pattern values
+                    const freqScale = 0.02; // Scale down high frequencies
+                    const m = 2 + (leftFreq * freqScale);
+                    const n = 2 + (rightFreq * freqScale);
+
+                    // Time-based vibration amplitude (simulates plate oscillation)
+                    const vibrationFreq = Math.abs(rightFreq - leftFreq) || beatFrequency || 10;
+                    const vibrationAmp = 0.5 + 0.5 * Math.sin(time * vibrationFreq * 0.05);
 
                     sandParticles.current.forEach(p => {
                         if (typeof p.vx === 'undefined') p.vx = 0;
@@ -163,7 +168,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         // Calculate Chladni pattern amplitude at this point
                         const val = Math.cos(n * pi * nx) * Math.cos(m * pi * ny) -
                             Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
-                        const amp = Math.abs(val);
+                        const amp = Math.abs(val) * vibrationAmp; // Modulate by vibration
 
                         // Calculate gradient (direction of steepest amplitude increase)
                         const dx = 0.01;
@@ -172,17 +177,20 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         const valY = Math.cos(n * pi * nx) * Math.cos(m * pi * (ny + dx)) -
                             Math.cos(m * pi * nx) * Math.cos(n * pi * (ny + dx));
 
-                        const gradX = (Math.abs(valX) - amp) / dx;
-                        const gradY = (Math.abs(valY) - amp) / dx;
+                        let gradX = (Math.abs(valX) - Math.abs(val)) / dx;
+                        let gradY = (Math.abs(valY) - Math.abs(val)) / dx;
 
-                        // REAL PHYSICS:
-                        // 1. Strong repulsion from vibrating areas (high amplitude)
-                        // 2. Attraction to nodal lines (low amplitude)
-                        const repulsionForce = amp * 15.0; // Much stronger!
-                        const nodeAttractionForce = (1.0 - amp) * 2.0;
+                        // Safety check for NaN
+                        if (isNaN(gradX)) gradX = 0;
+                        if (isNaN(gradY)) gradY = 0;
+
+                        // Adaptive force based on frequency (higher freq = gentler force)
+                        const forceScale = Math.min(1.0, 500 / Math.max(leftFreq, rightFreq));
+                        const repulsionForce = amp * 12.0 * forceScale * vibrationAmp;
+                        const nodeAttractionForce = (1.0 - amp) * 1.5 * forceScale;
 
                         // Push away from high amplitude areas
-                        if (amp > 0.1) {
+                        if (amp > 0.15) {
                             p.vx -= gradX * repulsionForce;
                             p.vy -= gradY * repulsionForce;
                         } else {
@@ -192,13 +200,13 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         }
 
                         // High friction - sand settles quickly
-                        const friction = 0.85;
+                        const friction = 0.88;
                         p.vx *= friction;
                         p.vy *= friction;
 
                         // Tiny random motion to prevent total freeze
-                        p.vx += (Math.random() - 0.5) * 0.05;
-                        p.vy += (Math.random() - 0.5) * 0.05;
+                        p.vx += (Math.random() - 0.5) * 0.08;
+                        p.vy += (Math.random() - 0.5) * 0.08;
 
                         // Update position
                         p.x += p.vx;
@@ -210,8 +218,8 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         if (p.y < 0) p.y = height;
                         if (p.y > height) p.y = 0;
 
-                        // Draw particle (only if in low-amplitude area for sharper patterns)
-                        if (amp < 0.3) {
+                        // Draw particle (show more particles for visibility)
+                        if (amp < 0.4) {
                             ctx.fillRect(p.x, p.y, 2, 2);
                         }
                     });
@@ -327,27 +335,34 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     // Advance time for the next frame
                     // We advance essentially "one frame's worth" of simulation time
                     time += 0.05; // Base speed
-                    const timeStep = 0.005;
-                    const frameDuration = 0.5;
+                    const timeStep = 0.002; // Smaller steps for smoother curves
+                    const frameDuration = 1.0; // Longer trail
 
                     for (let t = 0; t < frameDuration; t += timeStep) {
                         const simTime = time + t;
                         let x, y;
 
                         if (mode === 'lissajous') {
-                            const fScale = 0.05;
-                            x = cx + scale * Math.sin(simTime * leftFreq * fScale);
-                            y = cy + scale * Math.sin(simTime * rightFreq * fScale);
+                            // Normalize frequencies for visible patterns
+                            // Use ratio instead of absolute values
+                            const freqRatio = rightFreq / leftFreq;
+                            const baseFreq = Math.min(leftFreq, rightFreq);
+                            const fScale = 0.001; // Much slower for high frequencies
+
+                            x = cx + scale * Math.sin(simTime * baseFreq * fScale);
+                            y = cy + scale * Math.sin(simTime * baseFreq * freqRatio * fScale + Math.PI / 4);
 
                         } else if (mode === 'mandala') {
-                            const angle = (simTime * leftFreq * 0.05) % (Math.PI * 2);
-                            const r = scale * (0.8 + 0.2 * Math.sin(simTime * rightFreq * 0.05));
+                            const fScale = 0.002;
+                            const angle = (simTime * leftFreq * fScale) % (Math.PI * 2);
+                            const r = scale * (0.8 + 0.2 * Math.sin(simTime * rightFreq * fScale));
                             x = cx + Math.cos(angle) * r;
                             y = cy + Math.sin(angle) * r;
 
                         } else if (mode === 'wave') {
                             x = (simTime * 500) % width;
-                            const combinedAmp = Math.sin(simTime * leftFreq * 0.05) + Math.sin(simTime * rightFreq * 0.05);
+                            const fScale = 0.002;
+                            const combinedAmp = Math.sin(simTime * leftFreq * fScale) + Math.sin(simTime * rightFreq * fScale);
                             y = cy + combinedAmp * scale * 0.4;
                             if (x < 10) ctx.moveTo(x, y);
                         }
