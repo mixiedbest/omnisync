@@ -244,13 +244,13 @@ export function AboutPage({ onBack }) {
                                 </div>
 
                                 <div className="brainwave-card">
-                                    <h4>Wim Hof Breathing (The Energizer)</h4>
+                                    <h4>7-11 Deep Calm (The Anxiety Anchor)</h4>
                                     <p>
-                                        This technique uses repeated rounds of powerful, fast inhalations and relaxed exhalations,
-                                        followed by breath retention. It increases circulation, boosts energy, and can create a warm,
-                                        tingling, almost electric sensation throughout the body. Wim Hof breathing helps you tap into
-                                        deeper layers of resilience, immune strength, and mental clarity: a powerful practice for those
-                                        wanting to push boundaries safely.
+                                        This powerful pattern uses a 7-second inhale and a deeply extended 11-second exhale.
+                                        By breathing out significantly longer than you breathe in, you send a direct biological signal
+                                        to your brain that you are safe. This triggers a rapid parasympathetic response ("rest and digest"),
+                                        making it one of the most effective tools for stopping panic attacks, lowering high stress immediately,
+                                        and grounding yourself during intense emotion.
                                     </p>
                                 </div>
 

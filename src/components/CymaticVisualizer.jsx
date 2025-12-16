@@ -12,15 +12,23 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     const getInitialColor = () => {
         const title = trackTitle.toLowerCase();
 
-        // NOISE COLORS
+        // NOISE & SOUNDSCAPE COLORS
         if (noiseType) {
-            if (noiseType.includes('white')) return '#ffffff';
-            if (noiseType.includes('pink')) return '#ff69b4';
-            if (noiseType.includes('brown')) return '#8b4513';
-            if (noiseType === 'green' || title.includes('nature')) return '#22c55e';
-            if (noiseType === 'blue' || title.includes('water')) return '#3b82f6';
-            if (noiseType === 'violet') return '#8b5cf6';
-            if (noiseType === 'dark' || noiseType === 'black') return '#334155'; // Dark slate
+            // Color Noises
+            if (noiseType.includes('white')) return '#e2e8f0'; // Slate 200
+            if (noiseType.includes('pink')) return '#f472b6'; // Pink 400
+            if (noiseType.includes('brown')) return '#92400e'; // Amber 900
+            if (noiseType.includes('green')) return '#16a34a'; // Green 600
+            if (noiseType.includes('blue')) return '#2563eb'; // Blue 600
+            if (noiseType.includes('violet')) return '#7c3aed'; // Violet 600
+            if (noiseType.includes('grey')) return '#64748b'; // Slate 500
+
+            // Soundscapes
+            if (noiseType === 'ocean') return '#0ea5e9'; // Sky 500
+            if (noiseType === 'rain') return '#3b82f6'; // Blue 500
+            if (noiseType === 'cosmic') return '#8b5cf6'; // Violet 500
+            if (noiseType === 'earth') return '#78350f'; // Amber 900
+
             return '#cccccc';
         }
 
@@ -49,11 +57,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     // Update color if track changes
     useEffect(() => {
         setColor(getInitialColor());
-        if (noiseType) {
-            setMode('particle'); // Switch to particle/noise mode for noises
-        } else {
-            setMode('lissajous'); // Default for binaural
-        }
+        // We do NOT force mode changes anymore, allowing user preference to persist
     }, [beatFrequency, carrierFrequency, trackTitle, noiseType]);
 
     // Laser colors
@@ -93,55 +97,76 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
 
             ctx.lineWidth = noiseType ? 1.5 : 2;
             ctx.lineCap = 'round';
-            ctx.shadowBlur = noiseType ? 20 : 10;
+            ctx.shadowBlur = noiseType ? 15 : 10;
             ctx.shadowColor = color;
             ctx.strokeStyle = color;
 
             ctx.beginPath();
 
-            // NOISE / SOUNDSCAPE VISUALIZATION
-            if (noiseType || mode === 'particle') {
-                // Generate Organic/Chaotic Geometry
-                const points = 1000;
+            // PHYSICS ENGINE
+            // Noise = Fast/Random Chaos. Binaural = Smooth/Harmonic Math.
 
-                // Frequency factor (High types = fast chaos, Low types = slow waves)
-                // White/Blue/Violet = Fast
-                // Pink/Brown/Dark = Slow
-                const isHighFreq = ['white', 'blue', 'violet', 'grey'].some(t => noiseType?.includes(t));
-                const speedMult = isHighFreq ? 0.3 : 0.05;
-                const roughness = isHighFreq ? 50 : 5;
+            if (noiseType) {
+                // --- NOISE VISUALIZATION (Mode-Aware) ---
+                time += 0.1; // Noise moves faster
+                const points = 800;
 
-                time += speedMult;
+                // Determine craziness based on noise type
+                const isCalm = ['brown', 'green', 'ocean', 'earth'].some(t => noiseType.includes(t));
+                const jitterAmt = isCalm ? 5 : 20;
+                const waveSpeed = isCalm ? 0.2 : 1.0;
 
-                for (let i = 0; i < points; i++) {
-                    const angle = (i / points) * Math.PI * 2;
+                if (mode === 'lissajous') {
+                    // "Fuzzy Electron Cloud"
+                    for (let i = 0; i < points; i++) {
+                        const t = time + (i * 0.05);
+                        // Lissajous base ...
+                        const bx = Math.sin(t * 1.5);
+                        const by = Math.sin(t * 1.2); // Slightly discordant ratio
 
-                    // Simplex-like noise simulation using superposed sines
-                    const noiseVal = Math.sin(i * 0.1 + time) * Math.cos(i * 0.05 - time * 0.5) + Math.sin(time + i);
+                        // ... plus Noise Jitter
+                        const noiseX = (Math.random() - 0.5) * jitterAmt;
+                        const noiseY = (Math.random() - 0.5) * jitterAmt;
 
-                    const r = scale * (0.8 + 0.3 * noiseVal);
-                    // Add fuzz for high freq noises
-                    const fuzz = isHighFreq ? (Math.random() - 0.5) * 20 : 0;
+                        const x = cx + bx * scale + noiseX;
+                        const y = cy + by * scale + noiseY;
 
-                    const x = cx + Math.cos(angle) * (r + fuzz);
-                    const y = cy + Math.sin(angle) * (r + fuzz);
-
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
                 }
+                else if (mode === 'mandala') {
+                    // "Smoky Portal"
+                    for (let i = 0; i <= 360; i++) {
+                        const angle = (i / 360) * Math.PI * 2;
+                        // Noise modulating radius
+                        const noiseR = Math.sin(angle * 10 + time * waveSpeed) * Math.cos(angle * 4 - time);
+                        const r = scale * (0.8 + 0.1 * noiseR) + (Math.random() * jitterAmt);
 
-                // Add random particles for "static" feel if white noise
-                if (isHighFreq) {
-                    for (let p = 0; p < 20; p++) {
-                        const px = Math.random() * width;
-                        const py = Math.random() * height;
-                        ctx.moveTo(px, py);
-                        ctx.lineTo(px + 2, py + 2);
+                        const x = cx + Math.cos(angle) * r;
+                        const y = cy + Math.sin(angle) * r;
+
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                }
+                else if (mode === 'wave') {
+                    // "Oscilloscope Static"
+                    for (let i = 0; i < width; i += 5) {
+                        const x = i;
+                        // Base wave + Random Noise
+                        const base = Math.sin(i * 0.01 + time);
+                        const noise = (Math.random() - 0.5) * (isCalm ? 0.2 : 0.8);
+
+                        const y = cy + (base + noise) * scale * 0.4;
+
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
                     }
                 }
             }
-            // BINAURAL VISUALIZATION (Real-Time Physics)
             else {
+                // --- BINAURAL VISUALIZATION (Pure Physics) ---
                 // Advance time for the next frame
                 // We advance essentially "one frame's worth" of simulation time
                 time += 0.05; // Base speed

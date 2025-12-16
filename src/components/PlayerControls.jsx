@@ -53,7 +53,7 @@ export function PlayerControls({
                     beatFrequency={currentTrack?.beat || 10}
                     carrierFrequency={currentTrack?.left || 432}
                     trackTitle={currentTrack?.title || ''}
-                    noiseType={currentTrack?.noiseType || null}
+                    noiseType={currentTrack?.noiseType || currentTrack?.type || null}
                 />
             )}
 
