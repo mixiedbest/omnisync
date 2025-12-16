@@ -71,6 +71,12 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             description: 'Your sonic circle & synced sessions'
         },
         {
+            id: 'cosmic-alignment',
+            title: 'Cosmic Alignment',
+            icon: Star,
+            description: 'Astrology-based sound healing'
+        },
+        {
             id: 'playlists',
             title: 'Playlists',
             icon: List,

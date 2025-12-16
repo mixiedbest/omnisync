@@ -105,6 +105,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         }
 
         let time = 0;
+        let frame = 0;
 
         const animate = () => {
             if (!canvas) return;
@@ -126,6 +127,16 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             // Background
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, width, height);
+
+            // DIAGNOSTIC X (Proof of Life)
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(0, 0); ctx.lineTo(width, height);
+            ctx.stroke();
+
+            frame++;
+            if (frame % 60 === 0) setDebugMsg(`Run:${frame} Mode:${mode}`);
 
             // Styles
             ctx.lineWidth = noiseType ? 1.5 : 2;
