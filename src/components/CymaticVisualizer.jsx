@@ -105,7 +105,6 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         }
 
         let time = 0;
-        let frame = 0;
 
         const animate = () => {
             if (!canvas) return;
@@ -115,7 +114,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
             } catch (e) {
-                setDebugMsg('Resize Error: ' + e.message);
+                // Resize error ignored
             }
 
             const width = canvas.width;
@@ -127,16 +126,6 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             // Background
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, width, height);
-
-            // DIAGNOSTIC X (Proof of Life)
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = 5;
-            ctx.beginPath();
-            ctx.moveTo(0, 0); ctx.lineTo(width, height);
-            ctx.stroke();
-
-            frame++;
-            if (frame % 60 === 0) setDebugMsg(`Run:${frame} Mode:${mode}`);
 
             // Styles
             ctx.lineWidth = noiseType ? 1.5 : 2;
@@ -409,7 +398,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             {/* Controls Overlay */}
             <div className={`cymatic-controls ${showControls ? 'visible' : 'hidden'}`}>
                 <div className="cymatic-header">
-                    <h3>Cymatics <span style={{ fontSize: '12px', color: 'red' }}>{debugMsg}</span></h3>
+                    <h3>Cymatics</h3>
                     <div className="freq-display">
                         <span className="label">Driven by:</span>
                         <span className="value">{getDriverLabel()}</span>
