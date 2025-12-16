@@ -31,8 +31,6 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     };
 
     const [color, setColor] = useState(getInitialColor);
-    const [speed, setSpeed] = useState(1);
-    const [complexity, setComplexity] = useState(5);
     const [showControls, setShowControls] = useState(true);
 
     // Laser colors
@@ -46,11 +44,8 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     ];
 
     // Calculate the exact physics of the interference
-    // Lissajous figures are defined by the ratio between vertical and horizontal frequencies
     const leftFreq = carrierFrequency - (beatFrequency / 2);
     const rightFreq = carrierFrequency + (beatFrequency / 2);
-    // Determine the harmonic ratio (e.g., 204Hz / 200Hz = 1.02)
-    const harmonicRatio = rightFreq / leftFreq;
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -73,83 +68,72 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, width, height);
 
-            // Laser glow settings
-            ctx.lineWidth = 2.5;
+            ctx.lineWidth = 2; // Thinner line for high-freq detail
             ctx.lineCap = 'round';
-            ctx.shadowBlur = 15;
+            ctx.shadowBlur = 10;
             ctx.shadowColor = color;
             ctx.strokeStyle = color;
 
-            // Time step
-            time += 0.02 * speed;
-
             ctx.beginPath();
 
-            if (mode === 'lissajous') {
-                // THE REAL PHYSICS:
-                // X Axis oscillates at the Left Frequency
-                // Y Axis oscillates at the Right Frequency
-                // The "beat" comes from the difference between them.
-                // We scale time to make it visible (otherwise it blurs).
+            // PHYSICS ENGINE: REAL-TIME LASER PATH
+            // A frame is approx 16ms (0.016s).
+            // A 100Hz wave completes 1.6 cycles in that time.
+            // To see the "shape" clearly without it being a solid block of light,
+            // we slow down the "time domain" slightly, but keep the RATIO exact.
+            // This is equivalent to using a stroboscope or a high-speed camera.
 
-                const points = 800;
-                for (let i = 0; i < points; i++) {
-                    // t represents the phase of the wave
-                    const t = time + (i * 0.01);
+            const timeStep = 0.005; // High resolution drawing
+            const frameDuration = 0.5; // Draw a longer trail per frame for continuity
 
-                    // Simple Lissajous: x = A*sin(at), y = B*sin(bt)
-                    // Here 'a' is 1 (base) and 'b' is the harmonicRatio
-                    const x = cx + scale * Math.sin(t);
-                    const y = cy + scale * Math.sin(t * harmonicRatio);
+            // We draw the path the "laser" takes during this frame
+            for (let t = 0; t < frameDuration; t += timeStep) {
+                // Current simulation time
+                const simTime = time + t;
 
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
+                let x, y;
+
+                if (mode === 'lissajous') {
+                    // X = Left Ear Wave, Y = Right Ear Wave
+                    // We scale the frequency down (e.g. * 0.1) to make the motion perceivable
+                    // as a shape rather than a blur, while preserving the interference pattern.
+                    const fScale = 0.05;
+                    x = cx + scale * Math.sin(simTime * leftFreq * fScale);
+                    y = cy + scale * Math.sin(simTime * rightFreq * fScale);
+
+                } else if (mode === 'mandala') {
+                    // Radial Standing Wave
+                    const angle = (simTime * leftFreq * 0.05) % (Math.PI * 2);
+                    const r = scale * (0.8 + 0.2 * Math.sin(simTime * rightFreq * 0.05));
+                    x = cx + Math.cos(angle) * r;
+                    y = cy + Math.sin(angle) * r;
+
+                } else if (mode === 'wave') {
+                    // Oscilloscope View (Time vs Amplitude)
+                    // We map 'x' to time and 'y' to the combined waveform
+                    x = (simTime * 500) % width;
+                    const combinedAmp = Math.sin(simTime * leftFreq * 0.05) + Math.sin(simTime * rightFreq * 0.05);
+                    y = cy + combinedAmp * scale * 0.4;
+
+                    // Discontinuous jump handling for wave wrap-around
+                    if (x < 10) ctx.moveTo(x, y);
                 }
-            } else if (mode === 'mandala') {
-                // Radial Interference (Chladni Plate Simulation)
-                const points = 360;
-                for (let i = 0; i <= points; i++) {
-                    const angle = (i / points) * Math.PI * 2;
 
-                    // Interference pattern forming standing waves on a circle
-                    // We use the harmonic ratio to drive the modulation
-                    const wave1 = Math.sin(angle * 4 + time); // Base geometry
-                    const waveInterference = Math.sin(angle * 4 * harmonicRatio - time); // Interference layer
-
-                    const r = scale + (wave1 * waveInterference * 50 * complexity * 0.2);
-
-                    const x = cx + Math.cos(angle) * r;
-                    const y = cy + Math.sin(angle) * r;
-
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
-            } else if (mode === 'wave') {
-                // True Wave Interference
-                for (let i = 0; i < width; i += 2) {
-                    const x = i;
-                    // Normalized position (-PI to PI)
-                    const phase = (i / width) * Math.PI * 4;
-
-                    // Superposition: Wave 1 + Wave 2
-                    // Wave 2 is faster/slower by the harmonic ratio
-                    const y1 = Math.sin(phase + time);
-                    const y2 = Math.sin(phase * harmonicRatio + time);
-                    const combined = (y1 + y2) * scale * 0.3; // Constructive/Destructive interference
-
-                    const y = cy + combined;
-
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
+                if (t === 0 && mode !== 'wave') ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
             }
 
             ctx.stroke();
+
+            // Advance time for the next frame
+            // We advance essentially "one frame's worth" of simulation time
+            time += 0.05;
+
             requestRef.current = requestAnimationFrame(animate);
         };
         requestRef.current = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(requestRef.current);
-    }, [color, harmonicRatio, mode, speed, complexity]);
+    }, [color, leftFreq, rightFreq, mode]);
 
     return createPortal(
         <div className="cymatic-overlay">
@@ -196,30 +180,6 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                             />
                         ))}
                     </div>
-                </div>
-
-                <div className="control-group">
-                    <label>Complexity</label>
-                    <input
-                        type="range"
-                        min="1"
-                        max="20"
-                        step="0.1"
-                        value={complexity}
-                        onChange={(e) => setComplexity(parseFloat(e.target.value))}
-                    />
-                </div>
-
-                <div className="control-group">
-                    <label>Speed</label>
-                    <input
-                        type="range"
-                        min="0.1"
-                        max="5"
-                        step="0.1"
-                        value={speed}
-                        onChange={(e) => setSpeed(parseFloat(e.target.value))}
-                    />
                 </div>
             </div>
 
