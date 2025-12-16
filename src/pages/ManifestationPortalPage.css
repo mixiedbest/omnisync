@@ -1,0 +1,372 @@
+.manifestation-portal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0a1a 0%, #050510 50%, #000000 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+/* Close Button */
+.close-portal {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1001;
+    backdrop-filter: blur(10px);
+}
+
+.close-portal:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* Entrance Stage */
+.portal-entrance {
+    text-align: center;
+    color: white;
+}
+
+.spiral-aperture {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(234, 179, 8, 0.2) 0%, transparent 70%);
+    animation: spiralPulse 3s ease-in-out infinite;
+}
+
+.portal-icon {
+    color: #eab308;
+    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.6));
+    animation: iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes spiralPulse {
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: scale(1.1) rotate(180deg);
+    }
+}
+
+@keyframes iconFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.portal-entrance h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #eab308, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.portal-subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+.enter-portal-btn {
+    padding: 16px 48px;
+    font-size: 18px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #eab308, #f59e0b);
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(234, 179, 8, 0.3);
+}
+
+.enter-portal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(234, 179, 8, 0.5);
+}
+
+/* Intention Input Stage */
+.intention-input-stage {
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+}
+
+.input-container {
+    text-align: center;
+}
+
+.input-prompt {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 24px;
+    font-style: italic;
+}
+
+.intention-textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 24px;
+    font-size: 24px;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(234, 179, 8, 0.3);
+    border-radius: 16px;
+    color: white;
+    text-align: center;
+    resize: none;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 30px rgba(234, 179, 8, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.intention-textarea:focus {
+    border-color: rgba(234, 179, 8, 0.6);
+    box-shadow: 0 0 40px rgba(234, 179, 8, 0.3);
+}
+
+.intention-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.continue-btn {
+    margin-top: 32px;
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #eab308, #f59e0b);
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.continue-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.continue-btn:not(:disabled):hover {
+    transform: translateY(-2px);
+}
+
+/* Preset Selection Stage */
+.preset-selection {
+    text-align: center;
+    color: white;
+}
+
+.preset-selection h2 {
+    font-size: 36px;
+    margin-bottom: 60px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.preset-glyphs {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 900px;
+}
+
+.preset-glyph {
+    width: 140px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(10px);
+}
+
+.preset-glyph:hover {
+    transform: translateY(-10px) scale(1.05);
+    border-color: var(--preset-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 30px var(--preset-color);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.preset-glyph .glyph {
+    font-size: 48px;
+    filter: drop-shadow(0 0 10px var(--preset-color));
+}
+
+.preset-glyph .preset-name {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Portal Active Stage */
+.portal-active {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.portal-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.complete-btn {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.complete-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-50%) translateY(-2px);
+}
+
+/* Completion Stage */
+.completion-stage {
+    text-align: center;
+    color: white;
+}
+
+.completion-message {
+    animation: fadeInScale 1s ease-out;
+}
+
+.completion-icon {
+    color: #eab308;
+    filter: drop-shadow(0 0 30px rgba(234, 179, 8, 0.8));
+    margin-bottom: 24px;
+    animation: completionPulse 2s ease-in-out infinite;
+}
+
+@keyframes completionPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+.completion-message h2 {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+
+.completion-message p {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .portal-entrance h1 {
+        font-size: 36px;
+    }
+
+    .preset-glyphs {
+        gap: 20px;
+    }
+
+    .preset-glyph {
+        width: 120px;
+        height: 120px;
+    }
+
+    .preset-glyph .glyph {
+        font-size: 36px;
+    }
+
+    .intention-textarea {
+        font-size: 20px;
+    }
+}

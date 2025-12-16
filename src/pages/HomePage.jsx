@@ -71,6 +71,12 @@ export function HomePage({ onNavigate, theme, onToggleTheme }) {
             description: 'Your sonic circle & synced sessions'
         },
         {
+            id: 'manifestation',
+            title: 'Manifestation Portal',
+            icon: Sparkles,
+            description: 'Intention → Resonance → Embodiment'
+        },
+        {
             id: 'cosmic-alignment',
             title: 'Cosmic Alignment',
             icon: Star,

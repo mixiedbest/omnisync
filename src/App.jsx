@@ -20,6 +20,7 @@ import { Visualizer } from './components/Visualizer';
 import { CosmicAlignmentPage } from './pages/CosmicAlignmentPage';
 import { InnerSyncPage } from './pages/InnerSyncPage';
 import { ConnectionsPage } from './pages/ConnectionsPage';
+import { ManifestationPortalPage } from './pages/ManifestationPortalPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { UserProfilePage } from './pages/UserProfilePage';
 import { PlaylistsPage } from './pages/PlaylistsPage';
@@ -601,6 +602,10 @@ function App() {
         />
       </>
     );
+  }
+
+  if (currentPage === 'manifestation') {
+    return <ManifestationPortalPage onNavigate={handleNavigate} />;
   }
 
   if (currentPage === 'profile') {
