@@ -395,20 +395,10 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         <div className="cymatic-overlay">
             <canvas ref={canvasRef} className="cymatic-canvas" />
 
-            {/* DOM Debug Overlay - Validates Logic Life */}
-            <div style={{
-                position: 'absolute', top: 60, left: 20,
-                color: 'white', background: 'rgba(255,0,0,0.8)',
-                zIndex: 10001, padding: '8px', borderRadius: '4px',
-                pointerEvents: 'none', fontFamily: 'monospace'
-            }}>
-                DOM Debug: {debugMsg}
-            </div>
-
             {/* Controls Overlay */}
             <div className={`cymatic-controls ${showControls ? 'visible' : 'hidden'}`}>
                 <div className="cymatic-header">
-                    <h3>Laser Cymatics</h3>
+                    <h3>Cymatics <span style={{ fontSize: '12px', color: 'red' }}>{debugMsg}</span></h3>
                     <div className="freq-display">
                         <span className="label">Driven by:</span>
                         <span className="value">{getDriverLabel()}</span>
@@ -451,10 +441,10 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         ))}
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* Floating Action Buttons */}
-            <div className="fab-container">
+            < div className="fab-container" >
                 <button
                     className="fab-btn"
                     onClick={() => setShowControls(!showControls)}
@@ -469,8 +459,8 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 >
                     <X size={24} />
                 </button>
-            </div>
-        </div>,
+            </div >
+        </div >,
         document.body
     );
 }
