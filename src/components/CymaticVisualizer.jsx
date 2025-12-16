@@ -127,22 +127,6 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, width, height);
 
-            // === TEST PATTERN (PROOF OF LIFE) ===
-            // Draw a pulsing circle in the center
-            const pulseSize = 50 + Math.sin(time * 0.1) * 30;
-            ctx.fillStyle = '#00ff00'; // Bright green
-            ctx.beginPath();
-            ctx.arc(cx, cy, pulseSize, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Draw text
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 24px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('CYMATICS ACTIVE', cx, cy - 100);
-            ctx.fillText(`Mode: ${mode}`, cx, cy + 100);
-            // === END TEST PATTERN ===
-
             // Styles
             ctx.lineWidth = noiseType ? 1.5 : 2;
             ctx.lineCap = 'round';
@@ -161,7 +145,8 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 ctx.beginPath();
 
                 if (mode === 'chladni') {
-                    // Chladni Logic
+                    // REAL CHLADNI PLATE PHYSICS
+                    // Sand is pushed AWAY from vibrating areas, accumulates in nodal lines
                     const m = 2 + (leftFreq / 100);
                     const n = 2 + (rightFreq / 100);
 
@@ -174,39 +159,61 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         const ny = (p.y - cy) / (scale * 1.5);
 
                         const pi = Math.PI;
-                        const val = Math.cos(n * pi * nx) * Math.cos(m * pi * ny) - Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
 
+                        // Calculate Chladni pattern amplitude at this point
+                        const val = Math.cos(n * pi * nx) * Math.cos(m * pi * ny) -
+                            Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
                         const amp = Math.abs(val);
 
-                        // NEWTONIAN PHYSICS
-                        // 1. Friction (Damping) - stronger in nodes
-                        const damping = 0.92;
-                        p.vx *= damping;
-                        p.vy *= damping;
+                        // Calculate gradient (direction of steepest amplitude increase)
+                        const dx = 0.01;
+                        const valX = Math.cos(n * pi * (nx + dx)) * Math.cos(m * pi * ny) -
+                            Math.cos(m * pi * (nx + dx)) * Math.cos(n * pi * ny);
+                        const valY = Math.cos(n * pi * nx) * Math.cos(m * pi * (ny + dx)) -
+                            Math.cos(m * pi * nx) * Math.cos(n * pi * (ny + dx));
 
-                        // 2. Excitation (Force) - only where plate vibrates
-                        if (amp > 0.05) {
-                            const force = amp * 2.0; // Acceleration strength
-                            p.vx += (Math.random() - 0.5) * force;
-                            p.vy += (Math.random() - 0.5) * force;
+                        const gradX = (Math.abs(valX) - amp) / dx;
+                        const gradY = (Math.abs(valY) - amp) / dx;
+
+                        // REAL PHYSICS:
+                        // 1. Strong repulsion from vibrating areas (high amplitude)
+                        // 2. Attraction to nodal lines (low amplitude)
+                        const repulsionForce = amp * 15.0; // Much stronger!
+                        const nodeAttractionForce = (1.0 - amp) * 2.0;
+
+                        // Push away from high amplitude areas
+                        if (amp > 0.1) {
+                            p.vx -= gradX * repulsionForce;
+                            p.vy -= gradY * repulsionForce;
+                        } else {
+                            // Pull toward nodal lines
+                            p.vx -= gradX * nodeAttractionForce;
+                            p.vy -= gradY * nodeAttractionForce;
                         }
 
-                        // 3. Thermal Motion (keeps them alive)
-                        p.vx += (Math.random() - 0.5) * 0.1;
-                        p.vy += (Math.random() - 0.5) * 0.1;
+                        // High friction - sand settles quickly
+                        const friction = 0.85;
+                        p.vx *= friction;
+                        p.vy *= friction;
 
-                        // 4. Update Position
+                        // Tiny random motion to prevent total freeze
+                        p.vx += (Math.random() - 0.5) * 0.05;
+                        p.vy += (Math.random() - 0.5) * 0.05;
+
+                        // Update position
                         p.x += p.vx;
                         p.y += p.vy;
 
-                        // 5. Bounds Check (Wrap around for continuous flow)
+                        // Bounds check (wrap around)
                         if (p.x < 0) p.x = width;
                         if (p.x > width) p.x = 0;
                         if (p.y < 0) p.y = height;
                         if (p.y > height) p.y = 0;
 
-                        // Draw Particle
-                        ctx.fillRect(p.x, p.y, 1.5, 1.5);
+                        // Draw particle (only if in low-amplitude area for sharper patterns)
+                        if (amp < 0.3) {
+                            ctx.fillRect(p.x, p.y, 2, 2);
+                        }
                     });
                     time += 0.05;
 
