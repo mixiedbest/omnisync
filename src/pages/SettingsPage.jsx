@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Settings, Bell, Shield, Smartphone, ToggleLeft, ToggleRight, Info, Database, Download, Upload } from 'lucide-react';
+import { PinSetup } from '../components/PinLock';
 import './SettingsPage.css';
 
 export function SettingsPage({ onBack }) {
@@ -8,6 +9,8 @@ export function SettingsPage({ onBack }) {
         showMutuals: true,
         backgroundPlay: true
     });
+    const [showPinSetup, setShowPinSetup] = useState(false);
+    const [pendingPinSetting, setPendingPinSetting] = useState(null);
 
     useEffect(() => {
         const savedSettings = localStorage.getItem('omnisync_settings');
@@ -17,6 +20,18 @@ export function SettingsPage({ onBack }) {
     }, []);
 
     const toggleSetting = (key) => {
+        // Check if this is a PIN lock setting
+        if ((key === 'innerSyncPinLock' || key === 'manifestationPinLock') && !settings[key]) {
+            // Enabling PIN lock - check if PIN exists
+            const savedPin = localStorage.getItem('omnisync_pin');
+            if (!savedPin) {
+                // No PIN set yet, show setup
+                setPendingPinSetting(key);
+                setShowPinSetup(true);
+                return;
+            }
+        }
+
         const newSettings = { ...settings, [key]: !settings[key] };
         setSettings(newSettings);
         localStorage.setItem('omnisync_settings', JSON.stringify(newSettings));
@@ -229,6 +244,26 @@ export function SettingsPage({ onBack }) {
                     </div>
                 </div>
             </div>
+
+            {/* PIN Setup Modal */}
+            {showPinSetup && (
+                <PinSetup
+                    onComplete={() => {
+                        setShowPinSetup(false);
+                        // Enable the pending PIN setting
+                        if (pendingPinSetting) {
+                            const newSettings = { ...settings, [pendingPinSetting]: true };
+                            setSettings(newSettings);
+                            localStorage.setItem('omnisync_settings', JSON.stringify(newSettings));
+                            setPendingPinSetting(null);
+                        }
+                    }}
+                    onCancel={() => {
+                        setShowPinSetup(false);
+                        setPendingPinSetting(null);
+                    }}
+                />
+            )}
         </div >
     );
 }

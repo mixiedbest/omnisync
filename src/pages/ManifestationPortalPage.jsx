@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Sparkles, Anchor, Heart, Waves, TrendingUp, Zap, TreePine } from 'lucide-react';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
+import { PinLock } from '../components/PinLock';
 import './ManifestationPortalPage.css';
 
 export function ManifestationPortalPage({ onNavigate }) {
@@ -9,8 +10,20 @@ export function ManifestationPortalPage({ onNavigate }) {
     const [selectedPreset, setSelectedPreset] = useState(null);
     const [portalActive, setPortalActive] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [showPinLock, setShowPinLock] = useState(false);
+    const [isUnlocked, setIsUnlocked] = useState(false);
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
+
+    // Check PIN lock on mount
+    useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem('omnisync_settings') || '{}');
+        if (settings.manifestationPinLock) {
+            setShowPinLock(true);
+        } else {
+            setIsUnlocked(true);
+        }
+    }, []);
 
     const presets = [
         {
@@ -67,7 +80,7 @@ export function ManifestationPortalPage({ onNavigate }) {
 
     // Manage audio playback based on stage
     useEffect(() => {
-        if (stage === 'portal' && isPlaying && currentPreset) {
+        if (stage === 'portal' && currentPreset) {
             // Play with the preset's frequencies
             play(
                 currentPreset.frequencies.left,
@@ -77,14 +90,15 @@ export function ManifestationPortalPage({ onNavigate }) {
                 null, // soundscapeType
                 { left: 0.5, right: 0.5 } // volumes
             );
-        } else {
-            stop();
         }
 
+        // Only stop when leaving portal
         return () => {
-            stop();
+            if (stage !== 'portal') {
+                stop();
+            }
         };
-    }, [stage, isPlaying, currentPreset, play, stop]);
+    }, [stage, currentPreset]); // Removed play/stop from dependencies to prevent re-triggering
 
     // Portal animation
     useEffect(() => {
@@ -304,6 +318,20 @@ export function ManifestationPortalPage({ onNavigate }) {
             setPortalActive(false);
         }, 5000);
     };
+
+    // Show PIN lock if enabled and not unlocked
+    if (showPinLock && !isUnlocked) {
+        return (
+            <PinLock
+                title="Manifestation Portal"
+                onUnlock={() => {
+                    setIsUnlocked(true);
+                    setShowPinLock(false);
+                }}
+                onCancel={() => onNavigate('home')}
+            />
+        );
+    }
 
     return (
         <div className={`manifestation-portal ${stage}`}>

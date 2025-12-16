@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, User, Sparkles, BookOpen, Activity, Heart, Brain, Zap, Star, Frown, Meh, Smile, Coffee, Battery, BatteryLow, Wind, Cloud, Flame, Moon, Clock, Diamond, Feather, Shield, Palette, Waves, Rocket } from 'lucide-react';
 import { energyProfiles } from '../data/energyProfiles';
+import { PinLock } from '../components/PinLock';
 import './InnerSyncPage.css';
 import './InnerSyncLightMode.css';
 
@@ -13,6 +14,18 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
     const [hasUsername, setHasUsername] = useState(false);
     const [activeTab, setActiveTab] = useState(initialTab); // 'energy-profiles', 'favorites', 'journal', 'insights'
     const [selectedDuration, setSelectedDuration] = useState('short'); // 'short' or 'long'
+    const [showPinLock, setShowPinLock] = useState(false);
+    const [isUnlocked, setIsUnlocked] = useState(false);
+
+    // Check PIN lock on mount
+    useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem('omnisync_settings') || '{}');
+        if (settings.innerSyncPinLock) {
+            setShowPinLock(true);
+        } else {
+            setIsUnlocked(true);
+        }
+    }, []);
 
     // Aura Scan State Removed
 
@@ -289,6 +302,20 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
                     </button>
                 </div>
             </div>
+        );
+    }
+
+    // Show PIN lock if enabled and not unlocked
+    if (showPinLock && !isUnlocked) {
+        return (
+            <PinLock
+                title="INNERSYNC"
+                onUnlock={() => {
+                    setIsUnlocked(true);
+                    setShowPinLock(false);
+                }}
+                onCancel={onBack}
+            />
         );
     }
 
