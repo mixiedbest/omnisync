@@ -144,168 +144,34 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 ctx.fillStyle = color;
                 ctx.beginPath();
 
-                if (mode === 'chladni') {
-                    // REAL CHLADNI PLATE PHYSICS with temporal vibration
-                    // Normalize frequencies to reasonable pattern values
-                    const freqScale = 0.02; // Scale down high frequencies
-                    const m = 2 + (leftFreq * freqScale);
-                    const n = 2 + (rightFreq * freqScale);
+                if (mode === 'droplet') {
+                    // SINGLE DROPLET IMPACT - Continuous expanding rings
+                    time += 0.08;
 
-                    // Time-based vibration amplitude (simulates plate oscillation)
-                    const vibrationFreq = Math.abs(rightFreq - leftFreq) || beatFrequency || 10;
-                    const vibrationAmp = 0.5 + 0.5 * Math.sin(time * vibrationFreq * 0.05);
+                    // Ring spacing based on frequency
+                    const avgFreq = (leftFreq + rightFreq) / 2;
+                    const ringSpacing = Math.max(20, 800 / avgFreq);
+                    const maxRadius = Math.max(width, height) * 0.7;
 
-                    sandParticles.current.forEach(p => {
-                        if (typeof p.vx === 'undefined') p.vx = 0;
-                        if (typeof p.vy === 'undefined') p.vy = 0;
+                    // Draw expanding rings
+                    for (let r = 0; r < maxRadius; r += ringSpacing) {
+                        const ringAge = r + (time * 60);
+                        const currentRadius = ringAge % maxRadius;
 
-                        // Normalize position to -1 to 1 based on center
-                        const nx = (p.x - cx) / (scale * 1.5);
-                        const ny = (p.y - cy) / (scale * 1.5);
+                        if (currentRadius < maxRadius) {
+                            // Exponential damping
+                            const damping = Math.exp(-currentRadius / (maxRadius * 0.5));
 
-                        const pi = Math.PI;
+                            // Frequency modulation for thickness
+                            const oscillation = Math.sin(time * avgFreq * 0.05 + r * 0.1);
+                            const thickness = 1 + oscillation * 0.5;
 
-                        // Calculate Chladni pattern amplitude at this point
-                        const val = Math.cos(n * pi * nx) * Math.cos(m * pi * ny) -
-                            Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
-                        const amp = Math.abs(val) * vibrationAmp; // Modulate by vibration
-
-                        // Calculate gradient (direction of steepest amplitude increase)
-                        const dx = 0.01;
-                        const valX = Math.cos(n * pi * (nx + dx)) * Math.cos(m * pi * ny) -
-                            Math.cos(m * pi * (nx + dx)) * Math.cos(n * pi * ny);
-                        const valY = Math.cos(n * pi * nx) * Math.cos(m * pi * (ny + dx)) -
-                            Math.cos(m * pi * nx) * Math.cos(n * pi * (ny + dx));
-
-                        let gradX = (Math.abs(valX) - Math.abs(val)) / dx;
-                        let gradY = (Math.abs(valY) - Math.abs(val)) / dx;
-
-                        // Safety check for NaN
-                        if (isNaN(gradX)) gradX = 0;
-                        if (isNaN(gradY)) gradY = 0;
-
-                        // Adaptive force based on frequency (higher freq = gentler force)
-                        const forceScale = Math.min(1.0, 500 / Math.max(leftFreq, rightFreq));
-                        const repulsionForce = amp * 12.0 * forceScale * vibrationAmp;
-                        const nodeAttractionForce = (1.0 - amp) * 1.5 * forceScale;
-
-                        // Push away from high amplitude areas
-                        if (amp > 0.15) {
-                            p.vx -= gradX * repulsionForce;
-                            p.vy -= gradY * repulsionForce;
-                        } else {
-                            // Pull toward nodal lines
-                            p.vx -= gradX * nodeAttractionForce;
-                            p.vy -= gradY * nodeAttractionForce;
-                        }
-
-                        // High friction - sand settles quickly
-                        const friction = 0.88;
-                        p.vx *= friction;
-                        p.vy *= friction;
-
-                        // Tiny random motion to prevent total freeze
-                        p.vx += (Math.random() - 0.5) * 0.08;
-                        p.vy += (Math.random() - 0.5) * 0.08;
-
-                        // Update position
-                        p.x += p.vx;
-                        p.y += p.vy;
-
-                        // Bounds check (wrap around)
-                        if (p.x < 0) p.x = width;
-                        if (p.x > width) p.x = 0;
-                        if (p.y < 0) p.y = height;
-                        if (p.y > height) p.y = 0;
-
-                        // Draw particle (show more particles for visibility)
-                        if (amp < 0.4) {
-                            ctx.fillRect(p.x, p.y, 2, 2);
-                        }
-                    });
-                    time += 0.05;
-
-                } else if (mode === 'droplet') {
-                    // SINGLE DROPLET - Concentric ripples from center
-                    time += 0.05;
-
-                    const numRipples = 20;
-                    const maxRadius = Math.max(width, height);
-
-                    for (let i = 0; i < numRipples; i++) {
-                        // Each ripple expands outward
-                        const rippleAge = (time * 50 + i * 30) % maxRadius;
-                        const radius = rippleAge;
-
-                        // Wave amplitude based on both frequencies (interference)
-                        const freq1Wave = Math.sin(time * leftFreq * 0.01 + i * 0.5);
-                        const freq2Wave = Math.sin(time * rightFreq * 0.01 + i * 0.5);
-                        const interference = (freq1Wave + freq2Wave) / 2;
-
-                        // Damping - ripples fade as they expand
-                        const damping = Math.exp(-rippleAge / (maxRadius * 0.3));
-                        const amplitude = 15 * interference * damping;
-
-                        if (damping > 0.05) { // Only draw visible ripples
-                            ctx.lineWidth = 2 * damping;
-                            ctx.globalAlpha = damping;
-                            ctx.beginPath();
-                            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-                            ctx.stroke();
-                        }
-                    }
-                    ctx.globalAlpha = 1.0;
-
-                } else if (mode === 'water') {
-                    // WATER SURFACE - Complex wave interference
-                    time += 0.05;
-
-                    const resolution = 8; // Grid spacing
-                    const waveSpeed = 0.02;
-
-                    // Create wave sources based on frequencies
-                    const numSources = 4;
-                    const sources = [];
-                    for (let i = 0; i < numSources; i++) {
-                        const angle = (i / numSources) * Math.PI * 2;
-                        const dist = scale * 0.6;
-                        sources.push({
-                            x: cx + Math.cos(angle) * dist,
-                            y: cy + Math.sin(angle) * dist,
-                            freq: i % 2 === 0 ? leftFreq : rightFreq,
-                            phase: i * Math.PI / 2
-                        });
-                    }
-
-                    // Draw wave field
-                    for (let x = 0; x < width; x += resolution) {
-                        for (let y = 0; y < height; y += resolution) {
-                            let totalAmp = 0;
-
-                            // Sum waves from all sources
-                            sources.forEach(source => {
-                                const dx = x - source.x;
-                                const dy = y - source.y;
-                                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                                // Wave equation: A * sin(k*r - ω*t + φ)
-                                const k = source.freq * 0.01; // Wave number
-                                const omega = source.freq * waveSpeed;
-                                const damping = Math.exp(-dist / (scale * 2));
-
-                                const wave = Math.sin(k * dist - omega * time + source.phase) * damping;
-                                totalAmp += wave;
-                            });
-
-                            // Normalize and map to brightness
-                            const normalized = (totalAmp / numSources + 1) / 2; // 0 to 1
-                            const brightness = Math.floor(normalized * 255);
-
-                            // Draw pixel with wave amplitude
-                            if (normalized > 0.3 && normalized < 0.7) {
-                                ctx.fillStyle = color;
-                                ctx.globalAlpha = Math.abs(totalAmp / numSources);
-                                ctx.fillRect(x, y, resolution, resolution);
+                            if (damping > 0.08) {
+                                ctx.lineWidth = thickness * damping * 3;
+                                ctx.globalAlpha = damping * 0.8;
+                                ctx.beginPath();
+                                ctx.arc(cx, cy, currentRadius, 0, Math.PI * 2);
+                                ctx.stroke();
                             }
                         }
                     }
@@ -539,17 +405,9 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                             onClick={() => setMode('wave')}
                         >Wave</button>
                         <button
-                            className={mode === 'chladni' ? 'active' : ''}
-                            onClick={() => setMode('chladni')}
-                        >Sand</button>
-                        <button
                             className={mode === 'droplet' ? 'active' : ''}
                             onClick={() => setMode('droplet')}
                         >Droplet</button>
-                        <button
-                            className={mode === 'water' ? 'active' : ''}
-                            onClick={() => setMode('water')}
-                        >Water</button>
                     </div>
                 </div>
 
