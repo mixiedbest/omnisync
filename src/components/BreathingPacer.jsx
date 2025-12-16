@@ -72,6 +72,30 @@ export function BreathingPacer({ onClose, pattern: initialPattern = 'box' }) {
         };
     }, [selectedPattern, pattern]);
 
+    // Manual Positioning & Scroll Lock
+    // We use position: absolute + top: scrollY + body scroll lock
+    // This places the overlay exactly where the user is looking and prevents scrolling away.
+    // This bypasses any browser quirks with position: fixed.
+    useEffect(() => {
+        // 1. Lock Body Scroll
+        const originalStyle = window.getComputedStyle(document.body).overflow;
+        document.body.style.overflow = 'hidden';
+
+        // 2. Set Position
+        const overlay = document.querySelector('.breathing-overlay');
+        if (overlay) {
+            overlay.style.position = 'absolute';
+            overlay.style.top = `${window.scrollY}px`;
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = `${window.innerHeight}px`;
+        }
+
+        return () => {
+            document.body.style.overflow = originalStyle;
+        };
+    }, []);
+
     // Use createPortal to render outside of any parent containers that might break positioning
     return createPortal(
         <div className="breathing-overlay">

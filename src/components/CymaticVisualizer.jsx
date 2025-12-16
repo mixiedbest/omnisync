@@ -135,6 +135,25 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         return () => cancelAnimationFrame(requestRef.current);
     }, [color, leftFreq, rightFreq, mode]);
 
+    // Manual Positioning & Scroll Lock
+    useEffect(() => {
+        const originalStyle = window.getComputedStyle(document.body).overflow;
+        document.body.style.overflow = 'hidden';
+
+        const overlay = document.querySelector('.cymatic-overlay');
+        if (overlay) {
+            overlay.style.position = 'absolute';
+            overlay.style.top = `${window.scrollY}px`;
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = `${window.innerHeight}px`;
+        }
+
+        return () => {
+            document.body.style.overflow = originalStyle;
+        };
+    }, []);
+
     return createPortal(
         <div className="cymatic-overlay">
             <canvas ref={canvasRef} className="cymatic-canvas" />
