@@ -29,6 +29,7 @@ export function BreathSync({ breathPattern, isActive = true, onBreathCycle }) {
             const phaseProgress = Math.min(elapsed / duration, 1);
 
             setProgress(phaseProgress);
+            setPhase(currentPhase);
 
             if (phaseProgress >= 1) {
                 // Move to next phase
@@ -44,8 +45,8 @@ export function BreathSync({ breathPattern, isActive = true, onBreathCycle }) {
                         return newCount;
                     });
                 }
-                setPhase(currentPhase);
                 phaseStartTime = now;
+                setProgress(0);
             }
 
             animationFrameId = requestAnimationFrame(animate);

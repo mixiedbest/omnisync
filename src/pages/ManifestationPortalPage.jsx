@@ -498,7 +498,10 @@ export function ManifestationPortalPage({ onNavigate }) {
             )}
 
             {/* Close button */}
-            <button className="close-portal" onClick={() => onNavigate('home')}>
+            <button className="close-portal" onClick={() => {
+                stop();
+                onNavigate('home');
+            }}>
                 <X size={24} />
             </button>
         </div>
