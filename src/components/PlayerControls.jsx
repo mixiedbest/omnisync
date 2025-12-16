@@ -52,6 +52,8 @@ export function PlayerControls({
                     onClose={() => setShowVisualizer(false)}
                     beatFrequency={currentTrack?.beat || 10}
                     carrierFrequency={currentTrack?.left || 432}
+                    leftFrequency={currentTrack?.left}
+                    rightFrequency={currentTrack?.right}
                     trackTitle={currentTrack?.title || ''}
                     noiseType={currentTrack?.noiseType || currentTrack?.type || null}
                 />

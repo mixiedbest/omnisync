@@ -83,9 +83,9 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         { name: 'White', value: '#ffffff' }
     ];
 
-    // Calculate the exact physics of the interference
-    const leftFreq = carrierFrequency - (beatFrequency / 2);
-    const rightFreq = carrierFrequency + (beatFrequency / 2);
+    // Calculate interference based on explicit L/R or derived from carrier/beat
+    const leftFreq = leftFrequency || (carrierFrequency - (beatFrequency / 2));
+    const rightFreq = rightFrequency || (carrierFrequency + (beatFrequency / 2));
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -128,9 +128,6 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                 const m = 2 + (leftFreq / 100);
                 const n = 2 + (rightFreq / 100);
 
-                // Speed of vibration
-                const vibration = Math.sin(time * 5);
-
                 sandParticles.current.forEach(p => {
                     // Normalize position to -1 to 1 based on center
                     const nx = (p.x - cx) / (scale * 1.5);
@@ -148,7 +145,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     // PHYSICS:
                     // If amp is high, particle gets kicked randomly.
                     // If amp is low (node), particle stays still.
-                    if (amp > 0.1) {
+                    if (amp > 0.05) { // Lowered threshold for movement
                         // Move randomly away from high vibration
                         // The shake amount depends on how loud the vibration is
                         const shake = amp * 10;
@@ -162,6 +159,11 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                             p.x = cx + (Math.random() - 0.5) * scale;
                             p.y = cy + (Math.random() - 0.5) * scale;
                         }
+                    } else {
+                        // "Thermal Noise" to prevent freezing
+                        // Tiny brownian motion even in nodes
+                        p.x += (Math.random() - 0.5) * 0.5;
+                        p.y += (Math.random() - 0.5) * 0.5;
                     }
 
                     // Draw Particle
@@ -292,10 +294,18 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     }, []);
 
     // Compute display label
+    // Compute display label
     const getDriverLabel = () => {
         if (noiseType) {
             return noiseType.charAt(0).toUpperCase() + noiseType.slice(1) + (noiseType.includes('noise') ? '' : ' Ambience');
         }
+
+        // Calculate theoretical harmonic beat (e.g. for Phi Pairs: 641 - 396 = 245)
+        const diff = Math.abs(rightFreq - leftFreq);
+        if (diff > 0.1) {
+            return `${diff.toFixed(2)} Hz Harmonic`;
+        }
+
         if (beatFrequency && beatFrequency > 0) {
             return `${beatFrequency} Hz Beat`;
         }
