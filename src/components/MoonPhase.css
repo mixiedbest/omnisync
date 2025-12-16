@@ -1,0 +1,391 @@
+.moon-phase-container {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    z-index: 100;
+}
+
+.moon-display {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.moon-display:hover {
+    transform: scale(1.1);
+}
+
+.moon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+    border-radius: 50%;
+    animation: moonGlow 3s ease-in-out infinite;
+}
+
+@keyframes moonGlow {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+.moon-emoji {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+    animation: moonFloat 4s ease-in-out infinite;
+}
+
+@keyframes moonFloat {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) translateY(-10px);
+    }
+}
+
+.moon-label {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+/* Moon Portal Preview */
+.moon-portal-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.moon-portal-content {
+    max-width: 600px;
+    width: 100%;
+    background: linear-gradient(135deg, rgba(10, 10, 30, 0.98), rgba(20, 20, 40, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    color: white;
+    position: relative;
+}
+
+.close-moon-portal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-moon-portal:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.portal-preview-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.portal-subtitle {
+    font-size: 18px;
+    color: #eab308;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.portal-description {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.portal-practices {
+    margin-bottom: 24px;
+}
+
+.portal-practices h3 {
+    font-size: 16px;
+    color: #8b5cf6;
+    margin-bottom: 12px;
+}
+
+.portal-practices ul {
+    list-style: none;
+    padding: 0;
+}
+
+.portal-practices li {
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: rgba(139, 92, 246, 0.1);
+    border-left: 3px solid #8b5cf6;
+    border-radius: 6px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.launch-portal-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #eab308, #f59e0b);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.launch-portal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(234, 179, 8, 0.4);
+}
+
+/* Moon Guide Modal */
+.moon-guide-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.moon-guide-content {
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: linear-gradient(135deg, rgba(10, 10, 30, 0.98), rgba(20, 20, 40, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    color: white;
+    position: relative;
+}
+
+.close-moon-guide {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-moon-guide:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.moon-guide-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.moon-icon-large {
+    font-size: 80px;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+}
+
+.moon-guide-header h2 {
+    font-size: 28px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff, #e0e0e0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.moon-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.moon-guide-section {
+    margin-bottom: 28px;
+}
+
+.moon-guide-section h3 {
+    font-size: 18px;
+    color: #eab308;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.moon-guide-section p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.archetype-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.archetype-chip {
+    padding: 8px 16px;
+    background: rgba(234, 179, 8, 0.2);
+    border: 1px solid rgba(234, 179, 8, 0.4);
+    border-radius: 20px;
+    font-size: 14px;
+    color: #eab308;
+    font-weight: 500;
+}
+
+.practice-list {
+    list-style: none;
+    padding: 0;
+}
+
+.practice-list li {
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid #8b5cf6;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.affirmation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.affirmation-card {
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+    font-size: 16px;
+    font-style: italic;
+    color: #c4b5fd;
+    text-align: center;
+}
+
+/* Scrollbar */
+.moon-guide-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.moon-guide-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.moon-guide-content::-webkit-scrollbar-thumb {
+    background: rgba(234, 179, 8, 0.5);
+    border-radius: 4px;
+}
+
+.moon-guide-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(234, 179, 8, 0.7);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .moon-phase-container {
+        top: 20px;
+        right: 20px;
+    }
+
+    .moon-display {
+        width: 60px;
+        height: 60px;
+    }
+
+    .moon-emoji {
+        font-size: 45px;
+    }
+
+    .moon-guide-content {
+        padding: 24px;
+    }
+
+    .moon-icon-large {
+        font-size: 60px;
+    }
+}

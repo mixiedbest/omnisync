@@ -1,19 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './BreathSync.css';
 
 export function BreathSync({ breathPattern, isActive = true, onBreathCycle }) {
     const [phase, setPhase] = useState('inhale'); // inhale, hold, exhale
     const [progress, setProgress] = useState(0);
     const [cycleCount, setCycleCount] = useState(0);
+    const onBreathCycleRef = useRef(onBreathCycle);
 
     const { inhale = 4, hold = 2, exhale = 6 } = breathPattern || {};
+
+    // Update ref when callback changes
+    useEffect(() => {
+        onBreathCycleRef.current = onBreathCycle;
+    }, [onBreathCycle]);
 
     useEffect(() => {
         if (!isActive) return;
 
-        let startTime = Date.now();
         let currentPhase = 'inhale';
-        let phaseStartTime = startTime;
+        let phaseStartTime = Date.now();
 
         const getDuration = (p) => {
             if (p === 'inhale') return inhale * 1000;
@@ -41,7 +46,7 @@ export function BreathSync({ breathPattern, isActive = true, onBreathCycle }) {
                     currentPhase = 'inhale';
                     setCycleCount(c => {
                         const newCount = c + 1;
-                        if (onBreathCycle) onBreathCycle(newCount);
+                        if (onBreathCycleRef.current) onBreathCycleRef.current(newCount);
                         return newCount;
                     });
                 }
@@ -57,7 +62,7 @@ export function BreathSync({ breathPattern, isActive = true, onBreathCycle }) {
         return () => {
             cancelAnimationFrame(animationFrameId);
         };
-    }, [isActive, inhale, hold, exhale, onBreathCycle]);
+    }, [isActive, inhale, hold, exhale]); // Removed onBreathCycle from dependencies
 
     const getCircleScale = () => {
         if (phase === 'inhale') {

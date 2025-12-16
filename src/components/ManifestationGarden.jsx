@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Sparkles, Heart, Droplets, Sun } from 'lucide-react';
+import { Sparkles, Heart, Droplets, Sun, BarChart3 } from 'lucide-react';
+import { MoonPhase } from './MoonPhase';
 import './ManifestationGarden.css';
 
-export function ManifestationGarden({ manifestations = [], onSelectManifestation }) {
+export function ManifestationGarden({ manifestations = [], onSelectManifestation, onViewInsights, onLaunchMoonPortal }) {
     const [treeStage, setTreeStage] = useState('seed'); // seed, sprout, sapling, tree, blooming
     const [hoveredManifestation, setHoveredManifestation] = useState(null);
 
@@ -38,6 +39,8 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
 
     return (
         <div className="manifestation-garden">
+            {/* Moon Phase */}
+            <MoonPhase onLaunchPortal={onLaunchMoonPortal} />
             <div className="garden-canvas">
                 {/* Ground */}
                 <div className="ground">
@@ -45,7 +48,7 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                 </div>
 
                 {/* Tree - grows based on stage */}
-                <div className={`tree-container stage-${treeStage}`}>
+                <div className={`tree - container stage - ${ treeStage } `}>
                     {treeStage === 'seed' && (
                         <div className="seed-visual">
                             <div className="seed-glow"></div>
@@ -104,15 +107,18 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                 {manifestations.map((manifestation, index) => {
                     const pos = getFlowerPosition(index, manifestations.length);
                     const color = getFlowerColor(manifestation.archetype);
+                    const waterCount = manifestation.waterCount || 1;
+                    const scale = 1 + Math.min(waterCount - 1, 5) * 0.1; // Max 1.5x size
 
                     return (
                         <div
                             key={manifestation.id}
                             className="manifestation-flower"
                             style={{
-                                left: `${pos.x}%`,
-                                top: `${pos.y}%`,
-                                '--flower-color': color
+                                left: `${ pos.x }% `,
+                                top: `${ pos.y }% `,
+                                '--flower-color': color,
+                                transform: `scale(${ scale })`
                             }}
                             onMouseEnter={() => setHoveredManifestation(manifestation)}
                             onMouseLeave={() => setHoveredManifestation(null)}
@@ -121,7 +127,7 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                             <div className="flower-glow"></div>
                             <div className="flower-petals">
                                 {[0, 1, 2, 3, 4, 5].map(i => (
-                                    <div key={i} className="petal" style={{ transform: `rotate(${i * 60}deg)` }}></div>
+                                    <div key={i} className="petal" style={{ transform: `rotate(${ i * 60}deg)` }}></div>
                                 ))}
                             </div>
                             <div className="flower-center"></div>
@@ -132,6 +138,12 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                                     <div className="tooltip-date">
                                         {new Date(manifestation.date).toLocaleDateString()}
                                     </div>
+                                    {waterCount > 1 && (
+                                        <div className="tooltip-water">
+                                            <Droplets size={14} />
+                                            <span>Watered {waterCount}x</span>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -146,9 +158,9 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                             key={i}
                             className="firefly"
                             style={{
-                                left: `${20 + Math.random() * 60}%`,
-                                top: `${20 + Math.random() * 60}%`,
-                                animationDelay: `${Math.random() * 3}s`
+                                left: `${ 20 + Math.random() * 60 }% `,
+                                top: `${ 20 + Math.random() * 60 }% `,
+                                animationDelay: `${ Math.random() * 3 } s`
                             }}
                         ></div>
                     ))}
@@ -165,6 +177,12 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                     <Heart size={16} />
                     <span>Stage: {treeStage}</span>
                 </div>
+                {onViewInsights && manifestations.length > 0 && (
+                    <button className="insights-btn" onClick={onViewInsights}>
+                        <BarChart3 size={16} />
+                        <span>Insights</span>
+                    </button>
+                )}
             </div>
         </div>
     );

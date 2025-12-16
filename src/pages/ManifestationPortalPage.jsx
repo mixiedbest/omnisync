@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Sparkles, Anchor, Heart, Waves, TrendingUp, Zap, TreePine } from 'lucide-react';
+import { X, Sparkles, Anchor, Heart, Waves, TrendingUp, Zap, TreePine, Info } from 'lucide-react';
 import { useBinauralBeat } from '../hooks/useBinauralBeat';
 import { PinLock } from '../components/PinLock';
 import { ManifestationGarden, SeedPlantingCeremony } from '../components/ManifestationGarden';
 import { BreathSync } from '../components/BreathSync';
+import { ManifestationInsights } from '../components/ManifestationInsights';
 import './ManifestationPortalPage.css';
 
 export function ManifestationPortalPage({ onNavigate }) {
@@ -17,6 +18,8 @@ export function ManifestationPortalPage({ onNavigate }) {
     const [manifestations, setManifestations] = useState([]);
     const [seedPlanted, setSeedPlanted] = useState(false);
     const [showGarden, setShowGarden] = useState(false);
+    const [showAbout, setShowAbout] = useState(false);
+    const [showInsights, setShowInsights] = useState(false);
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
 
@@ -333,16 +336,37 @@ export function ManifestationPortalPage({ onNavigate }) {
     const completeSession = () => {
         setIsPlaying(false);
 
-        // Save manifestation to garden
+        // Save manifestation to garden (or water existing one)
         if (intention && selectedPreset) {
-            const newManifestation = {
-                id: Date.now(),
-                intention,
-                archetype: selectedPreset,
-                date: new Date().toISOString(),
-                bloomed: false
-            };
-            const updated = [...manifestations, newManifestation];
+            // Check if this intention already exists (case-insensitive)
+            const existingIndex = manifestations.findIndex(
+                m => m.intention.toLowerCase().trim() === intention.toLowerCase().trim()
+            );
+
+            let updated;
+            if (existingIndex !== -1) {
+                // Water existing manifestation
+                updated = [...manifestations];
+                updated[existingIndex] = {
+                    ...updated[existingIndex],
+                    waterCount: (updated[existingIndex].waterCount || 1) + 1,
+                    lastWatered: new Date().toISOString(),
+                    archetype: selectedPreset // Update archetype if changed
+                };
+            } else {
+                // Create new manifestation
+                const newManifestation = {
+                    id: Date.now(),
+                    intention,
+                    archetype: selectedPreset,
+                    date: new Date().toISOString(),
+                    lastWatered: new Date().toISOString(),
+                    waterCount: 1,
+                    bloomed: false
+                };
+                updated = [...manifestations, newManifestation];
+            }
+
             setManifestations(updated);
             localStorage.setItem('omnisync_manifestations', JSON.stringify(updated));
         }
@@ -362,6 +386,22 @@ export function ManifestationPortalPage({ onNavigate }) {
 
     const closeGarden = () => {
         setShowGarden(false);
+    };
+
+    const viewInsights = () => {
+        setShowInsights(true);
+    };
+
+    const closeInsights = () => {
+        setShowInsights(false);
+    };
+
+    const handleMoonPortalLaunch = (moonData) => {
+        // moonData contains: { phase, archetype, intentionPrompt }
+        setShowGarden(false); // Close garden
+        setIntention(moonData.intentionPrompt); // Pre-fill intention
+        setSelectedPreset(moonData.archetype); // Pre-select archetype
+        setStage('preset'); // Go to preset selection (they can see/change archetype)
     };
 
     // Show PIN lock if enabled and not unlocked
@@ -389,13 +429,103 @@ export function ManifestationPortalPage({ onNavigate }) {
                     <ManifestationGarden
                         manifestations={manifestations}
                         onSelectManifestation={(m) => console.log('Selected:', m)}
+                        onViewInsights={viewInsights}
+                        onLaunchMoonPortal={handleMoonPortalLaunch}
                     />
                 </div>
+            )}
+
+            {/* Insights Modal */}
+            {showInsights && (
+                <ManifestationInsights
+                    manifestations={manifestations}
+                    onClose={closeInsights}
+                />
             )}
 
             {/* Seed Planting Ceremony */}
             {stage === 'seed-ceremony' && (
                 <SeedPlantingCeremony onComplete={handleSeedPlanted} />
+            )}
+
+            {/* About Modal */}
+            {showAbout && (
+                <div className="about-modal">
+                    <button className="close-about-btn" onClick={() => setShowAbout(false)}>
+                        <X size={24} />
+                    </button>
+                    <div className="about-content">
+                        <h2>🌟 About the Manifestation Portal</h2>
+
+                        <div className="about-section">
+                            <h3>The Science of Manifestation</h3>
+                            <p>
+                                Manifestation combines neuroscience, quantum physics, and ancient wisdom.
+                                When you set an intention with focused attention, you activate neural pathways
+                                and create coherence between your thoughts, emotions, and actions.
+                            </p>
+                            <p>
+                                <strong>Key Principles:</strong>
+                            </p>
+                            <ul>
+                                <li><strong>Neuroplasticity:</strong> Your brain rewires itself based on repeated thoughts and beliefs</li>
+                                <li><strong>Reticular Activating System (RAS):</strong> Filters reality to show you what aligns with your focus</li>
+                                <li><strong>Emotional Resonance:</strong> Feelings amplify the signal of your intentions</li>
+                                <li><strong>Coherent State:</strong> Breath + sound + intention creates whole-brain synchronization</li>
+                            </ul>
+                        </div>
+
+                        <div className="about-section">
+                            <h3>How the Portal Works</h3>
+                            <p>
+                                The Manifestation Portal is a multi-sensory experience designed to create
+                                the optimal state for intention-setting:
+                            </p>
+                            <ul>
+                                <li><strong>Binaural Frequencies:</strong> Each archetype uses specific frequencies to entrain your brainwaves</li>
+                                <li><strong>Breath Synchronization:</strong> Guided breathing creates coherence between heart and brain</li>
+                                <li><strong>Visual Anchoring:</strong> Sacred geometry and flowing patterns engage your visual cortex</li>
+                                <li><strong>Present-Tense Intention:</strong> "I am" statements activate as if already true</li>
+                            </ul>
+                        </div>
+
+                        <div className="about-section">
+                            <h3><TreePine size={20} style={{ display: 'inline', marginRight: '8px' }} />Your Manifestation Garden</h3>
+                            <p>
+                                Your garden is a living visualization of your manifestation practice:
+                            </p>
+                            <ul>
+                                <li><strong>The Seed:</strong> Your foundational belief ("I believe in myself")</li>
+                                <li><strong>The Tree:</strong> Grows through 5 stages as you add more intentions</li>
+                                <li><strong>The Flowers:</strong> Each manifestation blooms as a colored flower based on its archetype</li>
+                                <li><strong>The Cycles:</strong> Track your practice and watch your garden evolve</li>
+                            </ul>
+                        </div>
+
+                        <div className="about-section">
+                            <h3>The Five Archetypes</h3>
+                            <ul>
+                                <li><Anchor size={16} style={{ display: 'inline', marginRight: '6px', color: '#8B4513' }} /><strong>Grounded & Safe:</strong> Root chakra, stability, security (194-256 Hz)</li>
+                                <li><Heart size={16} style={{ display: 'inline', marginRight: '6px', color: '#16a34a' }} /><strong>Open Heart / Love:</strong> Heart chakra, compassion, connection (639-1034 Hz)</li>
+                                <li><Waves size={16} style={{ display: 'inline', marginRight: '6px', color: '#2563eb' }} /><strong>Creative Flow:</strong> Sacral/throat, expression, creativity (528-741 Hz)</li>
+                                <li><Zap size={16} style={{ display: 'inline', marginRight: '6px', color: '#4f46e5' }} /><strong>Clarity & Direction:</strong> Third eye, intuition, vision (852-1379 Hz)</li>
+                                <li><TrendingUp size={16} style={{ display: 'inline', marginRight: '6px', color: '#eab308' }} /><strong>Abundance / Expansion:</strong> Crown, prosperity, limitlessness (432-699 Hz)</li>
+                            </ul>
+                        </div>
+
+                        <div className="about-section">
+                            <h3>Best Practices</h3>
+                            <ul>
+                                <li>Use headphones for full binaural effect</li>
+                                <li>Find a quiet, comfortable space</li>
+                                <li>Write intentions in present tense ("I am" not "I will")</li>
+                                <li>Feel the emotion of your intention as already true</li>
+                                <li>Practice regularly - consistency creates neural pathways</li>
+                                <li>Revisit your garden to reinforce intentions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {/* Entrance Stage */}
@@ -415,6 +545,10 @@ export function ManifestationPortalPage({ onNavigate }) {
                             View Your Garden ({manifestations.length})
                         </button>
                     )}
+                    <button className="info-btn" onClick={() => setShowAbout(true)}>
+                        <Info size={20} />
+                        How It Works
+                    </button>
                 </div>
             )}
 
@@ -470,7 +604,6 @@ export function ManifestationPortalPage({ onNavigate }) {
                     {currentPreset && (
                         <BreathSync
                             breathPattern={currentPreset.breathPattern}
-                            isActive={true}
                             onBreathCycle={(count) => {
                                 // Optional: Do something on breath cycles
                                 if (count % 5 === 0) {

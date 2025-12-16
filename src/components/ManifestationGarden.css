@@ -468,6 +468,16 @@
     font-size: 12px;
 }
 
+.tooltip-water {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #3b82f6;
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
 @keyframes tooltipAppear {
     from {
         opacity: 0;
@@ -537,6 +547,27 @@
 .stat svg {
     color: #eab308;
 }
+
+.insights-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid #8b5cf6;
+    border-radius: 12px;
+    color: #8b5cf6;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.insights-btn:hover {
+    background: rgba(139, 92, 246, 0.3);
+    transform: translateY(-2px);
+}
+
 
 /* Seed Ceremony */
 .seed-ceremony {
