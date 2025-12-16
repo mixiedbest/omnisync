@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Play, Pause, Volume2, Wind, Timer, SkipBack, SkipForward, Shuffle, Repeat, Repeat1, List } from 'lucide-react';
+import { Play, Pause, Volume2, Wind, Timer, SkipBack, SkipForward, Shuffle, Repeat, Repeat1, List, Zap } from 'lucide-react';
 import { BreathingPacer } from './BreathingPacer';
+import { CymaticVisualizer } from './CymaticVisualizer';
 import './PlayerControls.css';
 
 export function PlayerControls({
@@ -20,6 +21,7 @@ export function PlayerControls({
     onTogglePlaylistMode = () => { }
 }) {
     const [showPacer, setShowPacer] = useState(false);
+    const [showVisualizer, setShowVisualizer] = useState(false);
 
     const toggleSleepTimer = () => {
         if (!sleepTimer) onSetSleepTimer(3);
@@ -45,6 +47,14 @@ export function PlayerControls({
     return (
         <>
             {showPacer && <BreathingPacer onClose={() => setShowPacer(false)} />}
+            {showVisualizer && (
+                <CymaticVisualizer
+                    onClose={() => setShowVisualizer(false)}
+                    beatFrequency={currentTrack?.beat || 10}
+                    carrierFrequency={currentTrack?.left || 432}
+                    trackTitle={currentTrack?.title || ''}
+                />
+            )}
 
             <div className="player-controls glass-card">
                 <div className="player-info">
@@ -109,6 +119,16 @@ export function PlayerControls({
                     >
                         <Wind size={20} />
                         <span style={{ fontSize: '10px', opacity: 0.8 }}>Breathe</span>
+                    </button>
+
+                    <button
+                        className={`action-btn ${showVisualizer ? 'active' : ''}`}
+                        onClick={() => setShowVisualizer(!showVisualizer)}
+                        title="Laser Cymatics"
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', minWidth: '60px' }}
+                    >
+                        <Zap size={20} />
+                        <span style={{ fontSize: '10px', opacity: 0.8 }}>Lasers</span>
                     </button>
 
                     <button
