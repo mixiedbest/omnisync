@@ -7,6 +7,19 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
     const canvasRef = useRef(null);
     const requestRef = useRef(null);
     const [mode, setMode] = useState(noiseType ? 'particle' : 'lissajous');
+    const sandParticles = useRef([]);
+
+    // Initialize sand particles
+    useEffect(() => {
+        if (sandParticles.current.length === 0) {
+            for (let i = 0; i < 4000; i++) {
+                sandParticles.current.push({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight
+                });
+            }
+        }
+    }, []);
 
     // Determine initial color based on frequency, title, or noise type
     const getInitialColor = () => {
@@ -100,13 +113,64 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
             ctx.shadowBlur = noiseType ? 15 : 10;
             ctx.shadowColor = color;
             ctx.strokeStyle = color;
+            ctx.fillStyle = color; // For sand particles
 
             ctx.beginPath();
 
             // PHYSICS ENGINE
             // Noise = Fast/Random Chaos. Binaural = Smooth/Harmonic Math.
 
-            if (noiseType) {
+            if (mode === 'chladni') {
+                // --- CHLADNI PLATE (SAND) SIMULATION ---
+                // m and n determine the complexity of the grid
+                // We map frequencies to these integers/floats
+                // Low freq = simple pattern (m=2), High freq = complex (m=10)
+                const m = 2 + (leftFreq / 100);
+                const n = 2 + (rightFreq / 100);
+
+                // Speed of vibration
+                const vibration = Math.sin(time * 5);
+
+                sandParticles.current.forEach(p => {
+                    // Normalize position to -1 to 1 based on center
+                    const nx = (p.x - cx) / (scale * 1.5);
+                    const ny = (p.y - cy) / (scale * 1.5);
+
+                    // Chladni Formula:
+                    // Nodes are where this equation ~= 0
+                    // Amplitude = cos(n*pi*x)*cos(m*pi*y) - cos(m*pi*x)*cos(n*pi*y)
+                    const pi = Math.PI;
+                    const val = Math.cos(n * pi * nx) * Math.cos(m * pi * ny) - Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
+
+                    // Amplitude at this point (rectified)
+                    const amp = Math.abs(val);
+
+                    // PHYSICS:
+                    // If amp is high, particle gets kicked randomly.
+                    // If amp is low (node), particle stays still.
+                    if (amp > 0.1) {
+                        // Move randomly away from high vibration
+                        // The shake amount depends on how loud the vibration is
+                        const shake = amp * 10;
+                        p.x += (Math.random() - 0.5) * shake;
+                        p.y += (Math.random() - 0.5) * shake;
+
+                        // Keep within bounds (virtual plate)
+                        // If it flies off, reset to random position
+                        const dist = Math.sqrt(nx * nx + ny * ny);
+                        if (dist > 1) {
+                            p.x = cx + (Math.random() - 0.5) * scale;
+                            p.y = cy + (Math.random() - 0.5) * scale;
+                        }
+                    }
+
+                    // Draw Particle
+                    ctx.fillRect(p.x, p.y, 1.5, 1.5);
+                });
+
+                time += 0.05;
+
+            } else if (noiseType) {
                 // --- NOISE VISUALIZATION (Mode-Aware) ---
                 time += 0.1; // Noise moves faster
                 const points = 800;
@@ -164,6 +228,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                         else ctx.lineTo(x, y);
                     }
                 }
+                ctx.stroke();
             }
             else {
                 // --- BINAURAL VISUALIZATION (Pure Physics) ---
@@ -198,9 +263,9 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     if (t === 0 && mode !== 'wave') ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
+                ctx.stroke();
             }
 
-            ctx.stroke();
             requestRef.current = requestAnimationFrame(animate);
         };
         requestRef.current = requestAnimationFrame(animate);
@@ -226,6 +291,20 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
         };
     }, []);
 
+    // Compute display label
+    const getDriverLabel = () => {
+        if (noiseType) {
+            return noiseType.charAt(0).toUpperCase() + noiseType.slice(1) + (noiseType.includes('noise') ? '' : ' Ambience');
+        }
+        if (beatFrequency && beatFrequency > 0) {
+            return `${beatFrequency} Hz Beat`;
+        }
+        if (carrierFrequency) {
+            return `${carrierFrequency} Hz Tone`;
+        }
+        return 'Signal';
+    };
+
     return createPortal(
         <div className="cymatic-overlay">
             <canvas ref={canvasRef} className="cymatic-canvas" />
@@ -236,7 +315,7 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                     <h3>Laser Cymatics</h3>
                     <div className="freq-display">
                         <span className="label">Driven by:</span>
-                        <span className="value">{beatFrequency} Hz</span>
+                        <span className="value">{getDriverLabel()}</span>
                     </div>
                 </div>
 
@@ -255,6 +334,10 @@ export function CymaticVisualizer({ onClose, beatFrequency = 10, carrierFrequenc
                             className={mode === 'wave' ? 'active' : ''}
                             onClick={() => setMode('wave')}
                         >Wave</button>
+                        <button
+                            className={mode === 'chladni' ? 'active' : ''}
+                            onClick={() => setMode('chladni')}
+                        >Sand</button>
                     </div>
                 </div>
 
