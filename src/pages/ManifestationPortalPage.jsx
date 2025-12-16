@@ -62,17 +62,21 @@ export function ManifestationPortalPage({ onNavigate }) {
 
     const currentPreset = presets.find(p => p.id === selectedPreset);
 
-    // Audio playback
-    const { play, stop } = useBinauralBeat(
-        currentPreset?.frequencies.left || 432,
-        currentPreset?.frequencies.right || 432,
-        currentPreset?.frequencies.beat || 10
-    );
+    // Audio playback - hook doesn't take parameters
+    const { play, stop } = useBinauralBeat();
 
     // Manage audio playback based on stage
     useEffect(() => {
-        if (stage === 'portal' && isPlaying) {
-            play();
+        if (stage === 'portal' && isPlaying && currentPreset) {
+            // Play with the preset's frequencies
+            play(
+                currentPreset.frequencies.left,
+                currentPreset.frequencies.right,
+                0, // bothEarsFreq
+                null, // noiseType
+                null, // soundscapeType
+                { left: 0.5, right: 0.5 } // volumes
+            );
         } else {
             stop();
         }
@@ -80,7 +84,7 @@ export function ManifestationPortalPage({ onNavigate }) {
         return () => {
             stop();
         };
-    }, [stage, isPlaying, play, stop]);
+    }, [stage, isPlaying, currentPreset, play, stop]);
 
     // Portal animation
     useEffect(() => {
