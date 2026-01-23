@@ -217,33 +217,39 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
         );
     };
 
-    const generateAuraScan = () => {
+    const [quickDuration, setQuickDuration] = useState(5); // Default 5 minutes
+
+    const handleQuickSync = () => {
         if (!currentEmotion || !desiredEmotion) return;
 
         const current = currentEmotions.find(e => e.value === currentEmotion);
         const desired = desiredEmotions.find(e => e.value === desiredEmotion);
 
-        // Create a transitional frequency
-        const avgBeat = (current.freq.beat + desired.freq.beat) / 2;
+        // Iso-Principle: Start at current state matching frequency
+        const startBeat = current.freq.beat;
+        const endBeat = desired.freq.beat;
+
+        let adjustedEndBeat = endBeat;
 
         // Adjust based on symptoms
-        let adjustedBeat = avgBeat;
         if (physicalSymptoms.includes('insomnia') || physicalSymptoms.includes('racing-thoughts')) {
-            adjustedBeat = Math.max(4, adjustedBeat - 2); // Lower for calming
+            adjustedEndBeat = Math.max(0.5, adjustedEndBeat * 0.8); // Deep calming
         }
         if (physicalSymptoms.includes('fatigue') || physicalSymptoms.includes('low-energy')) {
-            adjustedBeat = Math.min(20, adjustedBeat + 3); // Higher for energy
+            adjustedEndBeat = Math.min(40, adjustedEndBeat * 1.2); // Boost energy
         }
 
         const preset = {
-            id: 'aura-scan-custom',
-            title: `${current.label} → ${desired.label} `,
-            desc: `Personalized Aura Scan: Transitioning from ${current.label} to ${desired.label} `,
-            left: 200,
-            right: 200 + adjustedBeat,
-            beat: adjustedBeat,
-            noiseType: physicalSymptoms.includes('headache') ? 'pink' : null,
-            type: physicalSymptoms.includes('tension') ? 'ocean' : null
+            id: `iso-ramp-${Date.now()}`,
+            title: `Iso-Ramp: ${current.label} → ${desired.label}`,
+            desc: `Transitioning from ${startBeat}Hz to ${adjustedEndBeat.toFixed(2)}Hz over ${quickDuration} mins.`,
+            left: 200, // Base carrier
+            right: 200 + adjustedEndBeat,
+            beat: adjustedEndBeat, // The TARGET beat
+            rampFrom: startBeat, // Metadata for player to handle ramp
+            rampDuration: quickDuration * 60, // Seconds
+            noiseType: physicalSymptoms.includes('headache') ? 'pink' : 'brown',
+            type: 'river' // Soothing default
         };
 
         // Log journal entry
@@ -342,6 +348,13 @@ export function InnerSyncPage({ onBack, onPlay, currentTrack, isPlaying, favorit
                 >
                     <Zap size={18} />
                     Energy Profiles
+                </button>
+                <button
+                    className={`tab-btn ${activeTab === 'aura-scan' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('aura-scan')}
+                >
+                    <Activity size={18} />
+                    Aura Scan
                 </button>
                 <button
                     className={`tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}

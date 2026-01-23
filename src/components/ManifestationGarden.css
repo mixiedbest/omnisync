@@ -807,3 +807,117 @@
         transform: translateY(0);
     }
 }
+
+/* Individual Plant Growth Stages */
+.manifestation-node {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: flowerAppear 0.8s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2100;
+    /* Must be > 2000 (modal) to be clickable */
+}
+
+.manifestation-node:hover {
+    z-index: 2200;
+}
+
+/* Node: Seed */
+.node-seed {
+    width: 12px;
+    height: 12px;
+    background: var(--node-color);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(45deg);
+    box-shadow: 0 0 10px var(--node-color);
+}
+
+/* Node: Sprout */
+.node-sprout {
+    position: relative;
+    width: 20px;
+    height: 30px;
+}
+
+.node-sprout .leaf {
+    position: absolute;
+    width: 10px;
+    height: 15px;
+    background: var(--node-color);
+    border-radius: 50% 0;
+    bottom: 0;
+}
+
+.node-sprout .leaf.left {
+    left: 0;
+    transform: rotate(-30deg);
+}
+
+.node-sprout .leaf.right {
+    right: 0;
+    transform: rotate(30deg) scaleX(-1);
+}
+
+/* Node: Sapling */
+.node-sapling {
+    position: relative;
+    width: 30px;
+    height: 40px;
+}
+
+.node-sapling .trunk-mini {
+    position: absolute;
+    width: 4px;
+    height: 20px;
+    background: #8B4513;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.node-sapling .foliage-mini {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: var(--node-color);
+    border-radius: 50%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.8;
+}
+
+/* Node: Bloom (Flower) */
+.node-bloom {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.tooltip-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tooltip-stage.capitalized {
+    text-transform: capitalize;
+    color: var(--accent-teal);
+}
+
+/* Ambient Elements - pointer events none to prevent click blocking */
+.ambient-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}

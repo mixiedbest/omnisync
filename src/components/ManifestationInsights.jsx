@@ -280,16 +280,19 @@ export function ManifestationInsights({ manifestations = [], onClose }) {
 
                             <div className="section">
                                 <h3>Most Practiced Intention</h3>
-                                {manifestations.length > 0 && (
-                                    <div className="top-intention">
-                                        <div className="top-intention-text">
-                                            "{manifestations.sort((a, b) => (b.waterCount || 1) - (a.waterCount || 1))[0].intention}"
+                                {manifestations.length > 0 && (() => {
+                                    const topManifestation = [...manifestations].sort((a, b) => (b.waterCount || 1) - (a.waterCount || 1))[0];
+                                    return (
+                                        <div className="top-intention">
+                                            <div className="top-intention-text">
+                                                "{topManifestation.intention}"
+                                            </div>
+                                            <div className="top-intention-count">
+                                                Practiced {topManifestation.waterCount || 1} times
+                                            </div>
                                         </div>
-                                        <div className="top-intention-count">
-                                            Practiced {manifestations[0].waterCount || 1} times
-                                        </div>
-                                    </div>
-                                )}
+                                    );
+                                })()}
                             </div>
                         </div>
                     )}

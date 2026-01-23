@@ -1,70 +1,31 @@
 export const categories = [
     {
         id: "healing",
-        title: "HEALING",
+        title: "HEALING (Nogier Frequencies)",
         icon: "Activity",
         color: "from-red-900 to-orange-900",
         items: [
-            { id: "h1", title: "Pain Relief (Deep Relief 174)", beat: 2, left: 174, right: 176, desc: "Toothache, injuries, tension. Layers: 7.83 Hz Schumann" },
-            { id: "h2", title: "Nausea Relief (Gut Reset 285)", beat: 7.83, left: 285, right: 292.83, desc: "Motion sickness, stomach upset. Layers: Pink noise" },
-            { id: "h3", title: "Migraine Softener", beat: 3, left: 396, right: 399, desc: "Pressure relief, light sensitivity. Layers: 174 Hz" },
-            { id: "h4", title: "Stress Dissolver", beat: 6, left: 396, right: 402, desc: "Anxiety, panic, overwhelm. Layers: 7.83 Hz" },
-            { id: "h5", title: "Nervous System Reboot", beat: 8, left: 432, right: 440, desc: "Calm vagus nerve, release tension. Layers: Soft brown noise" },
-            { id: "h6", title: "Deep Sleep Gateway", beat: 2.5, left: 432, right: 434.5, desc: "Faster sleep onset. Layers: 174 Hz, 7.83 Hz" },
-            { id: "h7", title: "Digestion (Gut–Brain Harmony)", beat: 3.5, left: 528, right: 531.5, desc: "Parasympathetic activation, solar plexus resonance. Layers: Brown noise, slow breath pulse" },
+            { id: "h1", title: "Pain Relief (Nogier G)", beat: 0, left: 1168, right: 1168, desc: "Resonates with Mesoderm (bones, muscles). Structural pain relief." },
+            { id: "h2", title: "Nausea / Gut Reset (Nogier E)", beat: 0, left: 584, right: 584, desc: "Resonates with Endoderm (GI tract, liver). Digestion aid." },
+            { id: "h3", title: "Nervous System Reboot (Nogier D)", beat: 0, left: 292, right: 292, desc: "Resonates with Ectoderm (skin, nerves). Cellular repair." },
+            { id: "h4", title: "Migraine Softener (Alpha + Epsilon)", beat: 10, left: 100, right: 110, desc: "Stabilizes brain (10Hz) with slow Epsilon modulation (0.5Hz)." },
+            { id: "h5", title: "Immune / Inflammation (Nogier B)", beat: 0, left: 2336, right: 2336, desc: "Metabolic balance and fighting chronic inflammation." },
+            { id: "h6", title: "Universal Healing (Nogier A)", beat: 0, left: 292, right: 292, desc: "General cellular vitality and tissue repair." },
         ]
     },
     {
         id: "chakras",
-        title: "CHAKRAS",
+        title: "CHAKRAS (Solfeggio & Planetary)",
         icon: "CircleDot",
         color: "from-pink-900 to-rose-900",
         items: [
-            { id: "c1", title: "Root Chakra Release", beat: 4, left: 396, right: 400, desc: "Release fear + guilt. Layers: Deep drum-like pulses" },
-            { id: "c2", title: "Sacral Creativity Flow", beat: 5, left: 417, right: 422, desc: "Sexual/creative energy. Layers: 222 Hz angel tone" },
-            { id: "c3", title: "Solar Plexus Power", beat: 8, left: 528, right: 536, desc: "Confidence, transformation. Layers: 888 Hz" },
-            { id: "c4", title: "Heart Chakra Love Field", beat: 9, left: 639, right: 648, desc: "Emotional healing, compassion. Layers: 333 Hz" },
-            { id: "c5", title: "Throat Chakra ClearSpeak", beat: 14, left: 741, right: 755, desc: "Expression, truth. Layers: Breath-texture ambience" },
-            { id: "c6", title: "Third Eye Vision", beat: 30, left: 852, right: 882, desc: "Intuition, clairvoyance. Layers: 963 Hz shimmer" },
-            { id: "c7", title: "Crown Chakra Unity Field", beat: 40, left: 963, right: 1003, desc: "Spiritual connection. Layers: 2172 Hz subtle" },
-        ]
-    },
-    {
-        id: "angels",
-        title: "ANGEL FREQUENCIES",
-        icon: "Feather",
-        color: "from-yellow-900 to-amber-900",
-        items: [
-            { id: "a1", title: "111 — New Beginnings Portal", beat: 10, left: 111, right: 121, desc: "Fresh start, clarity. Layers: 396 Hz" },
-            { id: "a2", title: "222 — Harmony & Balance", beat: 6, left: 222, right: 228, desc: "Harmony & Balance. Layers: 639 Hz" },
-            { id: "a3", title: "333 — Relationship Healing", beat: 8, left: 333, right: 341, desc: "Relationship Healing. Layers: 639 Hz" },
-            { id: "a4", title: "444 — Divine Protection", beat: 11, left: 444, right: 455, desc: "Divine Protection. Layers: 7.83 Hz grounding" },
-            { id: "a5", title: "555 — Transformation Boost", beat: 15, left: 555, right: 570, desc: "Transformation Boost. Layers: 528 Hz" },
-            { id: "a6", title: "777 — Intuitive Upgrade", beat: 33, left: 777, right: 810, desc: "Intuitive Upgrade. Layers: 852 Hz" },
-            { id: "a7", title: "888 — Abundance Activator", beat: 12, left: 888, right: 900, desc: "Abundance Activator. Layers: 528 Hz" },
-            { id: "a8", title: "999 — Completion & Ascension", beat: 36, left: 999, right: 1035, desc: "Completion & Ascension. Layers: 963 Hz" },
-        ]
-    },
-    {
-        id: "ascension",
-        title: "SPIRITUAL ASCENSION",
-        icon: "Sparkles",
-        color: "from-violet-900 to-purple-900",
-        items: [
-            { id: "s1", title: "Higher Consciousness (1074 Hz Gateway)", beat: 33, left: 1074, right: 1107, desc: "Higher Consciousness. Layers: 963 Hz" },
-            { id: "s2", title: "Energy Purification (1152 Hz Cleanse)", beat: 12, left: 1152, right: 1164, desc: "Energy Purification. Layers: 741 Hz" },
-            { id: "s3", title: "Equilibrium Reset (1174 Hz)", beat: 18, left: 1174, right: 1192, desc: "Equilibrium Reset. Layers: 432 Hz" },
-            { id: "s4", title: "Enlightenment Field (2172 Hz)", beat: 45, left: 2172, right: 2217, desc: "Enlightenment Field. Layers: 963 Hz" },
-        ]
-    },
-    {
-        id: "earth",
-        title: "EARTH & GROUNDING",
-        icon: "Globe",
-        color: "from-emerald-900 to-green-900",
-        items: [
-            { id: "e1", title: "Earth Resonance (Schumann 7.83)", beat: 7.83, left: 100, right: 107.83, desc: "Schumann Resonance. Layers: 396 Hz grounding" },
-            { id: "e2", title: "Earth + Heart (Gaia Love Field)", beat: 7.83, left: 432, right: 439.83, desc: "Gaia Love Field. Layers: Soft nature ambience" },
+            { id: "c1", title: "Root (Grounding)", beat: 7.83, left: 396, right: 403.83, desc: "Default: 396 Hz. Planetary Alt: Earth Day (194.18 Hz)." },
+            { id: "c2", title: "Sacral (Creativity)", beat: 6, left: 417, right: 423, desc: "Default: 417 Hz. Planetary Alt: Synodic Moon (210.42 Hz)." },
+            { id: "c3", title: "Solar Plexus (Power)", beat: 8, left: 528, right: 536, desc: "Default: 528 Hz. Planetary Alt: Sun (126.22 Hz)." },
+            { id: "c4", title: "Heart (Love)", beat: 10, left: 639, right: 649, desc: "Default: 639 Hz. Planetary Alt: Earth Year/Om (136.10 Hz)." },
+            { id: "c5", title: "Throat (Truth)", beat: 12, left: 741, right: 753, desc: "Default: 741 Hz. Planetary Alt: Mercury (141.27 Hz)." },
+            { id: "c6", title: "Third Eye (Intuition)", beat: 30, left: 852, right: 882, desc: "Default: 852 Hz. Planetary Alt: Venus (221.23 Hz)." },
+            { id: "c7", title: "Crown (Spirit)", beat: 40, left: 963, right: 1003, desc: "Default: 963 Hz. Planetary Alt: Platonic Year (172.06 Hz)." },
         ]
     },
     {
@@ -73,142 +34,55 @@ export const categories = [
         icon: "Zap",
         color: "from-blue-900 to-indigo-900",
         items: [
-            { id: "f1", title: "Laser Focus (Beta Drive 741)", beat: 20, left: 741, right: 761, desc: "Studying, work, coding. Layers: 40 Hz gamma pulses" },
-            { id: "f2", title: "Idea Generator (Creative Theta)", beat: 7, left: 417, right: 424, desc: "Brainstorming, songwriting. Layers: 528 Hz light" },
-            { id: "f3", title: "Memory Recall Boost", beat: 35, left: 852, right: 887, desc: "Memory Recall. Layers: 40 Hz harmonic" },
-            { id: "f4", title: "ADHD Hyperfocus Anchor", beat: 12, left: 528, right: 540, desc: "ADHD Hyperfocus. Layers: 7.83 Hz grounding" },
-        ]
-    },
-    {
-        id: "energy",
-        title: "ENERGY & MOOD BOOST",
-        icon: "Sun",
-        color: "from-orange-900 to-yellow-900",
-        items: [
-            { id: "en1", title: "Mood Up! (Instant Dopamine)", beat: 13, left: 528, right: 541, desc: "Instant Dopamine. Layers: 888 Hz prosperity" },
-            { id: "en2", title: "Morning Energy Charge", beat: 18, left: 396, right: 414, desc: "Morning Energy. Layers: Sub-bass 60 Hz pulse" },
-            { id: "en3", title: "Vibration Lift (High Aura)", beat: 20, left: 852, right: 872, desc: "High Aura. Layers: 963 Hz sparkle" },
-        ]
-    },
-    {
-        id: "trauma",
-        title: "TRAUMA / EMOTIONAL RELEASE",
-        icon: "HeartCrack",
-        color: "from-rose-900 to-pink-900",
-        items: [
-            { id: "t1", title: "Somatic Release (Stored Trauma Cleanse)", beat: 8, left: 417, right: 425, desc: "Stored Trauma Cleanse. Layers: 174 Hz grounding" },
-            { id: "t2", title: "Inner Child Soothing", beat: 5, left: 396, right: 401, desc: "Inner Child Soothing. Layers: 639 Hz heart" },
-            { id: "t3", title: "Grief Support", beat: 2.5, left: 432, right: 434.5, desc: "Grief Support. Layers: 639 Hz + 174 Hz" },
+            { id: "f1", title: "Laser Focus (Gamma 40Hz)", beat: 40, left: 200, right: 240, desc: "High-level processing, coding, complex work." },
+            { id: "f2", title: "Idea Generator (Theta 7.83Hz)", beat: 7.83, left: 100, right: 107.83, desc: "Twilight state for creative flow and brainstorming." },
+            { id: "f3", title: "ADHD Hyperfocus (SMR 14Hz)", beat: 14, left: 128, right: 142, desc: "Sensorimotor Rhythm. Calm body, active mind." },
+            { id: "f4", title: "Memory Recall (Low Beta 15Hz)", beat: 15, left: 160, right: 175, desc: "Active testing and recall without high-beta anxiety." },
         ]
     },
     {
         id: "manifestation",
         title: "MANIFESTATION & INTENTION",
-        icon: "Star",
-        color: "from-purple-900 to-fuchsia-900",
+        icon: "Sparkles",
+        color: "from-violet-900 to-purple-900",
         items: [
-            { id: "m1", title: "Quantum Manifestation Field", beat: 9, left: 528, right: 537, desc: "Quantum Manifestation. Layers: 888 Hz + 963 Hz" },
-            { id: "m2", title: "Reality Shift Gateway", beat: 40, left: 963, right: 1003, desc: "Reality Shift. Layers: 2172 Hz" },
-            { id: "m3", title: "Money Magnet Mode", beat: 12, left: 888, right: 900, desc: "Money Magnet. Layers: 528 Hz" },
+            { id: "m1", title: "Money Magnet (Jupiter 183.58Hz)", beat: 12, left: 183.58, right: 195.58, desc: "Frequency of expansion, luck, growth, and abundance." },
+            { id: "m2", title: "Reality Shift (Phase Shift 8Hz)", beat: 8, left: 200, right: 208, desc: "Bridge between conscious and subconscious minds." },
+            { id: "m3", title: "Quantum Field (Natural 432Hz)", beat: 0, left: 432, right: 432, desc: "Mathematical consistency for universal alignment." },
         ]
     },
     {
-        id: "somatic",
-        title: "BODY-BASED / SOMATIC HEALING",
-        icon: "Accessibility",
-        color: "from-teal-900 to-emerald-900",
+        id: "body",
+        title: "BODY-BASED / SOMATIC",
+        icon: "Heart",
+        color: "from-emerald-900 to-green-900",
         items: [
-            { id: "so1", title: "Vagus Nerve Reset", beat: 4, left: 432, right: 436, desc: "Vagus Nerve Reset. Layers: 7.83 Hz" },
-            { id: "so2", title: "Lymphatic Flow", beat: 6, left: 285, right: 291, desc: "Lymphatic Flow. Layers: 741 Hz" },
-            { id: "so3", title: "Organ Regeneration Boost", beat: 2, left: 285, right: 287, desc: "Organ Regeneration. Layers: 528 Hz" },
+            { id: "b1", title: "Vagus Nerve Reset (100Hz)", beat: 4, left: 100, right: 104, desc: "Mimics chest resonance of a low 'Ohm' chant." },
+            { id: "b2", title: "Lymphatic Flow (50Hz)", beat: 50, left: 100, right: 150, desc: "Muscle stimulation tone for fluid movement." },
+            { id: "b3", title: "Organ Regeneration (111Hz)", beat: 0, left: 111, right: 111, desc: "High Beta associated with cell rejuvenation." },
         ]
     },
     {
-        id: "sexuality",
-        title: "SEXUALITY & INTIMACY",
-        icon: "Flame",
-        color: "from-red-900 to-rose-900",
-        items: [
-            { id: "sx1", title: "Sensual Flow (Sacral Activation)", beat: 5, left: 417, right: 422, desc: "Sacral Activation. Layers: 222 Hz" },
-            { id: "sx2", title: "Kundalini Riser", beat: 10, left: 417, right: 427, desc: "Kundalini Riser. Layers: 888 Hz" },
-            { id: "sx3", title: "Deep Connection Mode", beat: 9, left: 639, right: 648, desc: "Deep Connection. Layers: 963 Hz" },
-        ]
-    },
-    {
-        id: "protection",
-        title: "AURA & ENERGY PROTECTION",
-        icon: "Shield",
-        color: "from-slate-900 to-gray-900",
-        items: [
-            { id: "p1", title: "Aura Shield (444 + 741)", beat: 14, left: 444, right: 458, desc: "Aura Shield. Layers: 741 Hz detox" },
-            { id: "p2", title: "Entity Cleanse", beat: 12, left: 1152, right: 1164, desc: "Entity Cleanse. Layers: 963 Hz + 7.83 Hz" },
-            { id: "p3", title: "Space Clearing Field", beat: 8, left: 528, right: 536, desc: "Space Clearing. Layers: 852 Hz" },
-        ]
-    },
-    {
-        id: "children",
-        title: "CHILDREN’S HEALING",
-        icon: "Baby",
-        color: "from-sky-900 to-blue-900",
-        items: [
-            { id: "k1", title: "Calm & Safe", beat: 2, left: 396, right: 398, desc: "Calm & Safe. Layers: soft white noise" },
-            { id: "k2", title: "Sleepy Star Dream Mode", beat: 1, left: 432, right: 433, desc: "Sleepy Star. Layers: 7.83 Hz" },
-            { id: "k3", title: "Focus for Kids", beat: 8, left: 417, right: 425, desc: "Focus for Kids. Layers: gentle bell tones" },
-        ]
-    },
-    {
-        id: "psychedelic",
-        title: "PSYCHEDELIC JOURNEYS",
+        id: "spiritual",
+        title: "SPIRITUAL ASCENSION (Psychedelic)",
         icon: "Eye",
-        color: "from-fuchsia-900 to-purple-900",
+        color: "from-indigo-900 to-violet-900",
         items: [
-            { id: "ps1", title: "DMT Field", beat: 40, left: 963, right: 1003, desc: "DMT Field. Layers: 40 Hz gamma & 2172 Hz" },
-            { id: "ps2", title: "Astral Projection", beat: 30, left: 852, right: 882, desc: "Astral Projection. Layers: 396 Hz grounding" },
-            { id: "ps3", title: "Third Eye Opening", beat: 20, left: 852, right: 872, desc: "Third Eye Opening. Layers: 963 Hz" },
+            { id: "s1", title: "DMT Field (Lambda/Epsilon)", beat: 0.1, left: 200, right: 200.1, desc: "Layers extremely slow (0.1Hz) with fast waves." },
+            { id: "s2", title: "Astral Projection (Theta 6.3Hz)", beat: 6.3, left: 150, right: 156.3, desc: "Specific portal frequency for out-of-body states." },
+            { id: "s3", title: "Third Eye Opening (936Hz)", beat: 30, left: 936, right: 966, desc: "Pineal activation pitch, distinct from Solfeggio." },
         ]
     },
     {
-        id: "neurodivergent",
-        title: "ADHD / NEURODIVERGENT SUPPORT",
-        icon: "Brain",
-        color: "from-cyan-900 to-teal-900",
+        id: "angels",
+        title: "ANGEL FREQUENCIES",
+        icon: "Feather",
+        color: "from-yellow-900 to-amber-900",
         items: [
-            { id: "nd1", title: "Calm Hyperfocus", beat: 12, left: 432, right: 444, desc: "Calm Hyperfocus. Layers: 40 Hz gamma" },
-            { id: "nd2", title: "Overwhelm Melt", beat: 3, left: 396, right: 399, desc: "Overwhelm Melt. Layers: 174 Hz" },
-            { id: "nd3", title: "Task Start Mode", beat: 18, left: 741, right: 759, desc: "Task Start Mode. Layers: none" },
-        ]
-    },
-    {
-        id: "breathwork",
-        title: "BREATHWORK-INTEGRATED",
-        icon: "Wind",
-        color: "from-teal-900 to-cyan-900",
-        items: [
-            { id: "br1", title: "Box Breathing", beat: 4, left: 432, right: 436, desc: "Pulsing at 4:4:4:4 timing" },
-            { id: "br2", title: "Wim Hof Prep", beat: 12, left: 396, right: 408, desc: "Rhythmic expanding pulses" },
-            { id: "br3", title: "Heart Coherence", beat: 6, left: 639, right: 645, desc: "5.5 bpm breath cue" },
-        ]
-    },
-    {
-        id: "anxiety",
-        title: "INSTANT ANXIETY RELIEF",
-        icon: "Smile",
-        color: "from-green-900 to-teal-900",
-        items: [
-            { id: "ax1", title: "Panic Button", beat: 2.5, left: 396, right: 398.5, desc: "Acute stress. Layers: 7.83 Hz" },
-            { id: "ax2", title: "Slow the Heart", beat: 4, left: 432, right: 436, desc: "Slow the Heart. Layers: brown noise" },
-            { id: "ax3", title: "Clear the Mind", beat: 5, left: 741, right: 746, desc: "Clear the Mind. Layers: ocean noise" },
-        ]
-    },
-    {
-        id: "daily",
-        title: "DAILY RITUAL MODES",
-        icon: "Sunrise",
-        color: "from-orange-900 to-yellow-900",
-        items: [
-            { id: "dr1", title: "Morning Activation", beat: 12, left: 528, right: 540, desc: "Morning Activation. Layers: 888 Hz" },
-            { id: "dr2", title: "Midday Reset", beat: 8, left: 432, right: 440, desc: "Midday Reset. Layers: 7.83 Hz" },
-            { id: "dr3", title: "Night Wind-Down", beat: 3, left: 396, right: 399, desc: "Night Wind-Down. Layers: 174 Hz" },
+            { id: "a1", title: "111 Hz (New Beginnings)", beat: 10, left: 111, right: 121, desc: "Backed with Alpha (10Hz) for clear mind." },
+            { id: "a2", title: "444 Hz (Protection)", beat: 4, left: 444, right: 448, desc: "Backed with Theta (4Hz) for safety/grounding." },
+            { id: "a3", title: "888 Hz (Abundance)", beat: 12, left: 888, right: 900, desc: "Backed with Jupiter (183.58Hz) for double luck." },
+            { id: "a7", title: "777 Hz (Intuition)", beat: 7, left: 777, right: 784, desc: "Divine connection and intuitive flow." },
         ]
     },
     {
@@ -224,7 +98,7 @@ export const categories = [
                 left: 10000,
                 right: 10000.5,
                 noiseType: "pink",
-                desc: "Gentle high-frequency masking (8-12 kHz range). Wideband hiss with warm pink noise to mask high-pitched ringing. Layers: 432 Hz calm pad",
+                desc: "Gentle high-frequency masking (8-12 kHz range). Wideband hiss with warm pink noise.",
                 volumes: { noise: 0.3, binaural: 0.2 }
             },
             {
@@ -234,7 +108,7 @@ export const categories = [
                 left: 100,
                 right: 102.5,
                 noiseType: "brown",
-                desc: "Deep delta waves (2.5 Hz) to reduce tinnitus intensity through relaxation. Warm brown noise base. Layers: 7.83 Hz Schumann",
+                desc: "Deep delta waves (2.5 Hz) to reduce tinnitus intensity through relaxation.",
                 volumes: { noise: 0.25, binaural: 0.4 }
             },
             {
@@ -244,7 +118,7 @@ export const categories = [
                 left: 0,
                 right: 0,
                 noiseType: "white",
-                desc: "White noise therapy designed to desensitize neurons at tinnitus frequency. Works best with regular use. Layers: Shaped noise spectrum",
+                desc: "White noise therapy designed to desensitize neurons at tinnitus frequency.",
                 volumes: { noise: 0.35 }
             },
             {
@@ -255,18 +129,8 @@ export const categories = [
                 right: 60.15,
                 noiseType: "pink",
                 type: "ocean",
-                desc: "Natural ocean-like movement with slow wave modulation (0.1-0.2 Hz). Pink noise shaped with low rumble (40-80 Hz). Layers: Ocean soundscape",
+                desc: "Natural ocean-like movement with slow wave modulation (0.1-0.2 Hz).",
                 volumes: { noise: 0.3, soundscape: 0.4, binaural: 0.15 }
-            },
-            {
-                id: "tin5",
-                title: "Gentle High-Band Whisper",
-                beat: 0,
-                left: 16000,
-                right: 16000,
-                noiseType: "pink",
-                desc: "Ultra-light airband (14-18 kHz) for hissing/steam-like tinnitus. Very low volume pink noise blends with internal sound. Layers: Soft air texture",
-                volumes: { noise: 0.2, binaural: 0.15 }
             },
             {
                 id: "tin6",
@@ -275,28 +139,8 @@ export const categories = [
                 left: 500,
                 right: 508,
                 noiseType: "white",
-                desc: "Slowly sweeping tone (500-8000 Hz cycle) interrupts neural firing patterns. 10-20 sec sweep cycle. Layers: Soft broadband noise",
+                desc: "Slowly sweeping tone (500-8000 Hz cycle) interrupts neural firing patterns.",
                 volumes: { noise: 0.25, binaural: 0.3 }
-            },
-            {
-                id: "tin7",
-                title: "Low-Tone Grounder",
-                beat: 0.2,
-                left: 95,
-                right: 95.2,
-                noiseType: "brown",
-                desc: "For low-frequency humming tinnitus. Heavy brown noise base with gentle 70-120 Hz tone. Minimal pulse modulation. Layers: Deep rumble",
-                volumes: { noise: 0.4, binaural: 0.25 }
-            },
-            {
-                id: "tin8",
-                title: "Somatic Stress Relief",
-                beat: 9,
-                left: 200,
-                right: 209,
-                noiseType: "pink",
-                desc: "Alpha waves (8-10 Hz) for stress-linked tinnitus. Increases alpha activity to quiet stress-induced spikes. Layers: Soft pink noise",
-                volumes: { noise: 0.3, binaural: 0.35 }
             },
             {
                 id: "tin9",
@@ -305,7 +149,7 @@ export const categories = [
                 left: 396,
                 right: 396.5,
                 noiseType: "brown",
-                desc: "Warm brown/pink noise mix with gentle 0.5 Hz delta pulse. Makes tinnitus less noticeable during sleep. Layers: 396 Hz or 417 Hz drift pads",
+                desc: "Warm brown/pink noise mix with gentle 0.5 Hz delta pulse.",
                 volumes: { noise: 0.35, binaural: 0.25 }
             }
         ]

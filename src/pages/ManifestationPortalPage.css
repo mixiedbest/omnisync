@@ -567,3 +567,180 @@
 .about-content::-webkit-scrollbar-thumb:hover {
     background: rgba(139, 92, 246, 0.7);
 }
+
+/* Nurture Modal */
+.nurture-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    /* Higher than garden clickables (2200) and modal (2000) */
+    animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.nurture-modal {
+    background: rgba(10, 10, 25, 0.95);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 24px;
+    padding: 32px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 0 50px rgba(34, 197, 94, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-modal-btn:hover {
+    color: white;
+    transform: scale(1.1);
+}
+
+.nurture-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.nurture-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #34d399, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nurture-stats {
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.intention-preview {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 24px;
+    font-size: 16px;
+}
+
+.protocol-progress {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.progress-step .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.progress-step .value {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+}
+
+.progress-step .value.capitalize {
+    text-transform: capitalize;
+}
+
+.protocol-guide {
+    text-align: center;
+}
+
+.protocol-guide h4 {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.day-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.day-dot {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    border: 1px solid transparent;
+}
+
+.day-dot.active {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border-color: #3b82f6;
+}
+
+.day-dot.completed {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border-color: #22c55e;
+}
+
+.start-nurture-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+}
+
+.start-nurture-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+}

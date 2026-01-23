@@ -12,6 +12,9 @@ export function ManifestationPortalPage({ onNavigate }) {
     const [intention, setIntention] = useState('');
     const [selectedPreset, setSelectedPreset] = useState(null);
     const [portalActive, setPortalActive] = useState(false);
+    const [activeManifestationId, setActiveManifestationId] = useState(null); // Track which manifestation is being nurtured
+    const [showNurtureModal, setShowNurtureModal] = useState(false);
+    const [nurtureTarget, setNurtureTarget] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [showPinLock, setShowPinLock] = useState(false);
     const [isUnlocked, setIsUnlocked] = useState(false);
@@ -324,6 +327,27 @@ export function ManifestationPortalPage({ onNavigate }) {
         setStage('input');
     };
 
+    const handleNurture = (manifestation) => {
+        console.log('Handling Nurture for:', manifestation);
+        setNurtureTarget(manifestation);
+        setShowNurtureModal(true);
+    };
+
+    const startNurtureSession = () => {
+        if (!nurtureTarget) return;
+
+        setActiveManifestationId(nurtureTarget.id);
+        setIntention(nurtureTarget.intention);
+        setSelectedPreset(nurtureTarget.archetype); // Use stored archetype ID
+        setShowNurtureModal(false);
+        setShowGarden(false);
+
+        // Skip input/preset selection, go straight to portal
+        setStage('portal');
+        setPortalActive(true);
+        setIsPlaying(true);
+    };
+
     const selectPreset = (presetId) => {
         setSelectedPreset(presetId);
         setTimeout(() => {
@@ -343,14 +367,25 @@ export function ManifestationPortalPage({ onNavigate }) {
                 m => m.intention.toLowerCase().trim() === intention.toLowerCase().trim()
             );
 
-            let updated;
+            let updated = [...manifestations];
             if (existingIndex !== -1) {
-                // Water existing manifestation
-                updated = [...manifestations];
+                // Water existing manifestation (Nurture Logic)
+                const current = updated[existingIndex];
+                const newSessionCount = (current.sessionsCompleted || 0) + 1;
+
+                // Determine stage based on 3x3 protocol
+                let newStage = current.stage || 'seed';
+                if (newSessionCount >= 9) newStage = 'bloom';
+                else if (newSessionCount >= 6) newStage = 'sapling';
+                else if (newSessionCount >= 3) newStage = 'sprout';
+
                 updated[existingIndex] = {
-                    ...updated[existingIndex],
-                    waterCount: (updated[existingIndex].waterCount || 1) + 1,
+                    ...current,
+                    waterCount: (current.waterCount || 1) + 1,
+                    sessionsCompleted: newSessionCount,
+                    lastSessionDate: new Date().toISOString(),
                     lastWatered: new Date().toISOString(),
+                    stage: newStage,
                     archetype: selectedPreset // Update archetype if changed
                 };
             } else {
@@ -361,7 +396,10 @@ export function ManifestationPortalPage({ onNavigate }) {
                     archetype: selectedPreset,
                     date: new Date().toISOString(),
                     lastWatered: new Date().toISOString(),
+                    lastSessionDate: new Date().toISOString(),
                     waterCount: 1,
+                    sessionsCompleted: 1,
+                    stage: 'seed',
                     bloomed: false
                 };
                 updated = [...manifestations, newManifestation];
@@ -369,6 +407,7 @@ export function ManifestationPortalPage({ onNavigate }) {
 
             setManifestations(updated);
             localStorage.setItem('omnisync_manifestations', JSON.stringify(updated));
+            setActiveManifestationId(null); // Reset active tracking
         }
 
         setStage('completion');
@@ -428,9 +467,10 @@ export function ManifestationPortalPage({ onNavigate }) {
                     </button>
                     <ManifestationGarden
                         manifestations={manifestations}
-                        onSelectManifestation={(m) => console.log('Selected:', m)}
+                        onSelectManifestation={handleNurture}
                         onViewInsights={viewInsights}
                         onLaunchMoonPortal={handleMoonPortalLaunch}
+                        onNurture={handleNurture}
                     />
                 </div>
             )}
@@ -441,6 +481,51 @@ export function ManifestationPortalPage({ onNavigate }) {
                     manifestations={manifestations}
                     onClose={closeInsights}
                 />
+            )}
+
+            {/* Nurture Modal */}
+            {showNurtureModal && nurtureTarget && (
+                <div className="nurture-modal-overlay">
+                    <div className="nurture-modal glass-card">
+                        <button className="close-modal-btn" onClick={() => setShowNurtureModal(false)}>
+                            <X size={24} />
+                        </button>
+
+                        <div className="nurture-header">
+                            <Sparkles size={32} style={{ color: 'var(--accent-teal)' }} />
+                            <h3>Nurture Your Seed</h3>
+                        </div>
+
+                        <div className="nurture-stats">
+                            <p className="intention-preview">"{nurtureTarget.intention}"</p>
+
+                            <div className="protocol-progress">
+                                <div className="progress-step">
+                                    <span className="label">Current Stage</span>
+                                    <span className="value capitalize">{nurtureTarget.stage || 'Seed'}</span>
+                                </div>
+                                <div className="progress-step">
+                                    <span className="label">Sessions Completed</span>
+                                    <span className="value">{nurtureTarget.sessionsCompleted || 0} / 9</span>
+                                </div>
+                            </div>
+
+                            <div className="protocol-guide">
+                                <h4>3-Day Protocol Progress</h4>
+                                <div className="day-indicators">
+                                    <div className={`day-dot ${(nurtureTarget.sessionsCompleted || 0) >= 3 ? 'completed' : 'active'}`}>Day 1</div>
+                                    <div className={`day-dot ${(nurtureTarget.sessionsCompleted || 0) >= 6 ? 'completed' : ((nurtureTarget.sessionsCompleted || 0) >= 3 ? 'active' : '')}`}>Day 2</div>
+                                    <div className={`day-dot ${(nurtureTarget.sessionsCompleted || 0) >= 9 ? 'completed' : ((nurtureTarget.sessionsCompleted || 0) >= 6 ? 'active' : '')}`}>Day 3</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button className="start-nurture-btn" onClick={startNurtureSession}>
+                            <Heart size={20} fill="currentColor" />
+                            Begin Meditation Session
+                        </button>
+                    </div>
+                </div>
             )}
 
             {/* Seed Planting Ceremony */}
@@ -492,13 +577,13 @@ export function ManifestationPortalPage({ onNavigate }) {
                         <div className="about-section">
                             <h3><TreePine size={20} style={{ display: 'inline', marginRight: '8px' }} />Your Manifestation Garden</h3>
                             <p>
-                                Your garden is a living visualization of your manifestation practice:
+                                Your garden tracks your 3-Day Amplification Protocol:
                             </p>
                             <ul>
-                                <li><strong>The Seed:</strong> Your foundational belief ("I believe in myself")</li>
-                                <li><strong>The Tree:</strong> Grows through 5 stages as you add more intentions</li>
-                                <li><strong>The Flowers:</strong> Each manifestation blooms as a colored flower based on its archetype</li>
-                                <li><strong>The Cycles:</strong> Track your practice and watch your garden evolve</li>
+                                <li><strong>The Seed (Day 1):</strong> Planting your intention. 3 sessions to sprout.</li>
+                                <li><strong>The Sprout (Day 2):</strong> Saturation phase. 3 more sessions to grow into a sapling.</li>
+                                <li><strong>The Sapling (Day 3):</strong> Zero Contradiction. 3 final sessions to reach full bloom.</li>
+                                <li><strong>The Bloom:</strong> A fully realized intention, radiating its frequency.</li>
                             </ul>
                         </div>
 
@@ -526,109 +611,120 @@ export function ManifestationPortalPage({ onNavigate }) {
                         </div>
                     </div>
                 </div>
-            )}
+            )
+            }
 
             {/* Entrance Stage */}
-            {stage === 'entrance' && (
-                <div className="portal-entrance fade-in">
-                    <div className="spiral-aperture">
-                        <Sparkles size={80} className="portal-icon" />
-                    </div>
-                    <h1>Manifestation Portal</h1>
-                    <p className="portal-subtitle">Intention → Resonance → Embodiment</p>
-                    <button className="enter-portal-btn" onClick={enterPortal}>
-                        Enter the Portal
-                    </button>
-                    {seedPlanted && manifestations.length > 0 && (
-                        <button className="view-garden-btn" onClick={viewGarden}>
-                            <TreePine size={20} />
-                            View Your Garden ({manifestations.length})
+            {
+                stage === 'entrance' && (
+                    <div className="portal-entrance fade-in">
+                        <div className="spiral-aperture">
+                            <Sparkles size={80} className="portal-icon" />
+                        </div>
+                        <h1>Manifestation Portal</h1>
+                        <p className="portal-subtitle">Intention → Resonance → Embodiment</p>
+                        <button className="enter-portal-btn" onClick={enterPortal}>
+                            Enter the Portal
                         </button>
-                    )}
-                    <button className="info-btn" onClick={() => setShowAbout(true)}>
-                        <Info size={20} />
-                        How It Works
-                    </button>
-                </div>
-            )}
+                        {seedPlanted && manifestations.length > 0 && (
+                            <button className="view-garden-btn" onClick={viewGarden}>
+                                <TreePine size={20} />
+                                View Your Garden ({manifestations.length})
+                            </button>
+                        )}
+                        <button className="info-btn" onClick={() => setShowAbout(true)}>
+                            <Info size={20} />
+                            How It Works
+                        </button>
+                    </div>
+                )
+            }
 
             {/* Intention Input Stage */}
-            {stage === 'input' && (
-                <div className="intention-input-stage fade-in">
-                    <div className="input-container">
-                        <p className="input-prompt">Speak in the present moment...</p>
-                        <textarea
-                            className="intention-textarea"
-                            placeholder="I am..."
-                            value={intention}
-                            onChange={(e) => setIntention(e.target.value)}
-                            autoFocus
-                        />
-                        <button
-                            className="continue-btn"
-                            onClick={() => setStage('preset')}
-                            disabled={!intention.trim()}
-                        >
-                            Continue
-                        </button>
+            {
+                stage === 'input' && (
+                    <div className="intention-input-stage fade-in">
+                        <div className="input-container">
+                            <p className="input-prompt">Speak in the present moment...</p>
+                            <textarea
+                                className="intention-textarea"
+                                placeholder="I am..."
+                                value={intention}
+                                onChange={(e) => setIntention(e.target.value)}
+                                autoFocus
+                            />
+                            <button
+                                className="continue-btn"
+                                onClick={() => setStage('preset')}
+                                disabled={!intention.trim()}
+                            >
+                                Continue
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Preset Selection Stage */}
-            {stage === 'preset' && (
-                <div className="preset-selection fade-in">
-                    <h2>Choose Your Resonance</h2>
-                    <div className="preset-glyphs">
-                        {presets.map(preset => (
-                            <button
-                                key={preset.id}
-                                className="preset-glyph"
-                                onClick={() => selectPreset(preset.id)}
-                                style={{ '--preset-color': preset.color }}
-                            >
-                                <preset.icon size={48} className="glyph" />
-                                <span className="preset-name">{preset.name}</span>
-                            </button>
-                        ))}
+            {
+                stage === 'preset' && (
+                    <div className="preset-selection fade-in">
+                        <h2>Choose Your Resonance</h2>
+                        <div className="preset-glyphs">
+                            {presets.map(preset => (
+                                <button
+                                    key={preset.id}
+                                    className="preset-glyph"
+                                    onClick={() => selectPreset(preset.id)}
+                                    style={{ '--preset-color': preset.color }}
+                                >
+                                    <preset.icon size={48} className="glyph" />
+                                    <span className="preset-name">{preset.name}</span>
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Portal Active Stage */}
-            {stage === 'portal' && (
-                <div className="portal-active">
-                    <canvas ref={canvasRef} className="portal-canvas" />
+            {
+                stage === 'portal' && (
+                    <div className="portal-active">
+                        <canvas ref={canvasRef} className="portal-canvas" />
 
-                    {/* Breath Synchronization Overlay */}
-                    {currentPreset && (
-                        <BreathSync
-                            breathPattern={currentPreset.breathPattern}
-                            onBreathCycle={(count) => {
-                                // Optional: Do something on breath cycles
-                                if (count % 5 === 0) {
-                                    console.log(`${count} breath cycles completed`);
-                                }
-                            }}
-                        />
-                    )}
+                        {/* Breath Synchronization Overlay */}
+                        {currentPreset && (
+                            <BreathSync
+                                breathPattern={currentPreset.breathPattern}
+                                onBreathCycle={(count) => {
+                                    // Optional: Do something on breath cycles
+                                    if (count % 5 === 0) {
+                                        console.log(`${count} breath cycles completed`);
+                                    }
+                                }}
+                            />
+                        )}
 
-                    <button className="complete-btn" onClick={completeSession}>
-                        Complete
-                    </button>
-                </div>
-            )}
+                        <button className="complete-btn" onClick={completeSession}>
+                            Complete
+                        </button>
+                    </div>
+                )
+            }
 
             {/* Completion Stage */}
-            {stage === 'completion' && (
-                <div className="completion-stage fade-in">
-                    <div className="completion-message">
-                        <Sparkles size={60} className="completion-icon" />
-                        <h2>Intention received.</h2>
-                        <p>Carry it with you.</p>
+            {
+                stage === 'completion' && (
+                    <div className="completion-stage fade-in">
+                        <div className="completion-message">
+                            <Sparkles size={60} className="completion-icon" />
+                            <h2>Intention received.</h2>
+                            <p>Carry it with you.</p>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Close button */}
             <button className="close-portal" onClick={() => {
@@ -637,6 +733,6 @@ export function ManifestationPortalPage({ onNavigate }) {
             }}>
                 <X size={24} />
             </button>
-        </div>
+        </div >
     );
 }

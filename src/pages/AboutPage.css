@@ -32,6 +32,11 @@
     animation: fadeIn 0.8s ease;
 }
 
+.about-header {
+    margin-bottom: 48px;
+    text-align: center;
+}
+
 .about-title {
     font-size: 36px;
     font-weight: 700;
@@ -39,8 +44,12 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 24px;
-    text-align: center;
+    margin-bottom: 16px;
+}
+
+.about-subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
 }
 
 .about-intro {
@@ -52,15 +61,13 @@
     padding: 0 20px;
 }
 
-.brainwave-section,
-.color-noise-section,
+.brainwaves-section,
 .technology-section,
 .why-section {
-    margin-bottom: 48px;
+    margin-bottom: 60px;
 }
 
-.brainwave-section h2,
-.color-noise-section h2,
+.brainwaves-section h2,
 .technology-section h2,
 .why-section h2 {
     font-size: 28px;
@@ -179,70 +186,110 @@
 }
 
 .closing {
-    font-size: 15px;
-    line-height: 1.7;
+    font-size: 16px;
+    line-height: 1.8;
     color: var(--text-primary);
-    margin-top: 24px;
-    padding: 20px;
+    text-align: center;
+    margin-top: 32px;
+    padding: 24px;
     background: rgba(20, 184, 166, 0.1);
-    border-radius: 12px;
+    border-radius: 16px;
     border: 1px solid rgba(20, 184, 166, 0.2);
 }
 
-/* Expandable Sections */
-.expandable-section {
-    margin-bottom: 24px;
+.page-footer {
+    text-align: center;
+    padding: 32px 20px;
+    margin-top: 60px;
+    font-size: 13px;
+    color: var(--text-muted);
+    border-top: 1px solid rgba(139, 92, 246, 0.1);
 }
 
-.section-header {
-    width: 100%;
+/* New Additions for Advanced Science Sections */
+.section-intro {
+    font-size: 16px;
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+}
+
+.card-header-icon {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 20px 24px;
-    background: rgba(17, 24, 39, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
-.section-header:hover {
-    border-color: rgba(139, 92, 246, 0.4);
-    background: rgba(17, 24, 39, 0.8);
+.card-header-icon h3 {
+    margin-bottom: 0;
 }
 
-.section-header.active {
-    border-color: var(--accent-purple);
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+.card-header-icon svg {
+    color: var(--accent-teal);
 }
 
-.section-header h2 {
-    font-size: 24px;
+.protocol-mini-steps {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.protocol-mini-steps p {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.protocol-mini-steps p:last-child {
+    margin-bottom: 0;
+}
+
+.protocol-mini-steps strong {
+    color: var(--accent-teal);
+}
+
+@media (max-width: 768px) {
+    .about-title {
+        font-size: 28px;
+    }
+
+    .brainwave-card,
+    .tech-card {
+        padding: 24px 20px;
+    }
+
+    .benefits-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Creators Section Styles */
+.creators-section {
+    margin-top: 80px;
+    margin-bottom: 60px;
+}
+
+.creators-section h2 {
+    font-size: 28px;
     font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
+    color: var(--accent-purple);
+    margin-bottom: 32px;
+    text-align: center;
 }
 
-.section-content {
-    padding: 32px 24px;
-}
-
-/* Creator Profiles */
 .creators-intro {
     text-align: center;
-    margin-bottom: 40px;
+    max-width: 700px;
+    margin: 0 auto 48px;
 }
 
 .creators-intro h3 {
-    font-size: 32px;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent-purple), var(--accent-teal));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 24px;
     margin-bottom: 16px;
+    color: var(--text-primary);
 }
 
 .creators-intro p {
@@ -325,98 +372,5 @@
     font-size: 16px;
     padding: 12px 0;
     color: var(--text-primary);
-    margin-bottom: 8px;
-}
-
-/* Privacy Notice */
-.privacy-notice {
-    max-width: 800px;
-    margin: 60px auto 40px;
-    padding: 24px;
-    background: rgba(139, 92, 246, 0.1);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    border-radius: 12px;
-    text-align: center;
-}
-
-.privacy-notice h3 {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--accent-purple);
-    margin-bottom: 12px;
-}
-
-.privacy-notice p {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin: 0;
-}
-
-/* Footer */
-.page-footer {
-    text-align: center;
-    padding: 20px;
-    color: var(--text-muted);
-    font-size: 14px;
-    border-top: 1px solid rgba(139, 92, 246, 0.1);
-}
-
-@media (max-width: 768px) {
-    .about-title {
-        font-size: 28px;
-    }
-
-    .brainwave-card,
-    .tech-card {
-        padding: 24px 20px;
-    }
-
-    .benefits-list {
-        grid-template-columns: 1fr;
-    }
-
-    .section-header h2 {
-        font-size: 18px;
-    }
-
-    .creator-profile,
-    .mission-section,
-    .mission-values {
-        padding: 24px 20px;
-    }
-}
-
-/* Light Mode Overrides */
-:root[data-theme="light"] .brainwave-card,
-:root[data-theme="light"] .tech-card,
-:root[data-theme="light"] .section-header,
-:root[data-theme="light"] .creator-profile,
-:root[data-theme="light"] .mission-section,
-:root[data-theme="light"] .mission-values {
-    background: rgba(255, 255, 255, 0.5);
-    border-color: rgba(123, 95, 184, 0.3);
-}
-
-:root[data-theme="light"] .section-header:hover {
-    background: rgba(255, 255, 255, 0.7);
-    border-color: rgba(123, 95, 184, 0.5);
-}
-
-:root[data-theme="light"] .example-box {
-    background: rgba(139, 92, 246, 0.1);
-    color: #1a202c;
-    border-left-color: var(--accent-purple);
-}
-
-:root[data-theme="light"] .benefits-list li {
-    background: rgba(255, 255, 255, 0.6);
-    border-color: rgba(139, 92, 246, 0.3);
-    color: #1a202c;
-}
-
-:root[data-theme="light"] .closing,
-:root[data-theme="light"] .privacy-notice {
-    background: rgba(255, 255, 255, 0.5);
-    border-color: rgba(123, 95, 184, 0.3);
+    font-weight: 500;
 }

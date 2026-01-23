@@ -29,11 +29,21 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
     };
 
     const getFlowerPosition = (index, total) => {
+        // If there's only one manifestation, center it at the tree
+        if (total === 1) {
+            return { x: 0, y: 0 };
+        }
+
         // Distribute flowers around the tree in a natural pattern
+        // Use pixel-based positioning from center instead of percentages
         const angle = (index / total) * Math.PI * 2;
-        const radius = 80 + (index % 3) * 30;
-        const x = 50 + Math.cos(angle) * radius;
-        const y = 50 + Math.sin(angle) * radius;
+        const baseRadius = 120; // pixels from center
+        const radiusVariation = (index % 3) * 40;
+        const radius = baseRadius + radiusVariation;
+
+        // Position relative to center (50%, 50%)
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
         return { x, y };
     };
 
@@ -48,7 +58,7 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                 </div>
 
                 {/* Tree - grows based on stage */}
-                <div className={`tree - container stage - ${ treeStage } `}>
+                <div className={`tree - container stage - ${treeStage} `}>
                     {treeStage === 'seed' && (
                         <div className="seed-visual">
                             <div className="seed-glow"></div>
@@ -107,43 +117,72 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                 {manifestations.map((manifestation, index) => {
                     const pos = getFlowerPosition(index, manifestations.length);
                     const color = getFlowerColor(manifestation.archetype);
-                    const waterCount = manifestation.waterCount || 1;
-                    const scale = 1 + Math.min(waterCount - 1, 5) * 0.1; // Max 1.5x size
+                    const stage = manifestation.stage || 'seed';
+                    const sessions = manifestation.sessionsCompleted || 0;
+
+                    // Scale based on growth
+                    let scale = 1;
+                    if (stage === 'sprout') scale = 1.2;
+                    else if (stage === 'sapling') scale = 1.5;
+                    else if (stage === 'bloom') scale = 1.8;
 
                     return (
                         <div
                             key={manifestation.id}
-                            className="manifestation-flower"
+                            className={`manifestation-node stage-${stage}`}
                             style={{
-                                left: `${ pos.x }% `,
-                                top: `${ pos.y }% `,
-                                '--flower-color': color,
-                                transform: `scale(${ scale })`
+                                position: 'absolute',
+                                left: '50%',
+                                top: '50%',
+                                transform: `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px) scale(${scale})`,
+                                '--node-color': color,
+                                cursor: 'pointer',
+                                zIndex: 5
                             }}
                             onMouseEnter={() => setHoveredManifestation(manifestation)}
                             onMouseLeave={() => setHoveredManifestation(null)}
-                            onClick={() => onSelectManifestation(manifestation)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('Clicked manifestation:', manifestation);
+                                onSelectManifestation(manifestation);
+                            }}
                         >
-                            <div className="flower-glow"></div>
-                            <div className="flower-petals">
-                                {[0, 1, 2, 3, 4, 5].map(i => (
-                                    <div key={i} className="petal" style={{ transform: `rotate(${ i * 60}deg)` }}></div>
-                                ))}
-                            </div>
-                            <div className="flower-center"></div>
+                            {/* Visual based on stage */}
+                            {stage === 'seed' && <div className="node-seed"></div>}
+
+                            {stage === 'sprout' && (
+                                <div className="node-sprout">
+                                    <div className="leaf left"></div>
+                                    <div className="leaf right"></div>
+                                </div>
+                            )}
+
+                            {stage === 'sapling' && (
+                                <div className="node-sapling">
+                                    <div className="trunk-mini"></div>
+                                    <div className="foliage-mini"></div>
+                                </div>
+                            )}
+
+                            {(stage === 'tree' || stage === 'bloom') && (
+                                <div className="node-bloom">
+                                    <div className="flower-glow"></div>
+                                    <div className="flower-petals">
+                                        {[0, 1, 2, 3, 4, 5].map(i => (
+                                            <div key={i} className="petal" style={{ transform: `rotate(${i * 60}deg)` }}></div>
+                                        ))}
+                                    </div>
+                                    <div className="flower-center"></div>
+                                </div>
+                            )}
 
                             {hoveredManifestation?.id === manifestation.id && (
                                 <div className="manifestation-tooltip">
                                     <div className="tooltip-text">{manifestation.intention}</div>
-                                    <div className="tooltip-date">
-                                        {new Date(manifestation.date).toLocaleDateString()}
+                                    <div className="tooltip-meta">
+                                        <div className="tooltip-stage capitalized">{stage}</div>
+                                        <div className="tooltip-sessions">Session {sessions}/9</div>
                                     </div>
-                                    {waterCount > 1 && (
-                                        <div className="tooltip-water">
-                                            <Droplets size={14} />
-                                            <span>Watered {waterCount}x</span>
-                                        </div>
-                                    )}
                                 </div>
                             )}
                         </div>
@@ -158,9 +197,9 @@ export function ManifestationGarden({ manifestations = [], onSelectManifestation
                             key={i}
                             className="firefly"
                             style={{
-                                left: `${ 20 + Math.random() * 60 }% `,
-                                top: `${ 20 + Math.random() * 60 }% `,
-                                animationDelay: `${ Math.random() * 3 } s`
+                                left: `${20 + Math.random() * 60}% `,
+                                top: `${20 + Math.random() * 60}% `,
+                                animationDelay: `${Math.random() * 3} s`
                             }}
                         ></div>
                     ))}
